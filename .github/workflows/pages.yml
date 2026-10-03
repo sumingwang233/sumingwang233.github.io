@@ -34,7 +34,7 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps chromium
-          python -m pip install fonttools==4.66.1 brotli==1.2.0
+          python -m pip install fonttools==4.66.1 brotli==1.2.0 PyMuPDF==1.27.2
       - name: Refresh public font subsets
         run: python scripts/prepare_assets.py
       - name: Check public data
@@ -49,6 +49,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: homepage-review
+          # Restrict hidden-file uploads to these generated public previews.
+          include-hidden-files: true
+          if-no-files-found: error
           path: |
             .local/previews/*.png
             _site/files/cv-*.pdf

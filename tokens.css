@@ -1,5 +1,5 @@
-/* Hallmark · macrostructure: Long Document · genre: editorial · tone: warm bookish · anchor hue: green · theme: Studio · nav: N6 · footer: Ft2 */
-/* Hallmark · pre-emit critique: P4 H4 E5 S5 R5 V5 */
+/* Hallmark · macrostructure: Long Document · genre: editorial · tone: warm bookish · anchor hue: green · theme: Studio · nav: compact masthead · footer: Ft2 */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
 :root {
   --color-paper: oklch(96.7% 0.012 95);
   --color-paper-2: oklch(93% 0.012 95);
@@ -26,7 +26,7 @@
   --text-lg: 1.125rem;
   --text-title: clamp(1.375rem, 2.6vw, 2rem);
   --text-display: clamp(1.75rem, 3.2vw, 2.5rem);
-  --text-wordmark: clamp(3rem, 7vw, 5.25rem);
+  --text-wordmark: clamp(1.5rem, 2vw, 2rem);
   --rule-hair: 1px;
   --radius-sm: 2px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -34,4 +34,9 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-micro: 120ms;
   --dur-short: 220ms;
+  --dur-reveal: 600ms;
+  --dur-stagger: 60ms;
+  --content-width: 70rem;
+  --page-gutter: 1rem;
+  --anchor-offset: 8rem;
 }

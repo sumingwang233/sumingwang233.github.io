@@ -1,4 +1,4 @@
-"""Small public-content and build validation, using Python's standard library."""
+"""Validate public data, rendered pages and the sanitized resume PDF."""
 import argparse
 import copy
 from html.parser import HTMLParser
@@ -6,12 +6,16 @@ import json
 from pathlib import Path
 import re
 import tempfile
+import unicodedata
 import zipfile
+
+import pymupdf
 
 from inspect_sources import extract
 
 ROOT = Path(__file__).resolve().parents[1]
 PHONE = re.compile(r'(?<!\d)(?:\+?86[\s-]*)?1[3-9](?:[\s-]*\d){9}(?!\d)')
+EMAIL = re.compile(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}')
 
 
 def public_text(text):
@@ -19,6 +23,30 @@ def public_text(text):
     for marker in ['@163.com', 'Lorem ipsum', 'DhtAFkwAAAAJ', 'YOUR_GOOGLE_SCHOLAR_ID']:
         assert marker not in text, f'Private or template marker: {marker}'
     assert not re.search(r'(?<![A-Za-z])[A-Za-z]:[\\/](?!/)|/mnt/[a-z]/|/Users/|/home/', text), 'Local absolute path was found'
+
+
+def check_resume_pdf(path, email):
+    def inspect(text):
+        text = unicodedata.normalize('NFKC', text)
+        text = ''.join(char for char in text if unicodedata.category(char) != 'Cf')
+        public_text(text)
+        assert all(value.lower() == email.lower() for value in EMAIL.findall(text)), 'Resume PDF contains an unapproved email'
+
+    with pymupdf.open(path) as doc:
+        assert doc.is_pdf and not doc.is_encrypted and not doc.needs_pass, 'Resume PDF cannot be inspected'
+        assert len(doc), 'Resume PDF is empty'
+        text = '\n'.join(page.get_text() for page in doc)
+        inspect(text)
+        assert email in text, 'Resume PDF must have extractable text and the approved public email'
+        assert not doc.embfile_count(), 'Resume PDF contains an embedded attachment'
+        assert not doc.get_xml_metadata(), 'Resume PDF contains XMP metadata'
+        for key, value in doc.metadata.items():
+            if key not in {'format', 'encryption'}:
+                assert not value, 'Resume PDF metadata must be cleared'
+        for page in doc:
+            assert not page.get_links(), 'Resume PDF contains a link'
+            assert not list(page.annots() or []), 'Resume PDF contains an annotation or attached file'
+            assert not list(page.widgets() or []), 'Resume PDF contains a form field'
 
 
 def validate_profile(profile):
@@ -88,6 +116,10 @@ def check_site(site, profile):
         lang = 'en' if route.startswith('en/') else 'zh'
         rendered = ' '.join(' '.join(parser.text).split())
         expected = [profile['contact']['email'], profile['person']['role'][lang]]
+        expected.append(profile['person']['name'][lang])
+        if route in {'cv/index.html', 'en/cv/index.html'}:
+            expected.extend([*profile['person']['name'].values(), profile['contact']['github'].removeprefix('https://')])
+            assert profile['contact']['github'] in parser.urls, f'{route}: missing profile GitHub link'
         for group in ['education', 'research', 'projects', 'evaluation', 'skills']:
             for item in profile[group]:
                 expected.extend(item[key][lang] for key in ['title', 'organization', 'period', 'status', 'text'] if key in item)
@@ -134,6 +166,7 @@ def check_site(site, profile):
         if path.is_file():
             assert path.suffix.lower() not in {'.docx', '.nvp'}, f'Private source format in site: {path}'
             assert '.local' not in path.parts
+    check_resume_pdf(site / 'files/job-resume-public.pdf', profile['contact']['email'])
 
 
 def self_check(profile):
@@ -168,6 +201,45 @@ def self_check(profile):
         assert extract(path) == original, 'Formatting-only edit should not trigger an update'
         write('Experience B')
         assert extract(path)['sha256'] != original['sha256']
+    with tempfile.TemporaryDirectory() as folder:
+        path = Path(folder) / 'resume.pdf'
+        email = profile['contact']['email']
+        for case in ['safe', 'phone', 'private-email', 'hidden-text', 'metadata', 'attachment', 'annotation', 'form', 'link', 'xmp', 'no-text', 'encrypted']:
+            with pymupdf.open() as doc:
+                page = doc.new_page()
+                if case != 'no-text':
+                    page.insert_text((40, 40), email)
+                if case == 'phone':
+                    page.insert_text((40, 60), '+86 138 0000 0000')
+                elif case == 'private-email':
+                    page.insert_text((40, 60), 'private@example.org')
+                elif case == 'hidden-text':
+                    page.insert_text((40, 60), 'private@example.org', render_mode=3)
+                elif case == 'metadata':
+                    doc.set_metadata({'author': 'private@example.org'})
+                elif case == 'attachment':
+                    doc.embfile_add('source.txt', b'private source')
+                elif case == 'annotation':
+                    page.add_text_annot((40, 60), 'private@example.org')
+                elif case == 'form':
+                    widget = pymupdf.Widget()
+                    widget.field_name = 'private-contact'
+                    widget.field_type = pymupdf.PDF_WIDGET_TYPE_TEXT
+                    widget.field_value = 'private@example.org'
+                    widget.rect = pymupdf.Rect(40, 60, 200, 80)
+                    page.add_widget(widget)
+                elif case == 'link':
+                    page.insert_link({'kind': pymupdf.LINK_URI, 'from': pymupdf.Rect(40, 40, 200, 60), 'uri': 'mailto:private@example.org'})
+                elif case == 'xmp':
+                    doc.set_xml_metadata('<private>private@example.org</private>')
+                options = {'encryption': pymupdf.PDF_ENCRYPT_AES_256, 'user_pw': 'test-password'} if case == 'encrypted' else {}
+                doc.save(path, deflate=True, **options)
+            try:
+                check_resume_pdf(path, email)
+            except AssertionError:
+                assert case != 'safe', 'Safe resume was rejected'
+            else:
+                assert case == 'safe', f'Unsafe resume was accepted: {case}'
 
 
 if __name__ == '__main__':
@@ -177,6 +249,7 @@ if __name__ == '__main__':
     data = json.loads((ROOT / '_data/profile.json').read_text('utf8'))
     validate_profile(data)
     self_check(data)
+    check_resume_pdf(ROOT / 'files/job-resume-public.pdf', data['contact']['email'])
     if args.site:
         check_site(args.site, data)
-    print('PASS: public profile, bilingual fields, duplicate detection, privacy and source-change checks' + ('; generated links and HTML' if args.site else ''))
+    print('PASS: public profile, bilingual fields, duplicate detection, PDF privacy regression and source-change checks' + ('; generated links, HTML and deployed resume PDF' if args.site else ''))
