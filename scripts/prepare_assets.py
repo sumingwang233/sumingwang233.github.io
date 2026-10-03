@@ -49,4 +49,3 @@ for slug, family, weight in [('notoserifsc', 'NotoSerifSC', 600), ('notosanssc',
     target = ROOT / 'assets' / 'fonts' / f'noto-{ "serif" if weight else "sans" }-sc.woff2'
     font.save(target)
     print(f'{target.name}: {target.stat().st_size // 1024} KB')
-
