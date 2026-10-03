@@ -1,0 +1,72 @@
+name: Validate and publish homepage
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.11'
+          bundler-cache: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install build tools
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          python -m pip install fonttools==4.66.1 brotli==1.2.0
+      - name: Refresh public font subsets
+        run: python scripts/prepare_assets.py
+      - name: Check public data
+        run: python scripts/validate.py
+      - name: Build Jekyll
+        run: bundle exec jekyll build --strict_front_matter
+      - name: Generate CV PDFs and check browser behavior
+        run: npm run verify
+      - name: Check generated privacy and links
+        run: python scripts/validate.py --site _site
+      - name: Save review previews
+        uses: actions/upload-artifact@v7
+        with:
+          name: homepage-review
+          path: |
+            .local/previews/*.png
+            _site/files/cv-*.pdf
+      - name: Package Pages site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

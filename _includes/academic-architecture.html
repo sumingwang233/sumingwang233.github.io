@@ -1,0 +1,15 @@
+{% assign arch = include.item.architecture %}
+<figure class="architecture-figure" aria-label="{{ include.item.image_caption[lang] }}">
+  <div class="architecture-flow">
+    <p class="architecture-scope">{{ arch.scope[lang] }}</p>
+    <div class="architecture-pair architecture-clients">{% for client in arch.clients %}<div class="architecture-node"><strong>{{ client.title }}</strong><span>{{ client.role[lang] }}</span></div>{% endfor %}</div>
+    <div class="architecture-connector"><span aria-hidden="true">↓</span> {{ arch.bridge[lang] }}</div>
+    <div class="architecture-node architecture-host"><strong>{{ arch.host.title }}</strong><span>{{ arch.host.role[lang] }}</span></div>
+    <div class="architecture-connector" aria-hidden="true">↓</div>
+    <div class="architecture-node"><strong>{{ arch.application.title }}</strong><span>{{ arch.application.role[lang] }}</span></div>
+    <div class="architecture-connector" aria-hidden="true">↙ &nbsp; ↘</div>
+    <div class="architecture-pair"><div class="architecture-node"><strong>{{ arch.domain.title }}</strong><span>{{ arch.domain.role[lang] }}</span></div><div class="architecture-node"><strong>{{ arch.infrastructure.title }}</strong><span>{{ arch.infrastructure.role[lang] }}</span></div></div>
+    <div class="feature-grid">{% for feature in arch.features %}<div class="feature"><strong>{{ feature.title[lang] }}</strong><code>{{ feature.implementation }}</code><p>{{ feature.detail[lang] }}</p></div>{% endfor %}</div>
+  </div>
+  <figcaption>{{ include.item.image_caption[lang] }}</figcaption>
+</figure>

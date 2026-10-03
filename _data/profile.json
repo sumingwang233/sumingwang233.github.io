@@ -1,0 +1,792 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-03",
+  "person": {
+    "name": {
+      "zh": "王鑫",
+      "en": "Xin Wang"
+    },
+    "role": {
+      "zh": "武汉大学心理健康与教育中心（以下简称大心）马鑫主任助理",
+      "en": "Assistant to Director Xin Ma, Mental Health and Education Center (Daxin), Wuhan University"
+    },
+    "tagline": {
+      "zh": "个人学术主页",
+      "en": "Personal academic homepage"
+    },
+    "lead": {
+      "zh": "Be Water, my friend",
+      "en": "Be Water, my friend"
+    },
+    "intro": {
+      "zh": "我毕业于武汉大学心理学本科，目前在心理中心参与情绪调节与自我验证研究。我的工作涉及行为实验设计、心理测量与数据分析，也包括个人软件和游戏原型的设计与 AI 辅助开发",
+      "en": "I graduated with a bachelor's degree in psychology from Wuhan University and currently contribute to emotion regulation and self-verification research at its Mental Health and Education Center. My work spans behavioral experiments, psychological measurement and data analysis, alongside the design and AI-assisted development of personal software and game prototypes"
+    },
+    "interests": {
+      "zh": "关注情绪调节、自我概念与心理测量，以及游戏中的玩家动机、情绪体验和自我调节。希望结合行为实验、测量与软件原型，研究互动反馈和奖励机制如何影响行为选择",
+      "en": "My interests include emotion regulation, self-concept and psychological measurement, as well as player motivation, emotional experience and self-regulation in games. I aim to combine behavioral experiments, measurement and software prototypes to study how interactive feedback and rewards shape behavioral choices"
+    }
+  },
+  "contact": {
+    "email": "sumingwang@qq.com",
+    "github": "https://github.com/sumingwang233"
+  },
+  "education": [
+    {
+      "id": "whu-psychology",
+      "title": {
+        "zh": "武汉大学 · 哲学学院 · 心理学本科",
+        "en": "Wuhan University · School of Philosophy · Bachelor's degree in Psychology"
+      },
+      "organization": {
+        "zh": "",
+        "en": ""
+      },
+      "period": {
+        "zh": "2022—2026",
+        "en": "2022–2026"
+      },
+      "bullets": {
+        "zh": [
+          "GPA：3.81 / 4.00",
+          "相关课程：心理统计 96；实验心理学实验 95；情绪心理学 93；认知神经科学 95；生理心理学 95；认知心理学 93"
+        ],
+        "en": [
+          "GPA: 3.81 / 4.00",
+          "Selected coursework: Psychological Statistics 96; Experimental Psychology Laboratory 95; Psychology of Emotion 93; Cognitive Neuroscience 95; Physiological Psychology 95; Cognitive Psychology 93"
+        ]
+      }
+    }
+  ],
+  "research": [
+    {
+      "id": "emotion-self-verification",
+      "presentation": "split",
+      "title": {
+        "zh": "情绪调节与自我验证",
+        "en": "Emotion Regulation & Self-Verification"
+      },
+      "organization": {
+        "zh": "武汉大学心理健康与教育中心 · 助理 · 指导教师：马鑫",
+        "en": "Wuhan University · Research Assistant · Supervisor: Xin Ma"
+      },
+      "period": {
+        "zh": "2023.04—至今",
+        "en": "Apr 2023–Present"
+      },
+      "status": {
+        "zh": "程序与材料预实验已完成，待正式数据采集",
+        "en": "Program and stimulus pilots complete; formal data collection pending"
+      },
+      "bullets": {
+        "zh": [
+          "在系列研究的研究 3 中，区分负性自我概念激活与负性情绪诱发，考察二者对情绪调节目标的影响；主导实验设计与 PsychoPy 程序实现",
+          "完成材料筛选预实验分析与报告。实验系统支持随机反馈、操纵检查、音频采集、事件日志与数据导出"
+        ],
+        "en": [
+          "In Study 3 of the research series, distinguish negative self-concept activation from negative emotion induction and examine their effects on emotion-regulation goals; lead experimental design and PsychoPy implementation",
+          "Completed stimulus-selection pilot analyses and a report. The experimental system supports randomized feedback, manipulation checks, audio recording, event logs and data export"
+        ]
+      },
+      "methods": [
+        "PsychoPy",
+        "Behavioral experiments"
+      ],
+      "image": "/assets/images/emotion-experiment.png",
+      "image_width": 3708,
+      "image_height": 2715,
+      "image_alt": {
+        "zh": "情绪调节系列研究流程图，呈现策略选择、负性事件书写以及自我图式激活与情绪诱发分离的实验安排",
+        "en": "Emotion-regulation research overview showing strategy selection, negative-event writing, and separation of self-schema activation from emotion induction"
+      },
+      "image_caption": {
+        "zh": "研究流程图 · 点击查看大图",
+        "en": "Research workflow · Open full-size diagram"
+      }
+    },
+    {
+      "id": "undergraduate-thesis",
+      "presentation": "reverse",
+      "title": {
+        "zh": "自我概念积极性与抑郁情绪",
+        "en": "Self-Concept Positivity & Depressive Affect"
+      },
+      "organization": {
+        "zh": "毕业论文 · 链式中介机制研究",
+        "en": "Undergraduate thesis · Serial mediation study"
+      },
+      "period": {
+        "zh": "2025—2026",
+        "en": "2025–2026"
+      },
+      "bullets": {
+        "zh": [
+          "基于自我验证与情绪调节动机理论，考察配得感、认知情绪调节策略在自我概念积极性与抑郁情绪之间的链式中介关系",
+          "负责数据采集、统计分析与论文撰写，使用 SPSS、Mplus 构建结构方程模型"
+        ],
+        "en": [
+          "Drawing on self-verification and emotion-regulation motivation theories, examine beliefs about deserving a good mood and cognitive emotion-regulation strategies as serial mediators",
+          "Responsible for data collection, statistical analysis and thesis writing; construct structural equation models using SPSS and Mplus"
+        ]
+      },
+      "methods": [
+        "SPSS",
+        "Mplus",
+        "SEM"
+      ],
+      "diagram": "serial-mediation",
+      "model": [
+        {
+          "zh": "自我概念积极性",
+          "en": "Self-concept positivity"
+        },
+        {
+          "zh": "好心情配得感",
+          "en": "Deserving a good mood"
+        },
+        {
+          "zh": "认知情绪调节策略",
+          "en": "Cognitive emotion-regulation strategies"
+        },
+        {
+          "zh": "抑郁倾向",
+          "en": "Depressive tendencies"
+        }
+      ],
+      "image_caption": {
+        "zh": "理论模型",
+        "en": "Theoretical model"
+      }
+    },
+    {
+      "id": "cleft-prom",
+      "title": {
+        "zh": "唇腭裂患者报告结局测量工具",
+        "en": "Cleft Lip and/or Palate PROM"
+      },
+      "organization": {
+        "zh": "PROM 开发 · 省级大学生创新项目",
+        "en": "PROM development · Provincial undergraduate innovation project"
+      },
+      "period": {
+        "zh": "2023—2025",
+        "en": "2023–2025"
+      },
+      "bullets": {
+        "zh": [
+          "负责概念框架、访谈提纲、项目申报书编写及数据分析；参与认知访谈、资料整理与条目修订，将患者体验转化为测量维度和条目",
+          "结合 PROs 标准与海外量表维度，设计半结构化访谈和焦点小组调研；使用 NVivo 三级编码梳理体验主题，支持本土化条目池构建",
+          "项目团队累计访谈 283 名患者、100 位家属，征询 17 位跨学科专家意见，形成初步量表；2025 年省级大创结项"
+        ],
+        "en": [
+          "Developed the conceptual framework, interview guide and project proposal; conducted data analysis and contributed to cognitive interviews and item revision, translating patient experiences into measurable dimensions and items",
+          "Used PRO standards and dimensions from overseas measures to design semi-structured interviews and focus groups; applied three-level coding in NVivo to identify experience themes and inform a localized item pool",
+          "The project team cumulatively interviewed 283 patients and 100 family members and consulted 17 interdisciplinary experts, producing a preliminary measure. Provincial-level undergraduate innovation project completed in 2025"
+        ]
+      },
+      "methods": [
+        "Psychometrics",
+        "Cognitive interviews",
+        "NVivo"
+      ],
+      "image_pending": true
+    }
+  ],
+  "publications": [
+    {
+      "id": "cleft-qualitative-2026",
+      "title": "Psychosocial Adjustment Among Chinese Youth with Cleft Lip and/or Palate: A Qualitative Study",
+      "authors": [
+        "Wenjie Zhao",
+        "Peiyu Zhao",
+        "Zongshuai Liu",
+        "Zisong Wang",
+        "Sinuo Tan",
+        "Minghan Li",
+        "Shijie Lv",
+        "Xin Wang",
+        "Jie Li",
+        "Wenjun Yuan",
+        "Wenying Kuang"
+      ],
+      "venue": "The Cleft Palate-Craniofacial Journal",
+      "year": 2026,
+      "doi": "10.1177/10556656261475739",
+      "status": {
+        "zh": "2026.08.19",
+        "en": "19 Aug 2026"
+      }
+    }
+  ],
+  "projects": [
+    {
+      "id": "gamelibrary",
+      "title": {
+        "zh": "GameLibrary",
+        "en": "GameLibrary"
+      },
+      "organization": {
+        "zh": "本地游戏库",
+        "en": "Local game library"
+      },
+      "period": {
+        "zh": "2026—至今",
+        "en": "2026–Present"
+      },
+      "bullets": {
+        "zh": [
+          "主导需求与交互设计，使用 AI 辅助开发、调试及验证；实现游戏目录扫描、候选审核、分类管理与快捷启动，迭代本地数据存储及桌面界面",
+          "已有 Windows 可下载版本与公开源码；桌面端、CLI 和 MCP 连接统一后端"
+        ],
+        "en": [
+          "Lead requirements and interaction design with AI-assisted implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface",
+          "Produced downloadable Windows builds and a public source repository; desktop, CLI and MCP clients connect to a shared backend"
+        ]
+      },
+      "methods": [
+        "C# / .NET 10",
+        "Tauri / Rust",
+        "React / TypeScript",
+        "SQLite"
+      ],
+      "url": "https://github.com/sumingwang233/GameLibrary",
+      "image_caption": {
+        "zh": "软件架构图",
+        "en": "Software architecture"
+      },
+      "diagram": "gamelibrary",
+      "architecture": {
+        "clients": [
+          {
+            "title": "Tauri · React · TypeScript",
+            "role": {
+              "zh": "桌面客户端 / Rust 桥接",
+              "en": "Desktop client / Rust bridge"
+            }
+          },
+          {
+            "title": "CLI · MCP",
+            "role": {
+              "zh": "命令行与 Agent 接口",
+              "en": "Command-line & agent interfaces"
+            }
+          }
+        ],
+        "bridge": {
+          "zh": "HostClient · Named pipe IPC",
+          "en": "HostClient · Named pipe IPC"
+        },
+        "host": {
+          "title": "Host",
+          "role": {
+            "zh": "请求分派 · 权限 · 会话与作业",
+            "en": "Dispatch · Permissions · Sessions & jobs"
+          }
+        },
+        "application": {
+          "title": "Application",
+          "role": {
+            "zh": "游戏库用例 · 候选审核 · 备份与恢复",
+            "en": "Catalog use cases · Candidate review · Backup & restore"
+          }
+        },
+        "domain": {
+          "title": "Domain",
+          "role": {
+            "zh": "领域模型与规则",
+            "en": "Domain models & rules"
+          }
+        },
+        "infrastructure": {
+          "title": "Infrastructure · SQLite",
+          "role": {
+            "zh": "数据库 · 文件 · 备份",
+            "en": "Database · Files · Backups"
+          }
+        },
+        "scope": {
+          "zh": "当前源码中的功能与实现",
+          "en": "Functions and implementation in the current source"
+        },
+        "features": [
+          {
+            "title": {
+              "zh": "目录扫描",
+              "en": "Folder scanning"
+            },
+            "implementation": "ScanJobRunner · DirectoryWalker",
+            "detail": {
+              "zh": "遍历目录，识别候选并记录扫描结果",
+              "en": "Traverse directories, identify candidates and record scan results"
+            }
+          },
+          {
+            "title": {
+              "zh": "候选审核与入库",
+              "en": "Candidate review"
+            },
+            "implementation": "CandidateReviewService · LibraryCatalogStore",
+            "detail": {
+              "zh": "人工确认，批量事务与逐项保存点",
+              "en": "Human confirmation, batch transactions and per-item savepoints"
+            }
+          },
+          {
+            "title": {
+              "zh": "游戏库与分类",
+              "en": "Library organization"
+            },
+            "implementation": "GameCatalogService · TagStore · GameCoverService",
+            "detail": {
+              "zh": "游戏记录、标签、收藏与封面管理",
+              "en": "Manage game records, tags, favorites and covers"
+            }
+          },
+          {
+            "title": {
+              "zh": "启动与进程跟踪",
+              "en": "Launch & process tracking"
+            },
+            "implementation": "LaunchRegistry · GameProcessTree",
+            "detail": {
+              "zh": "启动配置、参数、运行状态与进程退出",
+              "en": "Launch profiles, arguments, running state and process exit"
+            }
+          },
+          {
+            "title": {
+              "zh": "备份与恢复",
+              "en": "Backup & restore"
+            },
+            "implementation": "BackupCreateService · BackupRestoreService",
+            "detail": {
+              "zh": "创建数据快照并恢复本地游戏库",
+              "en": "Create data snapshots and restore the local library"
+            }
+          },
+          {
+            "title": {
+              "zh": "界面状态同步",
+              "en": "UI synchronization"
+            },
+            "implementation": "EventStream · HostClient · React hooks",
+            "detail": {
+              "zh": "独立事件等待通道，合并更新界面状态",
+              "en": "Separate event-wait channel with coalesced UI refresh"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dormitory-cooking",
+      "title": {
+        "zh": "大学寝室做饭模拟器",
+        "en": "Dormitory Cooking Simulator"
+      },
+      "organization": {
+        "zh": "独立游戏开发",
+        "en": "Independent game development"
+      },
+      "period": {
+        "zh": "2026—至今",
+        "en": "2026–Present"
+      },
+      "bullets": {
+        "zh": [
+          "主导玩法、交互与功能取舍，使用 AI 辅助开发和迭代；围绕采购、烹饪、资源管理与室友互动构建可运行原型",
+          "设计菜品评级、风险与关系反馈，迭代存档、教程和交互流程，并开展逻辑测试与实际运行验证"
+        ],
+        "en": [
+          "Lead gameplay, interaction design and feature selection with AI-assisted development; build a runnable prototype around shopping, cooking, resource management and roommate interactions",
+          "Design dish ratings, risk and relationship feedback; iterate saves, tutorials and interactions with logic tests and runtime validation"
+        ]
+      },
+      "methods": [
+        "Godot 4.7",
+        "GDScript"
+      ],
+      "image_caption": {
+        "zh": "游戏架构图",
+        "en": "Game architecture"
+      },
+      "diagram": "game",
+      "architecture": {
+        "scope": {
+          "zh": "当前 Godot 原型中的场景、系统与数据",
+          "en": "Scenes, systems and data in the current Godot prototype"
+        },
+        "clients": [
+          {
+            "title": "main_voxel.tscn · Player",
+            "role": {
+              "zh": "3D 寝室场景 · 移动与物品交互",
+              "en": "3D dorm scene · Movement and object interaction"
+            }
+          },
+          {
+            "title": "GameUI · HUD",
+            "role": {
+              "zh": "烹饪、手机、市场与暂停面板",
+              "en": "Cooking, phone, market and pause panels"
+            }
+          }
+        ],
+        "bridge": {
+          "zh": "系统调用 / 信号反馈 ↑",
+          "en": "System calls / Signal feedback ↑"
+        },
+        "host": {
+          "title": "GDScript · Autoload",
+          "role": {
+            "zh": "常驻玩法系统 · 状态与规则",
+            "en": "Persistent gameplay systems · State and rules"
+          }
+        },
+        "application": {
+          "title": "EventBus",
+          "role": {
+            "zh": "时间、库存、金钱、烹饪结果与风险事件",
+            "en": "Time, inventory, money, cooking-result and risk events"
+          }
+        },
+        "features": [
+          {
+            "title": {
+              "zh": "烹饪与反馈",
+              "en": "Cooking & feedback"
+            },
+            "implementation": "CookingSession · cooking_panel.gd",
+            "detail": {
+              "zh": "备料判定、火候、调味与结果等级",
+              "en": "Preparation timing, heat, seasoning and result grades"
+            }
+          },
+          {
+            "title": {
+              "zh": "食材与菜谱",
+              "en": "Ingredients & recipes"
+            },
+            "implementation": "Inventory · RecipeBook",
+            "detail": {
+              "zh": "食材消耗、新鲜度、设备耐久与菜谱解锁",
+              "en": "Ingredient use, freshness, equipment durability and recipe unlocks"
+            }
+          },
+          {
+            "title": {
+              "zh": "采购与经济",
+              "en": "Shopping & economy"
+            },
+            "implementation": "Economy · ShopManager · MarketSystem",
+            "detail": {
+              "zh": "购买食材和设备，记录资金收支",
+              "en": "Purchase ingredients and equipment; record income and spending"
+            }
+          },
+          {
+            "title": {
+              "zh": "室友与风险",
+              "en": "Social interaction & risk"
+            },
+            "implementation": "SocialManager · RiskManager",
+            "detail": {
+              "zh": "好感变化、风险积累与检查事件",
+              "en": "Affection changes, risk accumulation and inspection events"
+            }
+          },
+          {
+            "title": {
+              "zh": "时间与进度",
+              "en": "Time & progression"
+            },
+            "implementation": "GameClock · CourseProgress · TutorialState",
+            "detail": {
+              "zh": "行动耗时、课程进度与新手引导",
+              "en": "Action time, course progress and tutorial guidance"
+            }
+          },
+          {
+            "title": {
+              "zh": "空间与摆放",
+              "en": "World & placement"
+            },
+            "implementation": "Player · PlacementManager",
+            "detail": {
+              "zh": "场景交互、物品摆放与状态反馈",
+              "en": "Scene interaction, item placement and state feedback"
+            }
+          }
+        ],
+        "domain": {
+          "title": "DataLoader · .tres / .res",
+          "role": {
+            "zh": "菜谱、食材、设备与 NPC 资源",
+            "en": "Recipe, ingredient, equipment and NPC resources"
+          }
+        },
+        "infrastructure": {
+          "title": "SaveManager · JSON",
+          "role": {
+            "zh": "系统快照 · 校验与恢复 · 自动和手动存档",
+            "en": "System snapshots · Validation and restore · Auto/manual saves"
+          }
+        }
+      }
+    },
+    {
+      "id": "fnos-video-dedupe",
+      "title": {
+        "zh": "飞牛视频查重助手",
+        "en": "Video Dedupe Assistant"
+      },
+      "organization": {
+        "zh": "fnOS 原生应用",
+        "en": "fnOS native application"
+      },
+      "period": {
+        "zh": "2026—至今",
+        "en": "2026–Present"
+      },
+      "bullets": {
+        "zh": [
+          "主导需求和审阅流程设计，使用 AI 辅助实现 SHA-256 完全重复检测、抽帧感知哈希视觉相似检测与增量扫描缓存",
+          "实现扫描、人工审阅、预演与确认清理，加入文件复核、保留副本和审计记录等保护，并迭代应用界面与打包"
+        ],
+        "en": [
+          "Lead requirements and review-flow design with AI-assisted implementation of SHA-256 duplicate detection, frame-based perceptual-hash similarity detection and incremental scan caching",
+          "Implement scanning, human review, dry runs and confirmed cleanup, with file revalidation, retained-copy safeguards and audit records; iterate the interface and application packaging"
+        ]
+      },
+      "methods": [
+        "Python 3.12",
+        "NumPy",
+        "FFmpeg",
+        "SQLite",
+        "HTML / JavaScript"
+      ],
+      "image_pending": true
+    }
+  ],
+  "evaluation": [
+    {
+      "id": "angelalign-benchmark",
+      "title": {
+        "zh": "数字员工 Benchmark",
+        "en": "Digital Employee Benchmark"
+      },
+      "organization": {
+        "zh": "时代天使 · 系统软件中心 · AI 产品经理",
+        "en": "Angelalign · Systems Software Center · AI Product Manager"
+      },
+      "period": {
+        "zh": "2026.06",
+        "en": "Jun 2026"
+      },
+      "bullets": {
+        "zh": [
+          "参与需求采集与产品文档生成助手的评测任务设计及专家评价对齐，将业务需求拆解为可观察任务；区分客观约束、专家判断与用户偏好",
+          "评价引用真实性、内容完整性、评价一致性与真实使用反馈，形成分层评测思路"
+        ],
+        "en": [
+          "Contributed to task design and expert-assessment alignment for requirements and product-documentation assistants; translated business needs into observable tasks and distinguished objective constraints, expert judgment and user preferences",
+          "Evaluated citation authenticity, completeness, assessment consistency and real-world feedback, developing a layered evaluation approach"
+        ]
+      },
+      "diagram": "evaluation",
+      "image_caption": {
+        "zh": "分层评测流程",
+        "en": "Layered evaluation workflow"
+      },
+      "model": [
+        {
+          "zh": "业务需求",
+          "en": "Business needs",
+          "detail": {
+            "zh": "需求采集 · 产品文档生成",
+            "en": "Requirements · Product documentation"
+          }
+        },
+        {
+          "zh": "任务拆解",
+          "en": "Task design",
+          "detail": {
+            "zh": "转化为可观察任务",
+            "en": "Translate into observable tasks"
+          }
+        },
+        {
+          "zh": "专家对齐",
+          "en": "Expert alignment",
+          "detail": {
+            "zh": "对齐任务与评价标准",
+            "en": "Align tasks and assessment criteria"
+          }
+        },
+        {
+          "zh": "分层评价",
+          "en": "Layered assessment",
+          "detail": {
+            "zh": "结合真实使用反馈",
+            "en": "Incorporate real-world feedback"
+          }
+        }
+      ],
+      "dimensions": [
+        {
+          "zh": "客观约束",
+          "en": "Objective constraints"
+        },
+        {
+          "zh": "专家判断",
+          "en": "Expert judgment"
+        },
+        {
+          "zh": "用户偏好",
+          "en": "User preferences"
+        }
+      ],
+      "criteria": {
+        "zh": "引用真实性 · 内容完整性 · 评价一致性",
+        "en": "Citation authenticity · Completeness · Assessment consistency"
+      }
+    }
+  ],
+  "training": {
+    "zh": [
+      "第四届世界科学智能大赛：RNA–蛋白复合物结构预测赛道，获复赛资格",
+      "Datawhale 2026 AI 春训营：优秀学习者"
+    ],
+    "en": [
+      "4th World AI for Science Competition, RNA–protein structure prediction: second-round qualification",
+      "Datawhale 2026 AI Spring Training Camp: Outstanding Learner"
+    ]
+  },
+  "skills": [
+    {
+      "id": "experiments-analysis",
+      "title": {
+        "zh": "实验＆分析",
+        "en": "Experiments & analysis"
+      },
+      "text": {
+        "zh": "Python / PsychoPy 行为实验设计；E-Prime、MATLAB；SPSS、Mplus；NVivo、质性研究",
+        "en": "Python / PsychoPy behavioral experiment design; E-Prime, MATLAB; SPSS, Mplus; NVivo, qualitative research"
+      }
+    },
+    {
+      "id": "prototyping",
+      "title": {
+        "zh": "软件开发",
+        "en": "Software development"
+      },
+      "text": {
+        "zh": "AI产品开发；独立游戏设计；C#",
+        "en": "AI product development; independent game design; C#"
+      }
+    },
+    {
+      "id": "languages",
+      "title": {
+        "zh": "语言",
+        "en": "Languages"
+      },
+      "text": {
+        "zh": "IELTS 7.0（听力 7.5、阅读 8.5、写作 6.5、口语 6.0）；CET-6 600；CET-4 655",
+        "en": "IELTS 7.0 (L 7.5, R 8.5, W 6.5, S 6.0); CET-6 600; CET-4 655"
+      }
+    }
+  ],
+  "honors": {
+    "zh": [
+      "武汉大学乙等奖学金、国家励志奖学金（2022—2023 学年）；优秀学生干部（2024—2025 学年）",
+      "“外研社·国才杯·理解当代中国”英语组短视频大赛武汉大学校赛金奖"
+    ],
+    "en": [
+      "Wuhan University: Second-Class Scholarship and National Encouragement Scholarship (2022–2023); Outstanding Student Leader (2024–2025)",
+      "Gold Award, Wuhan University round of the FLTRP·ETIC “Understanding Contemporary China” English short-video competition"
+    ]
+  },
+  "campus_experience": [
+    {
+      "id": "campus-photography",
+      "title": {"zh": "党宣部记者团 · 摄影部副部长", "en": "Deputy Head of Photography · Publicity Office Student Reporters' Group"},
+      "organization": {"zh": "", "en": ""},
+      "period": {"zh": "2024.09—2025.09", "en": "Sep 2024–Sep 2025"},
+      "bullets": {
+        "zh": [
+          "统筹校级典礼与会议拍摄的人力安排和任务分发，建立从前期拍摄到后期交付的标准化工作流",
+          "推动视觉作品在校级官媒矩阵发布；参与的专题内容获评“2023—2024 年度中国青年报社卓越影响力校园新闻专题作品”"
+        ],
+        "en": [
+          "Coordinated staffing and assignments for university ceremonies and meetings, establishing a standardized workflow from photography to delivery",
+          "Supported publication of visual work through university media; contributed to a feature recognized by China Youth Daily as an influential campus news feature for 2023–2024"
+        ]
+      }
+    },
+    {
+      "id": "campus-club-design",
+      "title": {"zh": "自强劳动社／长跑协会 · 宣传部部长", "en": "Head of Publicity · Ziqiang Labor Society / Long-distance Running Association"},
+      "organization": {"zh": "", "en": ""},
+      "period": {"zh": "2023.09—2024.09", "en": "Sep 2023–Sep 2024"},
+      "bullets": {
+        "zh": [
+          "独立完成社团 Logo 迭代、宣传海报与物料设计，统一对外视觉与宣传调性",
+          "为社团招新与活动宣传提供视觉支持，保持不同宣传材料的风格一致，降低后续内容制作门槛"
+        ],
+        "en": [
+          "Independently iterated club logos and designed posters and publicity materials to establish a consistent visual identity",
+          "Provided visual support for recruitment and club activities, maintaining consistent publicity materials to simplify later content production"
+        ]
+      }
+    }
+  ],
+  "hobbies": [
+    {
+      "id": "photography",
+      "title": {"zh": "摄影", "en": "Photography"},
+      "text": {"zh": "东湖の秋", "en": "Autumn at East Lake"},
+      "image": "/assets/images/hobby-photography.jpg",
+      "image_width": 1600,
+      "image_height": 1067,
+      "image_alt": {"zh": "我拍摄的东湖秋景，阳光穿过金黄与绿色的树叶", "en": "My photograph of autumn at East Lake, with sunlight through golden and green leaves"}
+    },
+    {
+      "id": "games",
+      "title": {"zh": "单机游戏", "en": "Single-player games"},
+      "text": {"zh": "玩单机，也做游戏原型 · 我的游戏桌面", "en": "Playing solo and building game prototypes · My gaming desk"},
+      "image": "/assets/images/hobby-games.jpg",
+      "image_width": 1600,
+      "image_height": 1067,
+      "image_alt": {"zh": "我的游戏桌面照片，手柄、食物与背景中的游戏屏幕", "en": "My gaming desk photograph, with a controller, food and a game on the screen behind"}
+    },
+    {
+      "id": "cycling",
+      "title": {"zh": "骑行", "en": "Cycling"},
+      "text": {"zh": "沿途看风景 · 湖边的自行车", "en": "Taking in the scenery along the way · A bicycle by the lake"},
+      "image": "/assets/images/hobby-cycling.jpg",
+      "image_width": 1600,
+      "image_height": 1067,
+      "image_alt": {"zh": "我拍摄的湖边自行车，树影与湖面构成背景", "en": "My photograph of a bicycle by the lake, framed by trees and the water"}
+    },
+    {
+      "id": "fitness",
+      "title": {"zh": "健身", "en": "Fitness"},
+      "text": {"zh": "给运动留一点时间 · 操场夜景", "en": "Making time for movement · The sports field at night"},
+      "image": "/assets/images/hobby-fitness.jpg",
+      "image_width": 1600,
+      "image_height": 1067,
+      "image_alt": {"zh": "我拍摄的操场夜景，低视角的跑道与远处的运动人群", "en": "My nighttime sports-field photograph, with a low view of the track and people in the distance"}
+    }
+  ],
+  "other_experience": {
+    "zh": [
+      "新知陪伴：线上带教与内容策划，兼职（2026.07—至今）",
+      "武汉大学人民医院精神病科：毕业实习（2025 年夏）"
+    ],
+    "en": [
+      "Xinzhi Peiban: online mentoring and content planning, part-time (Jul 2026–Present)",
+      "Psychiatry placement, Renmin Hospital of Wuhan University (Summer 2025)"
+    ]
+  }
+}

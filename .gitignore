@@ -1,3 +1,14 @@
 _site/
 push.sh
 .DS_Store
+.local/
+.hallmark/
+.openai/
+dist/
+.bundle/
+vendor/
+node_modules/
+.jekyll-cache/
+.sass-cache/
+files/cv-*.pdf
+__pycache__/

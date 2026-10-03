@@ -6,10 +6,12 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-title                    : "Lorem ipsum"
-description              : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ornare aliquet ipsum, ac tempus justo dapibus sit amet. "
-repository               : "RayeRen/acad-homepage.github.io"
-google_scholar_stats_use_cdn : true
+title                    : "王鑫 · Xin Wang"
+description              : "王鑫的研究与作品：情绪调节、自我概念、心理测量，以及软件与游戏原型。"
+url                      : "https://sumingwang233.github.io"
+baseurl                  : ""
+repository               : "sumingwang233/sumingwang233.github.io"
+google_scholar_stats_use_cdn : false
 
 # google analytics
 google_analytics_id      :  # get google_analytics_id from https://analytics.google.com/analytics/
@@ -21,14 +23,14 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 
 # Site Author
 author:
-  name             : "Lorem ipsum"
-  avatar           : "images/android-chrome-512x512.png"
-  bio              : "Lorem ipsum College"
-  location         : "Beijing, China"
+  name             : "Xin Wang"
+  avatar           :
+  bio              : "Psychology · Research & Prototypes"
+  location         :
   employer         :
   pubmed           : 
-  googlescholar    : "https://scholar.google.com/citations?user=YOUR_GOOGLE_SCHOLAR_ID"
-  email            : "Lorem@ipsum.com"
+  googlescholar    :
+  email            : "sumingwang@qq.com"
   researchgate     :  # e.g., "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
@@ -37,7 +39,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : # e.g., "github username"
+  github           : "sumingwang233"
   google_plus      :
   keybase          :
   instagram        :
@@ -65,6 +67,26 @@ include:
   - _pages
   - files
 exclude:
+  - .local
+  - .hallmark
+  - .openai
+  - dist
+  - AGENTS.md
+  - scripts
+  - package-lock.json
+  - Gemfile.lock
+  - CONTRIBUTING.md
+  - _pages/category-archive.html
+  - _pages/page-archive.html
+  - _pages/tag-archive.html
+  - _pages/year-archive.html
+  - _posts
+  - _portfolio
+  - _publications
+  - _teaching
+  - talkmap
+  - talkmap.ipynb
+  - run_server.sh
   - docs
   - google_scholar_crawler
   - "*.sublime-project"
@@ -80,6 +102,8 @@ exclude:
   - Gruntfile.js
   - LICENSE
   - README
+  - README.md
+  - assets/README.md
   - Rakefile
   - assets/js/_main.js
   - assets/js/plugins
@@ -141,10 +165,7 @@ timezone: Asia/Shanghai # http://en.wikipedia.org/wiki/List_of_tz_database_time_
 
 # Plugins
 plugins:
-  - jekyll-paginate
   - jekyll-sitemap
-  - jekyll-gist
-  - jekyll-feed
   - jekyll-redirect-from
 # mimic GitHub Pages with --safe
 whitelist:

@@ -1,0 +1,13 @@
+{% assign lang = page.lang | default: 'zh' %}{% assign p = site.data.profile %}{% assign ui = site.data.interface[lang] %}
+<article class="cv-document">
+  <header class="cv-heading"><h1>{{ p.person.name[lang] }} <span>{% if lang == 'zh' %}Xin Wang{% else %}王鑫{% endif %}</span></h1><p>{{ p.person.role[lang] }}</p><p><a href="mailto:{{ p.contact.email }}">{{ p.contact.email }}</a> · <a href="{{ p.contact.github }}">github.com/sumingwang233</a></p></header>
+  <section class="cv-section"><h2>{{ ui.research_interests }}</h2><p>{{ p.person.interests[lang] }}</p></section>
+  <section class="cv-section"><h2>{{ ui.education_heading }}</h2>{% for item in p.education %}{% include academic-entry.html item=item %}{% endfor %}</section>
+  <section class="cv-section"><h2>{{ ui.publications_heading }}</h2>{% include academic-publication.html %}</section>
+  <section class="cv-section"><h2>{{ ui.research_heading }}</h2>{% for item in p.research %}{% include academic-entry.html item=item %}{% endfor %}</section>
+  <section class="cv-section"><h2>{{ ui.projects_heading }}</h2>{% for item in p.projects %}{% include academic-entry.html item=item %}{% endfor %}{% for item in p.evaluation %}{% include academic-entry.html item=item %}{% endfor %}<ul class="plain-list">{% for item in p.training[lang] %}<li>{{ item }}</li>{% endfor %}</ul></section>
+  <section class="cv-section"><h2>{{ ui.skills_heading }}</h2>{% for item in p.skills %}<p><strong>{{ item.title[lang] }}：</strong>{{ item.text[lang] }}</p>{% endfor %}</section>
+  <section class="cv-section"><h2>{{ ui.honors_heading }}</h2><ul class="plain-list">{% for item in p.honors[lang] %}<li>{{ item }}</li>{% endfor %}</ul></section>
+  <section class="cv-section"><h2>{{ ui.other_heading }}</h2><ul class="plain-list">{% for item in p.other_experience[lang] %}<li>{{ item }}</li>{% endfor %}</ul></section>
+  <p class="cv-endnote">{{ ui.cv_notes }} · {{ ui.updated }} {{ p.updated }}</p>
+</article>

@@ -1,0 +1,8 @@
+{
+  "name": "xin-wang-academic-homepage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PDF generation and browser verification for a Jekyll academic homepage",
+  "scripts": {"verify": "node scripts/browser-check.cjs"},
+  "devDependencies": {"playwright": "1.62.1"}
+}

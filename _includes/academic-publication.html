@@ -1,0 +1,6 @@
+{% for paper in p.publications %}<article class="publication" id="{{ paper.id }}">
+  <p class="entry-meta">{{ paper.status[lang] }}</p><h3>{{ paper.title }}</h3>
+  <p class="authors">{% for author in paper.authors %}{% if author == p.person.name.en %}<strong>{{ author }}</strong>{% else %}{{ author }}{% endif %}{% unless forloop.last %}, {% endunless %}{% endfor %}</p>
+  <p class="venue"><cite>{{ paper.venue }}</cite>, {{ paper.year }}</p>
+  <a class="text-link" href="https://doi.org/{{ paper.doi }}" rel="noopener">{% if page.cv %}doi: {{ paper.doi }}{% else %}{{ ui.doi }}{% endif %}</a>
+</article>{% endfor %}

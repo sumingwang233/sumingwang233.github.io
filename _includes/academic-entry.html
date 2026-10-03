@@ -1,0 +1,12 @@
+<article class="entry{% unless page.cv %}{% if include.item.presentation %} entry--{{ include.item.presentation }}{% endif %}{% endunless %}" id="{{ include.item.id }}">
+  <div class="entry-body">
+  <div class="entry-heading"><h3>{{ include.item.title[lang] }}</h3><span class="period">{{ include.item.period[lang] }}</span></div>
+  {% if include.item.organization[lang] != empty %}<p class="entry-meta">{{ include.item.organization[lang] }}</p>{% endif %}
+  {% if include.item.status %}<p class="research-status">{{ include.item.status[lang] }}</p>{% endif %}
+  <ul class="entry-points">{% for bullet in include.item.bullets[lang] %}<li>{{ bullet }}</li>{% endfor %}</ul>
+  {% unless page.cv %}{% if include.item.methods %}<p class="method-list">{% for method in include.item.methods %}<span>{{ method }}</span>{% endfor %}</p>{% endif %}{% endunless %}
+  {% if include.item.url %}<a class="text-link" href="{{ include.item.url }}" rel="noopener">{{ ui.repository }}</a>{% endif %}
+  </div>
+  {% unless page.cv %}{% if include.item.architecture %}{% include academic-architecture.html item=include.item %}{% elsif include.item.diagram == 'serial-mediation' or include.item.diagram == 'evaluation' %}{% include academic-mediation.html item=include.item %}{% elsif include.item.image %}<figure class="project-figure"><a class="figure-link" href="{{ include.item.image | relative_url }}" target="_blank" rel="noopener" aria-label="{{ ui.full_image }} · {{ include.item.title[lang] }}"><img src="{{ include.item.image | relative_url }}" width="{{ include.item.image_width }}" height="{{ include.item.image_height }}" loading="lazy" alt="{{ include.item.image_alt[lang] | escape }}"></a>{% if include.item.image_caption[lang] != empty %}<figcaption>{{ include.item.image_caption[lang] }}</figcaption>{% endif %}</figure>{% endif %}{% endunless %}
+  {% unless page.cv %}{% if include.item.image_pending %}{% assign figure_label = include.item.title[lang] %}{% include academic-placeholder.html label=figure_label %}{% endif %}{% endunless %}
+</article>

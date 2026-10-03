@@ -1,0 +1,21 @@
+<section class="document-section" id="hobbies" aria-labelledby="hobbies-title">
+  <h2 id="hobbies-title">{{ ui.hobbies_heading }}</h2>
+  <p class="hobbies-intro">{{ ui.hobbies_intro }}</p>
+  <div class="hobbies-carousel" role="region" aria-roledescription="{{ ui.carousel }}" aria-label="{{ ui.hobbies_heading }}">
+  <div class="hobbies-track" id="hobbies-track" tabindex="0" aria-label="{{ ui.hobbies_keyboard }}">
+    {% for hobby in p.hobbies %}
+    <figure class="hobby" role="group" aria-roledescription="{{ ui.slide }}" aria-label="{{ forloop.index }} / {{ p.hobbies.size }} · {{ hobby.title[lang] }}" data-title="{{ hobby.title[lang] | escape }}">
+      <a class="figure-link" href="{{ hobby.image | relative_url }}" target="_blank" rel="noopener" aria-label="{{ ui.full_image }} · {{ hobby.title[lang] }}"><img src="{{ hobby.image | relative_url }}" width="{{ hobby.image_width }}" height="{{ hobby.image_height }}" loading="lazy" alt="{{ hobby.image_alt[lang] | escape }}"></a>
+      <figcaption><h3>{{ hobby.title[lang] }}</h3><p>{{ hobby.text[lang] }}</p></figcaption>
+    </figure>
+    {% endfor %}
+  </div>
+  <div class="hobby-controls" hidden>
+    <button type="button" data-direction="-1" aria-controls="hobbies-track" aria-label="{{ ui.previous_slide }}">←</button>
+    <div class="hobby-dots" role="group" aria-label="{{ ui.choose_slide }}">{% for hobby in p.hobbies %}<button type="button" data-slide="{{ forloop.index0 }}" aria-controls="hobbies-track" aria-label="{{ hobby.title[lang] }}"><span aria-hidden="true"></span></button>{% endfor %}</div>
+    <button type="button" data-direction="1" aria-controls="hobbies-track" aria-label="{{ ui.next_slide }}">→</button>
+    <p class="hobby-position" aria-live="polite" aria-atomic="true"></p>
+  </div>
+  <p class="hobbies-hint">{{ ui.hobbies_swipe }}</p>
+  </div>
+</section>
