@@ -1,0 +1,56 @@
+# Academic homepage maintenance
+
+This is Xin Wang / 王鑫’s public bilingual academic and technical homepage, based on RayeRen/acad-homepage.github.io (MIT). Follow the user’s latest instructions and the privacy boundary below.
+
+## Start here
+
+Latest avatar preference (2026-10-03): use the owner-supplied original lifestyle photograph in a circular frame, via `portrait-lifestyle.jpg`. The web export preserves the photograph's appearance and strips source metadata; CSS centers and crops it without modifying the original. This supersedes all earlier illustrated-portrait preferences below.
+
+Latest browser review (2026-10-03): the homepage starts with introduction, education and research skills/languages, then research. Education has no illustration. The campus photography role is Deputy Head / 摄影部副部长; omit duplicate university metadata from both campus entries. The short-video honor omits the year and team-entry title. The photography caption is “东湖の秋”; keep this kana in the font subsets. Closing contact has a localized “Contact me” prefix and no repeated tagline. Interests use 720ms interruptible easing with subtle photo/heading/caption transitions, native touch scrolling, keyboard controls and immediate reduced-motion navigation. These explicit corrections supersede conflicting historical descriptions below.
+
+- `_data/profile.json` is the only public facts source. Shared fields include dates, author order, DOI, URLs and IDs; localized text uses `zh` / `en`. `_data/interface.json` holds labels, not career facts.
+- Four routes: `/` (Chinese), `/en/`, `/cv/`, `/en/cv/`. All use `_layouts/academic.html` and shared includes. The browser build generates `_site/files/cv-zh.pdf` and `cv-en.pdf` from those same facts.
+- `tokens.css` holds the design system. Keep the current warm bookish layout, typography and green accent when updating content. A content update is not a redesign.
+- The shared layout uses a bold hair-and-glasses favicon inspired by the owner's manga portrait. Keep it legible at 16/32px; the detailed photographer/skyline logo and old W icon are retained unused assets.
+
+## Trigger and sources
+
+Only inspect and maintain the website when the human asks in this chat to “检查”, check the CV, or update the website. There is no scheduled task, watcher, cloud agent or paid API integration.
+
+1. Run `python scripts/inspect_sources.py`. By default it reads `../学术CV/中文_general.docx` and `../学术CV/EN_general.docx`. Additional files may be read only when the user specifies them. Do not scan personal works, certificates, interviews or enterprise documents automatically.
+2. The initial facts were confirmed against the 2026-10-02 general CV: public email `sumingwang@qq.com`; research assistant start April 2023. Earlier review notes are historical context, not the current profile.
+3. Compare current source text with `.local/reviewed-sources.json`, which is private and gitignored. If nothing changed, report that and do not create a commit or PR. Formatting-only changes do not count.
+4. Apply the human’s explicit corrections first. When both language versions changed and disagree, list the conflicting fields and ask. If only one source changed, propose that change in both languages rather than letting an unchanged translation silently overwrite it.
+5. Keep stable entry IDs and author order. Distinguish participation from leadership, team sample counts from personal counts, and pending data collection from completed work. Never infer a publication, degree type, results or completion solely from a date passing.
+
+## Public boundary
+
+Allowed: approved career facts, the confirmed email, existing public GitHub / DOI links, and publicly released screenshots. Do not publish phone numbers, original DOCX/PDF sources, certificates, ID/student numbers, private source paths, interview records, research participant data or enterprise internals. Never add an unverified Scholar, ORCID or project link.
+
+The 2026-10-02 browser review explicitly authorized the supplied portrait, emotion-regulation diagram, relevant project figures and corresponding project-folder research. Preserve these editorial corrections when a later CV check runs: no terminal sentence periods; date-only publication label; Software development heading; revised skills; one CV link per homepage language. Use approved assets, list missing illustrations, and never substitute private learner or enterprise screenshots. The Godot prototype uses GDScript; do not infer C# there from the owner’s general skills. Original raster illustration text remains unchanged. CV PDFs remain compact text versions; web figures stay on the homepages.
+
+The latest design review uses a modest manga line-art portrait derived from the supplied photograph, with bare ears and no commemorative circular frame. The education figure uses the supplied campus night photograph without a caption. The AI evaluation figure summarizes the approved general CV's task design, expert alignment and layered evaluation; do not introduce enterprise examples or performance claims. Other-experience figures were removed; retain those textual experiences. Keep only the PROM and fnOS image placeholders for later work. Preserve the shortened figure captions, academic CV label and personal academic homepage tagline. The thesis figure is a theoretical model transcribed from the owner’s original defense presentation; do not add result coefficients or treat its arrows as causal evidence.
+
+The owner approved a homepage-only interests section with single-player games, photography, cycling and fitness, illustrated by their own photo-backup images. Retain those four photographs as metadata-free web derivatives, with source provenance kept privately in `.local/`. Do not scan other backup folders during routine CV maintenance. Research illustrations use alternating side-by-side layouts from 60rem; narrower views stack in reading order. Complex software architecture figures remain full width. The page background uses a stronger rough blank-paper texture; retain readable contrast and omit texture in print. Interests do not expand the academic CV PDFs.
+
+`.local/`, `.bundle/`, `vendor/` and `node_modules/` must remain gitignored and excluded from Jekyll. Review artifacts contain only public screenshots and generated public CVs. Never upload raw source text, source hashes or source diffs to public PRs or workflow artifacts.
+
+## Update and verification
+
+The 2026-10-03 follow-up uses a colored manga line-art portrait based on the owner's later lifestyle photograph, keeping the smile, glasses, coat and camera. The four hobbies share one native scroll-snap carousel with touch, buttons and keyboard controls, no autoplay and a scrolling fallback without JavaScript. The homepage has an additional Chinese job-resume download (`files/job-resume-public.pdf`); only the redacted derivative is public. The original phone and private email are actually removed from PDF content, the approved public email is retained, and metadata, hidden objects, attachments and links are checked. Never replace this file with the original source. New campus experiences appear on both homepages. The owner explicitly chose to retain the academic CV's checked PROM counts (283 patients, 100 family members and 17 experts), adding methods without importing the job resume's conflicting counts or new psychometric claims. The downloadable job resume preserves its supplied career text; its sanitization does not establish agreement between different source documents.
+
+The 2026-10-03 review makes the director-assistant role the homepage H1, with “Be Water, my friend” as its subtitle. The owner explicitly confirmed graduation from Wuhan University's psychology program and removed the GPA cutoff label. Keep the full university/school/degree education title and omit its duplicate metadata line. Software projects, AI evaluation and training share the Software development & AI practice section on the homepage and CV. Remove the old research/project section introductions. The expanded GameLibrary figure describes current source, not a stable-release feature guarantee; the cooking prototype uses an architecture figure instead of a gameplay image. Architecture features and their implementations must be checked against actual project code before updates.
+
+1. Update `_data/profile.json` in both languages; use the current Asia/Shanghai date for `updated` only when public content changes.
+2. Run `python scripts/validate.py`.
+3. Install build tools as needed in the project or use an existing runtime. Run `python scripts/prepare_assets.py` after text changes so the self-hosted CJK font subsets include new characters. This uses public Google Fonts sources; keep the approved, checked-in image assets intact.
+4. Run `bundle exec jekyll build --strict_front_matter`, `npm run verify`, then `python scripts/validate.py --site _site`.
+5. Inspect desktop/mobile screenshots in `.local/previews/` and both generated CV PDFs. Check public data and PDF text/metadata; retain the original local CV unchanged.
+6. Present a short field-level summary and concrete preview for public-content approval before pushing new content. Public PRs are public too. Then use a dedicated branch and one review PR; attach it to this chat. Do not merge or deploy without the human’s approval. Do not force-push or overwrite other local work.
+7. Run `python scripts/inspect_sources.py --record` only after the proposed public data has been reviewed. Keep the pending PR reference in `.local/` so repeated checks reuse an existing proposal instead of creating duplicates. A recorded source baseline is not proof of deployment.
+
+## Publishing
+
+Sites publication is managed separately from this GitHub Pages source. Its identity is retained locally in `.openai/hosting.json`, and its publication checkout, runtime notes and deployment record are private under `.local/`. Preserve the selected Site and audience when explicitly requested; never publish those local records or credentials in this repository.
+
+The user requested one public fork named `sumingwang233/sumingwang233.github.io`. Keep upstream licensing. CI validates every PR; only approved changes merged into `main` deploy through GitHub Pages. Keep the previous deployment when a build fails; restore via a corrective commit or revert. Do not enable tracking or Scholar crawling without a separate request.
