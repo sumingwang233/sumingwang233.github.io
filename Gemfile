@@ -10,6 +10,7 @@ source "https://rubygems.org"
 # Happy Jekylling!
 
 gem "jekyll", "~> 3.10"
+gem "kramdown-parser-gfm", "~> 1.1"
 gem "webrick", "~> 1.9"
 
 # If you want to use Jekyll native, uncomment the line below.

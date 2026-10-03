@@ -42,6 +42,8 @@ GEM
       listen (~> 3.0)
     kramdown (2.5.2)
       rexml (>= 3.4.4)
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     liquid (4.0.4)
     listen (3.10.1)
       logger
@@ -73,6 +75,7 @@ DEPENDENCIES
   jekyll (~> 3.10)
   jekyll-redirect-from
   jekyll-sitemap
+  kramdown-parser-gfm (~> 1.1)
   webrick (~> 1.9)
 
 BUNDLED WITH
