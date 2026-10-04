@@ -20,7 +20,7 @@
   <link rel="preload" href="{{ '/assets/fonts/noto-sans-sc.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ '/tokens.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/academic.css' | relative_url }}">
-  {% unless page.cv %}<script src="{{ '/assets/js/hobbies.js' | relative_url }}" defer></script><script src="{{ '/assets/js/reveal.js' | relative_url }}" defer></script>{% endunless %}
+  {% unless page.cv %}<script src="{{ '/assets/js/hobbies.js' | relative_url }}" defer></script><script src="{{ '/assets/js/reveal.js' | relative_url }}" defer></script><script src="{{ '/assets/js/images.js' | relative_url }}" defer></script>{% endunless %}
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":{{ p.person.name.en | jsonify }},"alternateName":{{ p.person.name.zh | jsonify }},"url":{{ site.url | jsonify }},"sameAs":[{{ p.contact.github | jsonify }}],"email":{{ p.contact.email | prepend: 'mailto:' | jsonify }}}</script>
 </head>
 <body{% if page.cv %} class="cv-view"{% endif %}>
@@ -37,6 +37,7 @@
   </header>
   {% endif %}
   <main id="content" tabindex="-1">{{ content }}</main>
+  {% unless page.cv %}{% include academic-image-viewer.html %}{% endunless %}
   {% unless page.cv %}<footer class="footer-academic"><span>© {{ site.time | date: '%Y' }} {{ p.person.name[lang] }}</span><span>{{ ui.updated }} {{ p.updated }}</span><a href="{{ p.contact.github }}" rel="noopener">GitHub ↗</a></footer>{% endunless %}
 </body>
 </html>

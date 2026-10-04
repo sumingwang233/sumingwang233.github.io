@@ -78,7 +78,7 @@ def validate_profile(profile):
                 assert {'zh', 'en'} <= set(node), f'{item["id"]}: figure node missing translation'
                 if 'detail' in node:
                     assert set(node['detail']) == {'zh', 'en'}
-            for key in ['title', 'organization', 'period', 'status', 'text', 'image_alt', 'image_caption']:
+            for key in ['title', 'organization', 'supervisor', 'period', 'status', 'text', 'image_alt', 'image_caption']:
                 if key in item:
                     assert set(item[key]) == {'zh', 'en'}, f'{item["id"]}: {key} missing translation'
     for paper in profile['publications']:
@@ -122,7 +122,7 @@ def check_site(site, profile):
             assert profile['contact']['github'] in parser.urls, f'{route}: missing profile GitHub link'
         for group in ['education', 'research', 'projects', 'evaluation', 'skills']:
             for item in profile[group]:
-                expected.extend(item[key][lang] for key in ['title', 'organization', 'period', 'status', 'text'] if key in item)
+                expected.extend(item[key][lang] for key in ['title', 'organization', 'supervisor', 'period', 'status', 'text'] if key in item)
                 expected.extend(item.get('bullets', {}).get(lang, []))
         for group in ['training', 'honors', 'other_experience']:
             expected.extend(profile[group][lang])

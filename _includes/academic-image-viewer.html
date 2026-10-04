@@ -1,0 +1,17 @@
+<dialog id="image-viewer" class="image-viewer" aria-label="{{ ui.full_image }}" aria-describedby="image-viewer-caption">
+  <div class="image-viewer-toolbar">
+    <p id="image-viewer-caption"></p>
+    <div class="image-viewer-controls" role="group" aria-label="{{ ui.image_zoom_controls }}">
+      <button type="button" data-zoom="-1" aria-label="{{ ui.image_zoom_out }}" title="{{ ui.image_zoom_out }}">−</button>
+      <output class="image-viewer-scale" aria-live="polite" aria-atomic="true">100%</output>
+      <button type="button" data-zoom="1" aria-label="{{ ui.image_zoom_in }}" title="{{ ui.image_zoom_in }}">＋</button>
+      <button type="button" data-reset>{{ ui.image_reset }}</button>
+    </div>
+    <button class="image-viewer-close" type="button" aria-label="{{ ui.image_close }}" title="{{ ui.image_close }}" autofocus>×</button>
+  </div>
+  <div class="image-viewer-stage" tabindex="0" aria-label="{{ ui.image_zoom_controls }}">
+    <img src="{{ p.hobbies.first.image | relative_url }}" alt="" loading="lazy" draggable="false">
+    <p class="image-viewer-error" hidden>{{ ui.image_error }}</p>
+  </div>
+  <p class="image-viewer-hint">{{ ui.image_zoom_hint }}</p>
+</dialog>
