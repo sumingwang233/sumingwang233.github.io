@@ -55,6 +55,8 @@ The 2026-10-03 review makes the director-assistant role the homepage H1, with �
 
 ## Publishing
 
+The latest 2026-10-04 follow-up simplifies the role to “武汉大学心理健康与教育中心助理” (with the English role synchronized), removes the intro email link and the separate research-status sentence, and moves the circular original portrait to the banner's left edge aligned with the document. Keep only the email address as the closing mailto link; its “联系我：” label is ordinary inherited-color text. GameLibrary uses its public 64px application icon after the homepage title, with no icon in CVs. The carousel position is visually clipped while remaining a polite screen-reader announcement; keep the controls and animation. These annotations supersede earlier wording and positioning instructions.
+
 Sites publication is managed separately from this GitHub Pages source. Its identity is retained locally in `.openai/hosting.json`, and its publication checkout, runtime notes and deployment record are private under `.local/`. Preserve the selected Site and audience when explicitly requested; never publish those local records or credentials in this repository.
 
 The user requested one public fork named `sumingwang233/sumingwang233.github.io`. Keep upstream licensing. CI validates every PR; only approved changes merged into `main` deploy through GitHub Pages. Keep the previous deployment when a build fails; restore via a corrective commit or revert. Do not enable tracking or Scholar crawling without a separate request.
