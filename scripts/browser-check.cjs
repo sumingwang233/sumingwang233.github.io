@@ -161,8 +161,17 @@ const server = http.createServer((req, res) => {
       await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       await target.evaluate(e => window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - 144, behavior: 'instant' }));
       await page.waitForFunction(() => !document.querySelector('#emotion-self-verification').classList.contains('reveal--pending'));
-      await page.waitForTimeout(160);
-      const opacity = await target.evaluate(e => Number(getComputedStyle(e).opacity));
+      const opacity = await target.evaluate(async e => {
+        const animation = e.getAnimations().find(a => a.animationName === 'content-reveal');
+        if (!animation) throw new Error('Scroll reveal did not create its CSS animation');
+        await animation.ready;
+        animation.pause();
+        const timing = animation.effect.getTiming();
+        animation.currentTime = timing.delay + timing.duration / 4;
+        const value = Number(getComputedStyle(e).opacity);
+        animation.finish();
+        return value;
+      });
       assert(opacity > 0 && opacity < 1, `${route}: missing intermediate reveal (${opacity})`);
       await page.waitForFunction(() => getComputedStyle(document.querySelector('#emotion-self-verification')).opacity === '1');
       await page.evaluate(() => window.scrollTo(0, 0));
