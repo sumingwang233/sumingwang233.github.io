@@ -64,6 +64,13 @@ const server = http.createServer((req, res) => {
         assert(!result.overflow && !result.wrapped.length && !result.clipped.length && result.images && result.serif && result.sans, `${route} @ ${width}: ${JSON.stringify(result)}`);
         if (route === '/' || route === '/en/') {
           const lang = route === '/' ? 'zh' : 'en';
+          assert.equal(await page.locator('.contact-links a').count(), 2);
+          assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
+          assert.equal(await page.locator('#intro-title').innerText(), profile.person.role[lang]);
+          assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
+          assert(await page.locator('#gamelibrary .application-icon').evaluate(e => e.naturalWidth === 64 && e.getBoundingClientRect().height > 20 && e.getBoundingClientRect().height < 40));
+          assert(await page.locator('.closing-contact > span').evaluate(e => !e.closest('a') && getComputedStyle(e).color === getComputedStyle(e.parentElement).color && getComputedStyle(e).textDecorationLine === 'none'));
+          assert(await page.locator('.hobby-position').evaluate(e => e.getAttribute('aria-live') === 'polite' && getComputedStyle(e).clipPath === 'inset(50%)' && e.getBoundingClientRect().width === 1));
           if (width === 375 || width === 1440) {
             await revealForScreenshot(page);
             await page.screenshot({ path: path.join(root, '.local', 'previews', `${lang}-${width}.png`), fullPage: true });
@@ -79,7 +86,7 @@ const server = http.createServer((req, res) => {
     }
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto(base + '/');
-    assert.equal(await page.locator('.contact-links a').count(), 3);
+    assert.equal(await page.locator('.contact-links a').count(), 2);
     assert.equal(await page.locator('.contact-links a[download]').first().innerText(), '学术简历');
     assert.equal(await page.locator('.contact-links a').last().innerText(), '求职简历');
     const jobResume = await page.request.get(base + '/files/job-resume-public.pdf');
@@ -93,16 +100,17 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#academic-interests p').innerText(), profile.person.interests.zh);
     assert.equal(await page.locator('#skills-title').innerText(), '技能 ＆ 语言');
     assert.equal(await page.locator('#skills dd').first().innerText(), 'Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）');
-    assert.equal(await page.locator('.contact-primary').innerText(), '邮件联系 ↗');
+    assert.equal(await page.locator('.intro a[href^="mailto:"]').count(), 0);
     assert.equal(await page.locator('#honors li').nth(1).innerText(), '“外研社·国才杯·理解当代中国”英语组短视频大赛武汉大学校赛金奖');
     assert.equal(await page.locator('.closing-contact p').count(), 0);
-    assert.equal(await page.locator('.closing-contact a').textContent(), '联系我： sumingwang@qq.com ↗');
+    assert.equal(await page.locator('.closing-contact > span').textContent(), '联系我：');
+    assert.equal(await page.locator('.closing-contact a').textContent(), 'sumingwang@qq.com ↗');
     assert.equal(await page.locator('#cleft-qualitative-2026 > .entry-meta').innerText(), '2026.08.19');
     assert.equal(await page.locator('#projects-title').innerText(), '软件开发 ＆ AI 实践');
-    assert.equal(await page.locator('h1#intro-title').innerText(), '武汉大学心理健康与教育中心（简称大心）助理');
+    assert.equal(await page.locator('h1#intro-title').innerText(), '武汉大学心理健康与教育中心助理');
     assert.equal(await page.locator('#emotion-self-verification .entry-supervisor').innerText(), '指导教师：马鑫');
     assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => getComputedStyle(e).fontWeight === '700' && Math.abs(e.getBoundingClientRect().right - e.parentElement.getBoundingClientRect().right) < 1));
-    assert.equal(await page.locator('#emotion-self-verification .research-status').innerText(), '程序与材料预实验已完成，待正式数据采集');
+    assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('.section-intro, #evaluation').count(), 0);
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
@@ -136,7 +144,7 @@ const server = http.createServer((req, res) => {
       const r = e.getBoundingClientRect();
       return r.width === r.height && r.width <= 144 && r.width >= 96 && getComputedStyle(e).borderRadius === '50%';
     }));
-    assert(await page.locator('.portrait').evaluate(e => e.getBoundingClientRect().left > document.querySelector('.wordmark').getBoundingClientRect().right));
+    assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
     assert.deepEqual(await page.locator('h1,h2,h3,p,li,dd').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
     const texture = await page.evaluate(() => getComputedStyle(document.body, '::before').backgroundImage);
     assert(texture.includes('book-paper-rough.png'));

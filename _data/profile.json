@@ -7,8 +7,8 @@
       "en": "Xin Wang"
     },
     "role": {
-      "zh": "武汉大学心理健康与教育中心（简称大心）助理",
-      "en": "Assistant, Mental Health and Education Center (Daxin), Wuhan University"
+      "zh": "武汉大学心理健康与教育中心助理",
+      "en": "Assistant, Mental Health and Education Center, Wuhan University"
     },
     "tagline": {
       "zh": "个人主页",
@@ -77,10 +77,6 @@
       "period": {
         "zh": "2023.04—至今",
         "en": "Apr 2023–Present"
-      },
-      "status": {
-        "zh": "程序与材料预实验已完成，待正式数据采集",
-        "en": "Program and stimulus pilots complete; formal data collection pending"
       },
       "bullets": {
         "zh": [
