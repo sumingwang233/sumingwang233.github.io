@@ -1,4 +1,10 @@
 {% assign lang = page.lang | default: 'zh' %}{% assign p = site.data.profile %}{% assign ui = site.data.interface[lang] %}
+{% assign banner = p.hobbies | where: 'id', 'photography' | first %}
+<figure class="home-banner">
+  <img src="{{ banner.image | relative_url }}" width="{{ banner.image_width }}" height="{{ banner.image_height }}" alt="{{ banner.image_alt[lang] | escape }}" fetchpriority="high">
+  <span class="portrait"><img src="{{ '/assets/images/portrait-lifestyle.jpg' | relative_url }}" width="1200" height="800" alt="{{ p.person.name[lang] }}{% if lang == 'zh' %}的生活照{% else %} lifestyle photograph{% endif %}"></span>
+  <figcaption>{{ banner.text[lang] }}</figcaption>
+</figure>
 <div class="document">
   <section class="intro" aria-labelledby="intro-title"><h1 id="intro-title" class="role">{{ p.person.role[lang] }}</h1><p class="intro-subtitle">{{ p.person.lead[lang] }}</p><p class="intro-copy">{{ p.person.intro[lang] }}</p><p class="intro-copy">{{ p.person.interests[lang] }}</p><div class="contact-links"><a class="contact-primary" href="mailto:{{ p.contact.email }}">{{ ui.contact }} ↗</a><a href="{{ ui.cv_file | relative_url }}" download>{{ ui.cv_download }}</a><a href="{{ ui.job_resume_file | relative_url }}" download>{{ ui.job_resume_download }}</a></div></section>
   <section class="document-section" id="education" aria-labelledby="education-title"><h2 id="education-title">{{ ui.education_heading }}</h2>{% for item in p.education %}{% include academic-entry.html item=item %}{% endfor %}</section>

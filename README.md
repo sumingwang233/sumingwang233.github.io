@@ -14,6 +14,8 @@
 
 主页提供学术简历与求职简历两个下载入口。`files/job-resume-public.pdf` 是用户提供的求职简历的脱敏副本：手机号与私人邮箱已从 PDF 中实际删除，保留批准公开的邮箱，文档元数据及附件已清理。原文件不进入仓库；更换副本时必须重新执行脱敏与文本、底层对象、元数据检查。兴趣版面使用原生横向滚动与 CSS 滚动吸附，支持触摸、按钮和键盘操作，不自动播放。
 
+主页采用紧凑置顶导航、本人摄影横幅和圆形生活照，保留旧书页纹理。桌面端教育、技能与论文以标题/正文两列呈现，校园经历为双列；窄屏保持文档顺序。滚动淡入仅首次触发，图片缩放仅用于精细指针悬停；无 JavaScript、键盘聚焦、打印和减少动态效果模式保持正文可读，学术 CV 排版独立。
+
 ## 构建与预览
 
 使用 Ruby 3.3、Python 3.12 和 Node.js 24：
@@ -22,7 +24,7 @@
 bundle install
 npm ci
 npx playwright install chromium
-python -m pip install fonttools==4.66.1 brotli==1.2.0
+python -m pip install fonttools==4.66.1 brotli==1.2.0 PyMuPDF==1.27.2
 python scripts/prepare_assets.py
 python scripts/validate.py
 bundle exec jekyll build --strict_front_matter
@@ -31,6 +33,8 @@ python scripts/validate.py --site _site
 ```
 
 `npm run verify` 自动生成 `_site/files/cv-zh.pdf`、`cv-en.pdf`，检查手机与桌面宽度、字体、图片、语言切换与键盘导航，并将截图保存到本地 `.local/previews/`。
+
+`scripts/validate.py` 使用 PyMuPDF 检查求职简历的可读文本，拒绝手机号和未批准的邮箱，以及元数据、附件、链接、注释和表单字段；无法提取文本或加密的 PDF 也不能通过。构建前检查源副本，构建后再检查实际部署副本，隐私回归样例不使用真实个人信息。CI 审阅产物仅包含指定的公开页面截图和生成的学术 CV PDF。
 
 预览构建产物：`python -m http.server 4000 --directory _site`，访问 `http://localhost:4000/`。请先生成 PDF 再预览，以免下载链接缺失。
 

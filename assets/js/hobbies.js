@@ -18,6 +18,7 @@ if (carousel) {
     next.disabled = target === slides.length - 1;
   }
   function update() {
+    if (!track.clientWidth) return; // Hidden or detached tracks have no slide geometry.
     const current = Math.max(0, Math.min(slides.length - 1, Math.round(track.scrollLeft / track.clientWidth)));
     destination = current;
     show(current);

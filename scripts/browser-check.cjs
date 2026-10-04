@@ -6,6 +6,19 @@ const http = require('node:http');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
 const site = path.join(root, '_site');
+const profile = JSON.parse(fs.readFileSync(path.join(root, '_data', 'profile.json'), 'utf8'));
+async function revealForScreenshot(page) {
+  // Exercise native scroll reveals so a full-page preview includes the whole page.
+  await page.evaluate(async () => {
+    for (let top = 0; top < document.body.scrollHeight; top += innerHeight * 0.8) {
+      window.scrollTo({ top, behavior: 'instant' });
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  });
+  await page.waitForFunction(() => !document.querySelector('.reveal--pending'));
+  await page.waitForTimeout(700);
+}
 const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.woff2': 'font/woff2', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.pdf': 'application/pdf' };
 const server = http.createServer((req, res) => {
   let file = path.resolve(site, '.' + decodeURIComponent(new URL(req.url, 'http://local').pathname));
@@ -28,12 +41,16 @@ const server = http.createServer((req, res) => {
     for (const [lang, route] of [['zh', '/cv/'], ['en', '/en/cv/']]) {
       await page.goto(base + route);
       await page.evaluate(() => document.fonts.ready);
+      assert.equal(await page.locator('.cv-heading h1').innerText(), `${profile.person.name[lang]} ${profile.person.name[lang === 'zh' ? 'en' : 'zh']}`);
+      assert.equal(await page.locator('.cv-heading a').last().getAttribute('href'), profile.contact.github);
+      assert.equal(await page.locator('.cv-heading a').last().innerText(), profile.contact.github.replace(/^https:\/\//, ''));
       await page.pdf({ path: path.join(site, 'files', `cv-${lang}.pdf`), format: 'A4', printBackground: false, preferCSSPageSize: true, displayHeaderFooter: false });
     }
     for (const route of ['/', '/en/', '/cv/', '/en/cv/']) {
       for (const width of [320, 375, 414, 768, 1280, 1440, 1920]) {
         await page.setViewportSize({ width, height: width === 1280 ? 800 : 900 });
         await page.goto(base + route);
+        assert.equal(await page.locator('meta[name="author"]').getAttribute('content'), profile.person.name.en);
         await page.evaluate(() => document.fonts.ready);
         await page.evaluate(() => Promise.all([...document.images].map(image => { image.loading = 'eager'; return image.decode(); })));
         const result = await page.evaluate(() => {
@@ -41,13 +58,14 @@ const server = http.createServer((req, res) => {
             const range = document.createRange(); range.selectNodeContents(a);
             return new Set([...range.getClientRects()].map(r => Math.round(r.y))).size > 1;
           }).map(a => a.textContent);
-          const clipped = [...document.querySelectorAll('h1,h2,h3,p,li,img')].filter(e => { if (e.closest('.hobbies-track') || e.matches('.portrait img')) return false; const r = e.getBoundingClientRect(); return r.x < -1 || r.right > innerWidth + 1; }).map(e => e.textContent.slice(0,50));
+          const clipped = [...document.querySelectorAll('h1,h2,h3,p,li,img')].filter(e => { if (e.closest('.hobbies-track') || e.matches('.portrait img, .home-banner > img')) return false; const r = e.getBoundingClientRect(); return r.x < -1 || r.right > innerWidth + 1; }).map(e => e.textContent.slice(0,50));
           return { overflow: document.documentElement.scrollWidth > innerWidth, wrapped, clipped, images: [...document.images].every(i => i.complete && i.naturalWidth > 0), serif: document.fonts.check('600 16px "Noto Serif SC"'), sans: document.fonts.check('400 16px "Noto Sans SC"') };
         });
         assert(!result.overflow && !result.wrapped.length && !result.clipped.length && result.images && result.serif && result.sans, `${route} @ ${width}: ${JSON.stringify(result)}`);
         if (route === '/' || route === '/en/') {
           const lang = route === '/' ? 'zh' : 'en';
           if (width === 375 || width === 1440) {
+            await revealForScreenshot(page);
             await page.screenshot({ path: path.join(root, '.local', 'previews', `${lang}-${width}.png`), fullPage: true });
             await page.screenshot({ path: path.join(root, '.local', 'previews', `${lang}-${width}-fold.png`) });
           }
@@ -98,6 +116,11 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#whu-psychology figure, #other figure').count(), 0);
     assert.equal(await page.locator('#other .plain-list li').count(), 2);
     assert.equal(await page.locator('.masthead-meta > span').innerText(), '个人学术主页');
+    assert.equal(await page.locator('.home-banner > img').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
+    assert.equal(await page.locator('.home-banner figcaption').innerText(), '东湖の秋');
+    assert.equal(await page.locator('.home-banner .portrait img').getAttribute('src'), '/assets/images/portrait-lifestyle.jpg');
+    assert.equal(await page.locator('.masthead-academic').evaluate(e => getComputedStyle(e).position), 'sticky');
+    assert.equal(await page.locator('.reveal--pending').count(), 0);
     assert.equal(await page.locator('#emotion-self-verification figcaption').innerText(), '研究流程图 · 点击查看大图');
     assert(await page.locator('.portrait').evaluate(e => {
       const r = e.getBoundingClientRect();
@@ -114,6 +137,47 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.hobbies-hint').innerText(), '左右滑动');
     await page.locator('.main-nav a[href="#hobbies"]').click();
     assert.equal(await page.locator('#hobbies-title').innerText(), '兴趣爱好');
+    await page.locator('.hobbies-track').evaluate(e => { e.style.display = 'none'; window.dispatchEvent(new Event('resize')); });
+    await page.locator('.hobbies-track').evaluate(e => { e.style.display = ''; window.dispatchEvent(new Event('resize')); });
+    assert.equal(await page.locator('[aria-current="true"]').getAttribute('data-slide'), '0');
+    for (const route of ['/', '/en/']) {
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto(base + route);
+      await page.evaluate(() => document.fonts.ready);
+      const target = page.locator('#emotion-self-verification');
+      assert(await target.evaluate(e => e.classList.contains('reveal--pending')));
+      assert.equal(await target.evaluate(e => getComputedStyle(e).opacity), '1');
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      await target.evaluate(e => window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - 144, behavior: 'instant' }));
+      await page.waitForFunction(() => !document.querySelector('#emotion-self-verification').classList.contains('reveal--pending'));
+      await page.waitForTimeout(160);
+      const opacity = await target.evaluate(e => Number(getComputedStyle(e).opacity));
+      assert(opacity > 0 && opacity < 1, `${route}: missing intermediate reveal (${opacity})`);
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('#emotion-self-verification')).opacity === '1');
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await target.scrollIntoViewIfNeeded();
+      assert(!(await target.evaluate(e => e.classList.contains('reveal--pending'))), 'Content must reveal only once');
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.waitForFunction(() => !document.querySelector('.reveal--pending'));
+      assert.equal(await page.locator('.reveal--pending').count(), 0);
+      await page.goto(base + route);
+      assert.equal(await page.locator('.reveal--pending').count(), 0);
+      assert.equal(await page.locator('.home-banner > img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
+    }
+    const noScript = await browser.newContext({ javaScriptEnabled: false });
+    for (const route of ['/', '/en/']) {
+      const fallback = await noScript.newPage();
+      await fallback.setViewportSize({ width: 375, height: 900 });
+      await fallback.goto(base + route);
+      assert.equal(await fallback.locator('.reveal--pending').count(), 0);
+      assert(await fallback.locator('#research-title').isVisible());
+      assert(await fallback.locator('.home-banner > img').isVisible());
+      assert(await fallback.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+      await fallback.close();
+    }
+    await noScript.close();
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     for (const route of ['/', '/en/']) {
       for (const width of [375, 1280]) {
         await page.setViewportSize({ width, height: 900 });
@@ -189,6 +253,6 @@ const server = http.createServer((req, res) => {
       assert((await response.body()).subarray(0,4).toString() === '%PDF');
     }
     assert.deepEqual(errors, []);
-    console.log('PASS: 28 viewport checks, laptop fold, self-hosted fonts, images, keyboard navigation, reduced motion, language switch, two public PDFs');
+    console.log('PASS: 28 viewport checks, banner and sticky navigation, one-time reveals, no-JS fallback, laptop fold, fonts, images, keyboard navigation, reduced motion, carousel, language switch and CV PDFs');
   } finally { await browser.close(); server.close(); }
-})().catch(error => { console.error(error.message); server.close(); process.exitCode = 1; });
+})().catch(error => { console.error(error.stack || error.message); server.close(); process.exitCode = 1; });

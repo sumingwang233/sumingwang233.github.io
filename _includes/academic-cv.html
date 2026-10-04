@@ -1,6 +1,6 @@
 {% assign lang = page.lang | default: 'zh' %}{% assign p = site.data.profile %}{% assign ui = site.data.interface[lang] %}
 <article class="cv-document">
-  <header class="cv-heading"><h1>{{ p.person.name[lang] }} <span>{% if lang == 'zh' %}Xin Wang{% else %}王鑫{% endif %}</span></h1><p>{{ p.person.role[lang] }}</p><p><a href="mailto:{{ p.contact.email }}">{{ p.contact.email }}</a> · <a href="{{ p.contact.github }}">github.com/sumingwang233</a></p></header>
+  <header class="cv-heading"><h1>{{ p.person.name[lang] }} <span>{% if lang == 'zh' %}{{ p.person.name.en }}{% else %}{{ p.person.name.zh }}{% endif %}</span></h1><p>{{ p.person.role[lang] }}</p><p><a href="mailto:{{ p.contact.email }}">{{ p.contact.email }}</a> · <a href="{{ p.contact.github }}">{{ p.contact.github | remove_first: 'https://' | escape }}</a></p></header>
   <section class="cv-section"><h2>{{ ui.research_interests }}</h2><p>{{ p.person.interests[lang] }}</p></section>
   <section class="cv-section"><h2>{{ ui.education_heading }}</h2>{% for item in p.education %}{% include academic-entry.html item=item %}{% endfor %}</section>
   <section class="cv-section"><h2>{{ ui.publications_heading }}</h2>{% include academic-publication.html %}</section>

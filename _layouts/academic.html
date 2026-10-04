@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{{ p.person.name[lang] | escape }} · {% if page.cv %}{{ ui.cv_title }}{% else %}{{ p.person.tagline[lang] }}{% endif %}</title>
   <meta name="description" content="{{ p.person.intro[lang] | escape }}">
-  <meta name="author" content="Xin Wang">
+  <meta name="author" content="{{ p.person.name.en | escape }}">
   <link rel="canonical" href="{{ page.url | absolute_url }}">
   <link rel="alternate" hreflang="zh-CN" href="{% if page.cv %}{{ '/cv/' | absolute_url }}{% else %}{{ '/' | absolute_url }}{% endif %}">
   <link rel="alternate" hreflang="en" href="{% if page.cv %}{{ '/en/cv/' | absolute_url }}{% else %}{{ '/en/' | absolute_url }}{% endif %}">
@@ -20,7 +20,7 @@
   <link rel="preload" href="{{ '/assets/fonts/noto-sans-sc.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ '/tokens.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/academic.css' | relative_url }}">
-  {% unless page.cv %}<script src="{{ '/assets/js/hobbies.js' | relative_url }}" defer></script>{% endunless %}
+  {% unless page.cv %}<script src="{{ '/assets/js/hobbies.js' | relative_url }}" defer></script><script src="{{ '/assets/js/reveal.js' | relative_url }}" defer></script>{% endunless %}
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":{{ p.person.name.en | jsonify }},"alternateName":{{ p.person.name.zh | jsonify }},"url":{{ site.url | jsonify }},"sameAs":[{{ p.contact.github | jsonify }}],"email":{{ p.contact.email | prepend: 'mailto:' | jsonify }}}</script>
 </head>
 <body{% if page.cv %} class="cv-view"{% endif %}>
@@ -29,9 +29,11 @@
   <nav class="cv-tools" aria-label="{{ ui.cv }}"><a href="{{ home_url | relative_url }}">← {{ ui.back }}</a><a href="{{ ui.cv_file | relative_url }}" download>{{ ui.cv_download }}</a><button type="button" onclick="window.print()">{{ ui.cv_print }}</button><a href="{{ ui.cv_other_page | relative_url }}" lang="{% if lang == 'zh' %}en{% else %}zh-CN{% endif %}">{{ ui.switch }}</a></nav>
   {% else %}
   <header class="masthead-academic">
-    <div class="masthead-meta"><span>{{ p.person.tagline[lang] }}</span><a class="language-link" href="{{ ui.switch_url | relative_url }}" lang="{% if lang == 'zh' %}en{% else %}zh-CN{% endif %}">{{ ui.switch }}</a></div>
-<div class="identity-row"><a class="wordmark" href="{{ home_url | relative_url }}" aria-label="{{ p.person.name[lang] }} · {{ ui.home }}">{% if lang == 'zh' %}王 鑫{% else %}Xin Wang{% endif %}<span>{% if lang == 'zh' %}Xin Wang{% else %}王鑫{% endif %}</span></a><span class="portrait"><img src="{{ '/assets/images/portrait-lifestyle.jpg' | relative_url }}" width="1200" height="800" alt="{{ p.person.name[lang] }}{% if lang == 'zh' %}的生活照{% else %} lifestyle photograph{% endif %}" fetchpriority="high"></span></div>
+    <div class="masthead-inner">
+    <div class="masthead-meta"><a class="wordmark" href="{{ home_url | relative_url }}" aria-label="{{ p.person.name[lang] }} · {{ ui.home }}">{% if lang == 'zh' %}{{ p.person.name.zh | split: '' | join: ' ' }}{% else %}{{ p.person.name.en }}{% endif %}<span>{% if lang == 'zh' %}{{ p.person.name.en }}{% else %}{{ p.person.name.zh }}{% endif %}</span></a><span>{{ p.person.tagline[lang] }}</span></div>
     <nav class="main-nav" aria-label="{{ ui.menu }}"><a href="#research">{{ ui.research }}</a><a href="#publications">{{ ui.publications }}</a><a href="#projects">{{ ui.projects }}</a><a href="#hobbies">{{ ui.hobbies }}</a><a href="{{ ui.cv_page | relative_url }}">{{ ui.cv }}</a></nav>
+    <a class="language-link" href="{{ ui.switch_url | relative_url }}" lang="{% if lang == 'zh' %}en{% else %}zh-CN{% endif %}">{{ ui.switch }}</a>
+    </div>
   </header>
   {% endif %}
   <main id="content" tabindex="-1">{{ content }}</main>
