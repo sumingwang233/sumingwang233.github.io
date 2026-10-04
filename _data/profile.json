@@ -1,18 +1,18 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-03",
+  "updated": "2026-10-04",
   "person": {
     "name": {
       "zh": "王鑫",
       "en": "Xin Wang"
     },
     "role": {
-      "zh": "武汉大学心理健康与教育中心（以下简称大心）马鑫主任助理",
-      "en": "Assistant to Director Xin Ma, Mental Health and Education Center (Daxin), Wuhan University"
+      "zh": "武汉大学心理健康与教育中心（简称大心）助理",
+      "en": "Assistant, Mental Health and Education Center (Daxin), Wuhan University"
     },
     "tagline": {
-      "zh": "个人学术主页",
-      "en": "Personal academic homepage"
+      "zh": "个人主页",
+      "en": "Personal homepage"
     },
     "lead": {
       "zh": "Be Water, my friend",
@@ -67,8 +67,12 @@
         "en": "Emotion Regulation & Self-Verification"
       },
       "organization": {
-        "zh": "武汉大学心理健康与教育中心 · 助理 · 指导教师：马鑫",
-        "en": "Wuhan University · Research Assistant · Supervisor: Xin Ma"
+        "zh": "武汉大学心理健康与教育中心 · 助理",
+        "en": "Wuhan University · Research Assistant"
+      },
+      "supervisor": {
+        "zh": "马鑫",
+        "en": "Xin Ma"
       },
       "period": {
         "zh": "2023.04—至今",
@@ -670,8 +674,8 @@
         "en": "Experiments & analysis"
       },
       "text": {
-        "zh": "Python / PsychoPy 行为实验设计；E-Prime、MATLAB；SPSS、Mplus；NVivo、质性研究",
-        "en": "Python / PsychoPy behavioral experiment design; E-Prime, MATLAB; SPSS, Mplus; NVivo, qualitative research"
+        "zh": "Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）",
+        "en": "Python / PsychoPy behavioral experiment design; E-Prime, MatLab; SPSS, Mplus; NVivo (qualitative analysis)"
       }
     },
     {

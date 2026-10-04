@@ -58,7 +58,7 @@ const server = http.createServer((req, res) => {
             const range = document.createRange(); range.selectNodeContents(a);
             return new Set([...range.getClientRects()].map(r => Math.round(r.y))).size > 1;
           }).map(a => a.textContent);
-          const clipped = [...document.querySelectorAll('h1,h2,h3,p,li,img')].filter(e => { if (e.closest('.hobbies-track') || e.matches('.portrait img, .home-banner > img')) return false; const r = e.getBoundingClientRect(); return r.x < -1 || r.right > innerWidth + 1; }).map(e => e.textContent.slice(0,50));
+          const clipped = [...document.querySelectorAll('h1,h2,h3,p,li,img')].filter(e => { if (e.closest('.hobbies-track') || e.matches('.portrait img, .banner-link img')) return false; const r = e.getBoundingClientRect(); return r.x < -1 || r.right > innerWidth + 1; }).map(e => e.textContent.slice(0,50));
           return { overflow: document.documentElement.scrollWidth > innerWidth, wrapped, clipped, images: [...document.images].every(i => i.complete && i.naturalWidth > 0), serif: document.fonts.check('600 16px "Noto Serif SC"'), sans: document.fonts.check('400 16px "Noto Sans SC"') };
         });
         assert(!result.overflow && !result.wrapped.length && !result.clipped.length && result.images && result.serif && result.sans, `${route} @ ${width}: ${JSON.stringify(result)}`);
@@ -88,19 +88,29 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#campus .entry').count(), 2);
     assert.equal(await page.locator('#campus .entry-meta').count(), 0);
     assert.equal(await page.locator('#campus-photography h3').innerText(), '党宣部记者团 · 摄影部副部长');
-    assert.deepEqual(await page.locator('.document > section').evaluateAll(nodes => nodes.slice(1, 4).map(n => n.id)), ['education', 'skills', 'research']);
+    assert.deepEqual(await page.locator('.document > section').evaluateAll(nodes => nodes.slice(1, 5).map(n => n.id)), ['education', 'skills', 'academic-interests', 'research']);
+    assert.equal(await page.locator('.intro-copy').count(), 1);
+    assert.equal(await page.locator('#academic-interests p').innerText(), profile.person.interests.zh);
+    assert.equal(await page.locator('#skills-title').innerText(), '技能 ＆ 语言');
+    assert.equal(await page.locator('#skills dd').first().innerText(), 'Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）');
+    assert.equal(await page.locator('.contact-primary').innerText(), '邮件联系 ↗');
     assert.equal(await page.locator('#honors li').nth(1).innerText(), '“外研社·国才杯·理解当代中国”英语组短视频大赛武汉大学校赛金奖');
     assert.equal(await page.locator('.closing-contact p').count(), 0);
     assert.equal(await page.locator('.closing-contact a').textContent(), '联系我： sumingwang@qq.com ↗');
     assert.equal(await page.locator('#cleft-qualitative-2026 > .entry-meta').innerText(), '2026.08.19');
     assert.equal(await page.locator('#projects-title').innerText(), '软件开发 ＆ AI 实践');
-    assert.equal(await page.locator('h1#intro-title').innerText(), '武汉大学心理健康与教育中心（以下简称大心）马鑫主任助理');
+    assert.equal(await page.locator('h1#intro-title').innerText(), '武汉大学心理健康与教育中心（简称大心）助理');
+    assert.equal(await page.locator('#emotion-self-verification .entry-supervisor').innerText(), '指导教师：马鑫');
+    assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => getComputedStyle(e).fontWeight === '700' && Math.abs(e.getBoundingClientRect().right - e.parentElement.getBoundingClientRect().right) < 1));
+    assert.equal(await page.locator('#emotion-self-verification .research-status').innerText(), '程序与材料预实验已完成，待正式数据采集');
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('.section-intro, #evaluation').count(), 0);
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
     assert.equal(await page.locator('#projects > .plain-list li').count(), 2);
     assert.equal(await page.locator('#whu-psychology .entry-meta').count(), 0);
     assert.equal(await page.locator('#whu-psychology h3').innerText(), '武汉大学 · 哲学学院 · 心理学本科');
+    assert.equal(await page.locator('#whu-psychology .university-emblem').getAttribute('src'), '/assets/images/whu-emblem.png');
+    assert(await page.locator('#whu-psychology .university-emblem').evaluate(e => Math.abs(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e.parentElement).fontSize) - 1.3) < 0.02));
     assert.equal(await page.locator('#whu-psychology .entry-points li').first().innerText(), 'GPA：3.81 / 4.00');
     assert(await page.locator('#whu-psychology .entry-points').evaluate(e => e.clientWidth > 800));
     assert.equal(await page.locator('#gamelibrary .architecture-node').count(), 6);
@@ -115,9 +125,9 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#angelalign-benchmark .evaluation-dimensions .architecture-node').count(), 3);
     assert.equal(await page.locator('#whu-psychology figure, #other figure').count(), 0);
     assert.equal(await page.locator('#other .plain-list li').count(), 2);
-    assert.equal(await page.locator('.masthead-meta > span').innerText(), '个人学术主页');
-    assert.equal(await page.locator('.home-banner > img').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
-    assert.equal(await page.locator('.home-banner figcaption').innerText(), '东湖の秋');
+    assert.equal(await page.locator('.masthead-meta > span').innerText(), '个人主页');
+    assert.equal(await page.locator('.banner-link img').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
+    assert.equal(await page.locator('.home-banner figcaption').count(), 0);
     assert.equal(await page.locator('.home-banner .portrait img').getAttribute('src'), '/assets/images/portrait-lifestyle.jpg');
     assert.equal(await page.locator('.masthead-academic').evaluate(e => getComputedStyle(e).position), 'sticky');
     assert.equal(await page.locator('.reveal--pending').count(), 0);
@@ -163,8 +173,105 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.reveal--pending').count(), 0);
       await page.goto(base + route);
       assert.equal(await page.locator('.reveal--pending').count(), 0);
-      assert.equal(await page.locator('.home-banner > img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
+      assert.equal(await page.locator('.banner-link img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
     }
+    // Navigation moves through intermediate positions and leaves the heading below the sticky bar.
+    for (const route of ['/', '/en/']) {
+      for (const width of [375, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        await page.goto(base + route);
+        const end = await page.locator('#research').evaluate(e => e.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) - parseFloat(getComputedStyle(e).scrollMarginTop));
+        await page.locator('.main-nav a[href="#research"]').click();
+        await page.waitForTimeout(80);
+        const middle = await page.evaluate(() => scrollY);
+        assert(middle > 0 && middle < end - 2, `${route} @ ${width}: missing smooth anchor travel`);
+        await page.waitForFunction(top => Math.abs(scrollY - top) < 2, end);
+        assert(await page.locator('#research').evaluate(e => e.getBoundingClientRect().top >= document.querySelector('.masthead-academic').getBoundingClientRect().bottom));
+        assert(await page.locator('.main-nav a').evaluateAll(links => links.every(e => getComputedStyle(e).borderTopStyle === 'solid' && e.getBoundingClientRect().height >= 44)));
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), 'auto');
+      }
+    }
+    // The same viewer handles research, hobby, banner and portrait images in place.
+    for (const route of ['/', '/en/']) {
+      for (const width of [375, 1280]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(base + route);
+        const link = page.locator('#emotion-self-verification .figure-link');
+        const url = page.url(), pageCount = page.context().pages().length;
+        await link.click();
+        const viewer = page.locator('.image-viewer');
+        await page.waitForFunction(() => document.querySelector('.image-viewer[open] img').naturalWidth > 0 && !document.querySelector('.image-viewer[open] img').hidden);
+        assert(await viewer.isVisible());
+        assert.equal(page.url(), url);
+        assert.equal(page.context().pages().length, pageCount);
+        assert.equal(await viewer.locator('img').getAttribute('src'), await link.evaluate(e => e.href));
+        await viewer.locator('[data-zoom="1"]').click();
+        assert.equal(await viewer.locator('output').innerText(), '150%');
+        const stage = viewer.locator('.image-viewer-stage');
+        const box = await stage.boundingBox();
+        const beforeDrag = await viewer.locator('img').evaluate(e => e.style.transform);
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(box.x + box.width / 2 + 50, box.y + box.height / 2, { steps: 3 });
+        await page.mouse.up();
+        assert.notEqual(await viewer.locator('img').evaluate(e => e.style.transform), beforeDrag);
+        await page.mouse.wheel(0, -120);
+        await page.waitForFunction(() => parseInt(document.querySelector('.image-viewer output').value, 10) > 150);
+        await stage.focus();
+        await page.keyboard.press('0');
+        assert.equal(await viewer.locator('output').innerText(), '100%');
+        await page.keyboard.press('+');
+        assert.equal(await viewer.locator('output').innerText(), '150%');
+        if (route === '/') await page.screenshot({ path: path.join(root, '.local', 'previews', `image-viewer-${width}.png`) });
+        for (let i = 0; i < 10; i++) await page.keyboard.press('+');
+        assert.equal(await viewer.locator('output').innerText(), '400%');
+        assert(await viewer.locator('[data-zoom="1"]').isDisabled());
+        for (let i = 0; i < 10; i++) await page.keyboard.press('-');
+        assert.equal(await viewer.locator('output').innerText(), '100%');
+        assert(await viewer.locator('[data-zoom="-1"]').isDisabled());
+        await viewer.locator('[data-zoom="1"]').focus();
+        await page.keyboard.press('Shift+Tab');
+        assert.equal(await page.locator(':focus').getAttribute('class'), 'image-viewer-stage');
+        for (let i = 0; i < 7; i++) {
+          await page.keyboard.press('Tab');
+          assert(await viewer.evaluate(e => e.contains(document.activeElement)), 'Image dialog must retain keyboard focus');
+        }
+        await page.keyboard.press('Escape');
+        await page.waitForFunction(() => !document.documentElement.classList.contains('image-viewer-open'));
+        assert.equal(await page.locator('.image-viewer[open]').count(), 0);
+        assert.equal(await page.locator(':focus').getAttribute('href'), await link.getAttribute('href'));
+        assert(!(await page.evaluate(() => document.documentElement.classList.contains('image-viewer-open'))));
+        for (const selector of ['.hobby.is-current .figure-link', '.banner-link', '.portrait']) {
+          await page.locator(selector).click();
+          await page.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
+          await viewer.locator('.image-viewer-close').click();
+          assert.equal(page.url(), url);
+        }
+        await link.click();
+        await page.evaluate(() => { document.querySelector('.image-viewer').close(); document.querySelector('.portrait').click(); });
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        assert(await viewer.evaluate(e => e.open && document.documentElement.classList.contains('image-viewer-open')));
+        await viewer.locator('.image-viewer-close').click();
+      }
+    }
+    const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
+    touch.on('pageerror', error => errors.push(error.message));
+    await touch.goto(base + '/');
+    await touch.locator('#emotion-self-verification .figure-link').tap();
+    await touch.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
+    await touch.locator('.image-viewer [data-zoom="1"]').tap();
+    const touchBox = await touch.locator('.image-viewer-stage').boundingBox();
+    const touchBefore = await touch.locator('.image-viewer img').evaluate(e => e.style.transform);
+    const cdp = await touch.context().newCDPSession(touch);
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: touchBox.x + touchBox.width / 2, y: touchBox.y + touchBox.height / 2 }] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: touchBox.x + touchBox.width / 2 + 50, y: touchBox.y + touchBox.height / 2 }] });
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    assert.notEqual(await touch.locator('.image-viewer img').evaluate(e => e.style.transform), touchBefore);
+    await touch.locator('.image-viewer-close').tap();
+    assert.equal(await touch.locator('.image-viewer[open]').count(), 0);
+    await touch.close();
     const noScript = await browser.newContext({ javaScriptEnabled: false });
     for (const route of ['/', '/en/']) {
       const fallback = await noScript.newPage();
@@ -172,7 +279,8 @@ const server = http.createServer((req, res) => {
       await fallback.goto(base + route);
       assert.equal(await fallback.locator('.reveal--pending').count(), 0);
       assert(await fallback.locator('#research-title').isVisible());
-      assert(await fallback.locator('.home-banner > img').isVisible());
+      assert(await fallback.locator('.banner-link img').isVisible());
+      assert.equal(await fallback.locator('.banner-link').getAttribute('target'), null);
       assert(await fallback.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await fallback.close();
     }
@@ -253,6 +361,6 @@ const server = http.createServer((req, res) => {
       assert((await response.body()).subarray(0,4).toString() === '%PDF');
     }
     assert.deepEqual(errors, []);
-    console.log('PASS: 28 viewport checks, banner and sticky navigation, one-time reveals, no-JS fallback, laptop fold, fonts, images, keyboard navigation, reduced motion, carousel, language switch and CV PDFs');
+    console.log('PASS: 28 viewports, annotation content, official emblem, smooth navigation, in-page zoom/drag/keyboard/touch viewer, one-time reveals, no-JS fallback, reduced motion, carousel and CV PDFs');
   } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error.stack || error.message); server.close(); process.exitCode = 1; });

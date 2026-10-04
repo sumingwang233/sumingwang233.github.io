@@ -5,7 +5,7 @@
   <div class="hobbies-track" id="hobbies-track" tabindex="0" aria-label="{{ ui.hobbies_keyboard }}">
     {% for hobby in p.hobbies %}
     <figure class="hobby" role="group" aria-roledescription="{{ ui.slide }}" aria-label="{{ forloop.index }} / {{ p.hobbies.size }} · {{ hobby.title[lang] }}" data-title="{{ hobby.title[lang] | escape }}">
-      <a class="figure-link" href="{{ hobby.image | relative_url }}" target="_blank" rel="noopener" aria-label="{{ ui.full_image }} · {{ hobby.title[lang] }}"><img src="{{ hobby.image | relative_url }}" width="{{ hobby.image_width }}" height="{{ hobby.image_height }}" loading="lazy" alt="{{ hobby.image_alt[lang] | escape }}"></a>
+      <a class="figure-link" href="{{ hobby.image | relative_url }}" aria-label="{{ ui.full_image }} · {{ hobby.title[lang] }}"><img src="{{ hobby.image | relative_url }}" width="{{ hobby.image_width }}" height="{{ hobby.image_height }}" loading="lazy" alt="{{ hobby.image_alt[lang] | escape }}"></a>
       <figcaption><h3>{{ hobby.title[lang] }}</h3><p>{{ hobby.text[lang] }}</p></figcaption>
     </figure>
     {% endfor %}
