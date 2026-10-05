@@ -29,9 +29,9 @@ def load_profile():
     authors = {lang: yaml.safe_load((ROOT / f'data/{lang}/authors/me.yaml').read_text('utf8')) for lang in ['zh', 'en']}
     result = {'schema_version': 1, 'updated': authors['zh']['updated'], 'contact': authors['zh']['contact']}
     assert authors['zh']['contact'] == authors['en']['contact']
-    result['person'] = {key: {lang: authors[lang][source] for lang in authors} for key, source in [('role', 'role'), ('intro', 'bio'), ('interests', 'interests_text'), ('lead', 'motto'), ('tagline', 'tagline')]}
+    result['person'] = {key: {lang: authors[lang][source] for lang in authors} for key, source in [('role', 'role'), ('intro', 'bio'), ('lead', 'motto'), ('tagline', 'tagline')]}
     result['person']['name'] = {lang: authors[lang]['name']['display'] for lang in authors}
-    for key in ['education', 'skills', 'hobbies']:
+    for key in ['education', 'skills', 'hobbies', 'academic_interests']:
         result[key] = combine(authors['zh'][key], authors['en'][key], key)
     for section, groups in [('research', ['research']), ('projects', ['projects', 'evaluation']), ('publications', ['publications'])]:
         for group in groups:

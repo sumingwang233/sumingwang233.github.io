@@ -1,1 +1,1 @@
-{{ if or .organization .supervisor }}<p class="entry-meta{{ with .supervisor }} entry-meta--supervisor{{ end }}"><span>{{ .organization }}</span>{{ with .supervisor }}<strong class="entry-supervisor">{{ i18n "supervisor" }}{{ . }}</strong>{{ end }}</p>{{ end }}
+{{ with .organization }}<p class="entry-meta">{{ . }}</p>{{ end }}

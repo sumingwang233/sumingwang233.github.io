@@ -62,8 +62,6 @@ hobbies:
   other: Interests
 hobbies_heading:
   other: Beyond research & code
-hobbies_intro:
-  other: Single-player games, photography, cycling and fitness · All photographs here are my own
 carousel:
   other: Carousel
 slide:
@@ -139,7 +137,7 @@ all_projects:
 all_research:
   other: All research →
 notes_heading:
-  other: Selected notes
+  other: My blog
 all_notes:
   other: All notes →
 zh_article:

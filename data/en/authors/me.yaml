@@ -7,10 +7,24 @@ name:
   family: Wang
   alternate: 王鑫
 role: Assistant, Mental Health and Education Center, Wuhan University
-bio: I graduated with a bachelor's degree in psychology from Wuhan University and currently contribute to emotion regulation and self-verification research at its Mental Health and Education Center. My work spans behavioral experiments, psychological measurement and data analysis, alongside the design and AI-assisted development of personal software and game prototypes
+bio: |-
+  I graduated with a bachelor's degree in psychology from Wuhan University and currently contribute to emotion regulation and self-verification research at its Mental Health and Education Center.
+
+  My work involves behavioral experiment design, serving as an experimenter and collecting data, as well as psychological measurement and data analysis.
+
+  In my spare time, I devote time and energy to personal interests, including the design of personal software and independent games, and AI-assisted development.
 tagline: Personal homepage
 motto: Be Water, my friend
-interests_text: My interests include emotion regulation, self-concept and psychological measurement, as well as player motivation, emotional experience and self-regulation in games. I aim to combine behavioral experiments, measurement and software prototypes to study how interactive feedback and rewards shape behavioral choices
+academic_interests:
+- id: emotion-self-concept
+  title: Emotion regulation, self-concept & psychological measurement
+  text: Building on my current emotion regulation and self-verification research, I use behavioral experiments and psychological measurement to understand how emotion-regulation motives and self-concept influence emotional experience
+- id: game-psychology
+  title: Game psychology
+  text: I am interested in player motivation, emotional experience and self-regulation, with a long-term aspiration to develop game psychology as a field in mainland China. I aim to combine behavioral experiments, psychological measurement and software prototypes to study how interactive feedback and reward mechanisms in games influence behavioral choices
+- id: bci-cognitive-neuroscience
+  title: Brain–computer interfaces & cognitive neuroscience
+  text: I have an interest in, and some initial exposure to, brain–computer interfaces and cognitive neuroscience, and hope to better understand cognitive processes and their neural mechanisms
 links:
 - icon: at-symbol
   url: mailto:sumingwang@qq.com
