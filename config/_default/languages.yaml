@@ -1,0 +1,12 @@
+zh:
+  locale: zh-Hans
+  label: 中文
+  contentDir: content/zh
+  weight: 1
+  title: 王鑫 · 个人主页
+en:
+  locale: en-US
+  label: English
+  contentDir: content/en
+  weight: 2
+  title: Xin Wang · Personal homepage

@@ -1,0 +1,150 @@
+book_research:
+  other: Research
+book_publications:
+  other: Papers
+book_projects:
+  other: Work
+book_experience:
+  other: Experience
+book_cv:
+  other: CV
+html_lang:
+  other: en
+home:
+  other: Home
+research:
+  other: Research
+publications:
+  other: Papers
+projects:
+  other: Work
+cv:
+  other: CV
+switch:
+  other: 中文
+switch_url:
+  other: /
+contact:
+  other: Email me
+closing_contact:
+  other: 'Contact me:'
+cv_download:
+  other: Academic CV
+job_resume_download:
+  other: Job resume (Chinese)
+job_resume_file:
+  other: /files/job-resume-public.pdf
+cv_file:
+  other: /files/cv-en.pdf
+cv_page:
+  other: /en/cv/
+research_heading:
+  other: Research experience
+publications_heading:
+  other: Publication
+projects_heading:
+  other: Software development & AI practice
+education_heading:
+  other: Education
+evaluation_heading:
+  other: AI evaluation
+training_heading:
+  other: Additional training
+skills_heading:
+  other: Skills & languages
+honors_heading:
+  other: Awards & honors
+other_heading:
+  other: Other experience
+campus_heading:
+  other: Campus experience
+hobbies:
+  other: Interests
+hobbies_heading:
+  other: Beyond research & code
+hobbies_intro:
+  other: Single-player games, photography, cycling and fitness · All photographs here are my own
+carousel:
+  other: Carousel
+slide:
+  other: Interest
+hobbies_swipe:
+  other: Swipe horizontally
+hobbies_keyboard:
+  other: Swipe horizontally or use the arrow keys to explore
+previous_slide:
+  other: Previous interest
+next_slide:
+  other: Next interest
+choose_slide:
+  other: Choose an interest
+repository:
+  other: View source ↗
+doi:
+  other: Paper DOI ↗
+updated:
+  other: Updated
+skip:
+  other: Skip to content
+menu:
+  other: Browse
+cv_title:
+  other: Academic CV
+cv_print:
+  other: Print / save PDF
+back:
+  other: Back to home
+cv_other:
+  other: 中文 CV
+cv_other_file:
+  other: /files/cv-zh.pdf
+cv_other_page:
+  other: /cv/
+research_interests:
+  other: Research interests
+footer:
+  other: Psychology research & software prototypes
+cv_notes:
+  other: Public version · Email and public links only
+full_image:
+  other: Open full-size image
+supervisor:
+  other: 'Supervisor: '
+university_emblem:
+  other: Wuhan University emblem
+image_close:
+  other: Close image
+image_zoom_controls:
+  other: Image zoom
+image_zoom_in:
+  other: Zoom in
+image_zoom_out:
+  other: Zoom out
+image_reset:
+  other: Fit to view
+image_zoom_hint:
+  other: Scroll or use +/− to zoom · Drag when zoomed · Esc to close
+image_error:
+  other: This image could not load; close the viewer and try again
+image_pending:
+  other: Illustration to follow
+records:
+  other: Records
+experience:
+  other: Experience
+details:
+  other: Read more →
+all_projects:
+  other: Explore all four →
+all_research:
+  other: All research →
+notes_heading:
+  other: Selected notes
+all_notes:
+  other: All notes →
+zh_article:
+  other: Chinese-language article
+journal_empty:
+  other: No journal entries published yet. This space awaits real writing.
+photos_intro:
+  other: Landscapes, campus scenes and everyday city life, photographed by me

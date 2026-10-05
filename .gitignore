@@ -1,4 +1,8 @@
 _site/
+public/
+resources/
+.hugo_build.lock
+hugo_stats.json
 push.sh
 .DS_Store
 .local/

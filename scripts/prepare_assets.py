@@ -1,4 +1,4 @@
-"""Refresh self-hosted font subsets from the public profile and UI text."""
+"""Refresh self-hosted subsets from the canonical Hugo content and labels."""
 import json
 from pathlib import Path
 import urllib.request
@@ -28,7 +28,7 @@ def strings(value):
     return ''
 
 
-text = ''.join(strings(json.loads((ROOT / '_data' / f).read_text('utf8'))) for f in ['profile.json', 'interface.json'])
+text = ''.join(path.read_text('utf8') for folder in ['content', 'data', 'i18n'] for path in (ROOT / folder).rglob('*') if path.suffix in {'.md', '.yaml'})
 text += ''.join(chr(n) for n in range(32, 127)) + '王 鑫Xin Wang·—–↗↓←：，。；（） /研究经历发表论文'
 for slug, family, weight in [('notoserifsc', 'NotoSerifSC', 600), ('notosanssc', 'NotoSansSC', None)]:
     folder = f'https://raw.githubusercontent.com/google/fonts/main/ofl/{slug}'

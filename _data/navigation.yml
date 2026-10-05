@@ -1,9 +1,0 @@
-main:
-  - title: "研究"
-    url: "/#research"
-  - title: "论文"
-    url: "/#publications"
-  - title: "作品"
-    url: "/#projects"
-  - title: "简历"
-    url: "/cv/"

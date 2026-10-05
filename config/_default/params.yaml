@@ -1,0 +1,27 @@
+hugoblox:
+  schema: "2.0"
+  identity:
+    name: Xin Wang
+    type: person
+    tagline: Psychology research & software prototypes
+  theme:
+    mode: light
+    pack: default
+    colors:
+      primary: "#205d46"
+  typography:
+    pack: academic
+  layout:
+    radius: none
+    avatar_shape: circle
+  header:
+    enable: true
+    sticky: true
+    search: false
+    theme_toggle: false
+    theme_picker: false
+    language_switcher: true
+  footer:
+    style: minimal
+  analytics:
+    provider: ""

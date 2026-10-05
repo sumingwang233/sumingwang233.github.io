@@ -1,0 +1,2 @@
+{{ range .Translations }}<a class="language-link" href="{{ .RelPermalink }}" lang="{{ .Language.Locale }}" hreflang="{{ .Language.Locale }}">{{ .Language.Label }}</a>{{ end }}
+{{ if not .IsTranslated }}{{ if eq .Language.Lang "zh" }}<a class="language-link" href="/en/{{ .Section }}/" lang="en">English · {{ i18n "zh_article" }}</a>{{ end }}{{ end }}

@@ -1,5 +1,9 @@
 # Public assets
 
+The Hugo deployment uses an explicit allowlist in `config/_default/module.yaml`. Historical unused images below are retained only in source history; they are not mounted into the published site.
+
+- `images/photography/*-{thumb,full}.webp`: 12 owner-authorized photographs in landscape/campus/city/travel groups (4/3/3/2). Metadata-free sRGB derivatives at maximum 1080px/2400px; originals are unchanged. Captions and presentation live in the bilingual photography Markdown. Private source provenance stays outside Git and deployment.
+
 - `images/gamelibrary.webp`: optimized copy of the publicly released example interface at [GameLibrary](https://github.com/sumingwang233/GameLibrary/blob/main/website/public/assets/library.png). It shows the project’s example library, not a personal game directory. The published screenshot was identified as v1.5.5 on 2026-10-02.
 - `fonts/noto-serif-sc.woff2` and `fonts/noto-sans-sc.woff2`: text-specific subsets of [Noto Serif SC](https://github.com/google/fonts/tree/main/ofl/notoserifsc) and [Noto Sans SC](https://github.com/google/fonts/tree/main/ofl/notosanssc), self-hosted under the accompanying SIL Open Font License files.
 - `images/favicon-avatar.png`: 64px web export of an AI-designed bold hair-and-glasses mark, inspired by the manga portrait; used as the favicon on all four routes
@@ -16,7 +20,7 @@
 - `images/hobby-{photography,games,cycling,fitness}.jpg`: the owner's own autumn-lake, gaming-desk, lakeside-bicycle and sports-field photographs, selected from the explicitly authorized photo backup; resized to a maximum of 1600px and exported without EXIF/XMP/IPTC or GPS metadata; originals unchanged
 - `images/emotion-experiment.png`: the owner-supplied overview of the emotion-regulation research series, presented unchanged with a full-size link
 - `images/dormitory-cooking.png`: retained screenshot from the owner’s Godot prototype review; the homepage now displays a game architecture figure instead
-- GameLibrary uses a responsive HTML architecture figure checked against the current project source and architecture documentation, including scanning, review, library organization, launch tracking, backup and UI synchronization; its technical labels live in `_data/profile.json` and describe current source rather than all stable-release features
+- GameLibrary uses a responsive HTML architecture figure checked against the current project source and architecture documentation, including scanning, review, library organization, launch tracking, backup and UI synchronization; its technical labels live in `content/{zh,en}/projects/gamelibrary/index.md` and describe current source rather than all stable-release features
 - The cooking prototype uses the same responsive figure structure, checked against its actual Godot scenes, Autoload configuration, EventBus signals, gameplay systems, Resource data and JSON snapshot storage
 - The thesis theory diagram is transcribed from the owner’s original presentation as a responsive HTML figure; it contains no result coefficients or personal identifiers
 - The Digital Employee Benchmark figure summarizes the approved general CV's task design, expert alignment and layered evaluation; it includes no enterprise documents, task examples or performance scores

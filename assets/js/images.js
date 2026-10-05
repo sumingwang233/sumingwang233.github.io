@@ -55,6 +55,8 @@ if (imageViewer && typeof imageViewer.showModal === 'function') {
     zoom = 1; x = 0; y = 0; drag = undefined;
     image.hidden = true;
     error.hidden = true;
+    // The requested full-size photograph may be uncached and hidden while loading.
+    image.loading = 'eager';
     image.src = link.href;
     image.alt = link.querySelector('img').alt;
     caption.textContent = image.alt;
