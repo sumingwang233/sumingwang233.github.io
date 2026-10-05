@@ -51,7 +51,7 @@ def validate_profile(profile):
     assert profile['schema_version'] == 1
     assert set(profile['contact']) == {'email', 'github'}
     ids = []
-    for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'hobbies', 'campus_experience']:
+    for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'hobbies', 'campus_experience', 'academic_interests']:
         for item in profile[group]:
             ids.append(item['id'])
             for key in ['title', 'organization', 'supervisor', 'period', 'status', 'text', 'image_alt', 'image_caption']:
@@ -123,8 +123,8 @@ def entry_facts(item, lang, figure=False):
 def check_site(site, profile):
     for lang, prefix in [('zh', ''), ('en', 'en/')]:
         home, text = parsed(site, prefix)
-        present(text, [profile['person'][k][lang] for k in ['name', 'role', 'intro', 'interests', 'lead']], prefix)
-        for group in ['education', 'skills']:
+        present(text, [profile['person'][k][lang] for k in ['name', 'role', 'intro', 'lead']], prefix)
+        for group in ['education', 'skills', 'academic_interests']:
             for item in profile[group]:
                 present(text, entry_facts(item, lang), prefix)
         for item in profile['research'] + [profile['projects'][0], profile['evaluation'][0]]:
@@ -132,7 +132,7 @@ def check_site(site, profile):
         for hobby in profile['hobbies']:
             present(text, [hobby['title'][lang], hobby['text'][lang]], prefix)
         _, cv = parsed(site, prefix + 'cv')
-        for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'campus_experience']:
+        for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'campus_experience', 'academic_interests']:
             for item in profile[group]:
                 present(cv, entry_facts(item, lang), prefix + 'cv')
         for group in ['honors', 'training', 'other_experience']:

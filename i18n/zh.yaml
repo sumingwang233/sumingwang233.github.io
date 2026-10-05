@@ -62,8 +62,6 @@ hobbies:
   other: 兴趣
 hobbies_heading:
   other: 兴趣爱好
-hobbies_intro:
-  other: 研究与开发之外，我喜欢单机游戏、摄影、骑行和健身 · 这里的照片均由我拍摄
 carousel:
   other: 图文轮播
 slide:
@@ -139,7 +137,7 @@ all_projects:
 all_research:
   other: 全部研究 →
 notes_heading:
-  other: 笔记精选
+  other: 我的博客
 all_notes:
   other: 全部笔记 →
 zh_article:

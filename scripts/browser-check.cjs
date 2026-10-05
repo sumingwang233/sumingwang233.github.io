@@ -71,6 +71,21 @@ const server = http.createServer((req, res) => {
           assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
           assert.equal(await page.locator('#intro-title').innerText(), `${profile.person.name[lang]} ${profile.person.name[lang === 'zh' ? 'en' : 'zh']}`);
           assert.equal(await page.locator('.intro .role').innerText(), profile.person.role[lang]);
+          assert.deepEqual(await page.locator('.intro-copy').allTextContents(), profile.person.intro[lang].split('\n\n'));
+          assert.equal(await page.locator('#academic-interests li').count(), 3);
+          assert.deepEqual(await page.locator('#academic-interests strong').allTextContents(), profile.academic_interests.map(item => item.title[lang] + (lang === 'zh' ? '：' : ': ')));
+          assert.equal(await page.locator('#notes-title').innerText(), lang === 'zh' ? '我的博客' : 'My blog');
+          assert.equal(await page.locator('.hobbies-intro').count(), 0);
+          assert(!(await page.locator('.footer-academic').innerText()).includes(profile.updated));
+          assert(await page.locator('.masthead-academic').evaluate(e => getComputedStyle(e, '::before').backgroundImage === getComputedStyle(document.body, '::before').backgroundImage));
+          assert(await page.locator('.portrait').evaluate(e => {
+            const portrait = e.getBoundingClientRect(), banner = e.closest('.home-banner').getBoundingClientRect();
+            return Math.abs(portrait.width - portrait.height) < 1 && portrait.height / banner.height > 0.9 && portrait.height < banner.height && portrait.top >= banner.top && portrait.bottom <= banner.bottom;
+          }));
+          assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => e.parentElement.classList.contains('entry-timing') && e.previousElementSibling.classList.contains('period') && Math.abs(e.getBoundingClientRect().top - e.previousElementSibling.getBoundingClientRect().top) < 2));
+          if (width >= 1280 && lang === 'zh') {
+            assert(await page.locator('#research .summary').evaluateAll(nodes => Math.max(...nodes.map(e => e.getBoundingClientRect().top)) - Math.min(...nodes.map(e => e.getBoundingClientRect().top)) < 1));
+          }
           assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
           assert(await page.locator('#gamelibrary .application-icon').evaluate(e => e.naturalWidth === 64 && e.getBoundingClientRect().height > 20 && e.getBoundingClientRect().height < 40));
           assert(await page.locator('.closing-contact > span').evaluate(e => !e.closest('a') && getComputedStyle(e).color === getComputedStyle(e.parentElement).color && getComputedStyle(e).textDecorationLine === 'none'));
@@ -79,6 +94,14 @@ const server = http.createServer((req, res) => {
             await revealForScreenshot(page);
             await page.screenshot({ path: path.join(root, '.local', 'previews', `${lang}-${width}.png`), fullPage: true });
             await page.screenshot({ path: path.join(root, '.local', 'previews', `${lang}-${width}-fold.png`) });
+            if (width === 1440) {
+              await page.locator('#academic-interests').screenshot({ path: path.join(root, '.local', 'previews', `${lang}-interests.png`) });
+              await page.locator('#research').screenshot({ path: path.join(root, '.local', 'previews', `${lang}-research-overview.png`) });
+              await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+              await page.locator('.records-menu').evaluate(e => { e.open = true; });
+              await page.screenshot({ path: path.join(root, '.local', 'previews', `${lang}-records-menu.png`) });
+              await page.locator('.records-menu').evaluate(e => { e.open = false; });
+            }
           }
           if (width === 1280) assert(await page.locator('.contact-links').evaluate(e => e.getBoundingClientRect().bottom <= innerHeight), `${route}: primary contact does not fit laptop fold`);
         }
@@ -97,8 +120,8 @@ const server = http.createServer((req, res) => {
     assert.equal(jobResume.status(), 200);
     assert((await jobResume.body()).subarray(0, 4).toString() === '%PDF');
     assert.deepEqual(await page.locator('.document > section').evaluateAll(nodes => nodes.slice(1, 5).map(n => n.id)), ['education', 'skills', 'academic-interests', 'research']);
-    assert.equal(await page.locator('.intro-copy').count(), 1);
-    assert.equal(await page.locator('#academic-interests p').innerText(), profile.person.interests.zh);
+    assert.equal(await page.locator('.intro-copy').count(), 3);
+    assert.deepEqual(await page.locator('#academic-interests li').allTextContents(), profile.academic_interests.map(item => item.title.zh + '：' + item.text.zh));
     assert.equal(await page.locator('#skills-title').innerText(), '技能 ＆ 语言');
     assert.equal(await page.locator('#skills dd').first().innerText(), 'Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）');
     assert.equal(await page.locator('.intro a[href^="mailto:"]').count(), 0);
@@ -133,10 +156,11 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.reveal--pending').count(), 0);
     assert(await page.locator('.portrait').evaluate(e => {
       const r = e.getBoundingClientRect();
-      return r.width === r.height && r.width <= 144 && r.width >= 96 && getComputedStyle(e).borderRadius === '50%';
+      const banner = e.closest('.home-banner').getBoundingClientRect();
+      return r.width === r.height && r.height / banner.height > 0.9 && getComputedStyle(e).borderRadius === '50%';
     }));
     assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
-    assert.deepEqual(await page.locator('h1,h2,h3,p,li,dd').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
+    assert.deepEqual(await page.locator('h1,h2,h3').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
     const texture = await page.evaluate(() => getComputedStyle(document.body, '::before').backgroundImage);
     assert(texture.includes('book-paper-rough.png'));
     assert.equal((await page.request.get(texture.match(/url\("([^"]+)"\)/)[1])).status(), 200);
@@ -353,7 +377,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#projects-title').innerText(), 'Software development & AI practice');
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
-    assert.deepEqual(await page.locator('h1,h2,h3,p,li,dd').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
+    assert.deepEqual(await page.locator('h1,h2,h3').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
     for (const lang of ['zh', 'en']) {
       const response = await page.request.get(`${base}/files/cv-${lang}.pdf`);
       assert.equal(response.status(), 200);

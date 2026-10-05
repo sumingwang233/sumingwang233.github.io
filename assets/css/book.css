@@ -3,26 +3,35 @@
 .intro h1 span { display: inline-block; font-size: 0.52em; color: var(--color-muted); margin-left: 0.4em; letter-spacing: 0; }
 .intro .role { font: 400 clamp(1rem, 1.7vw, 1.25rem)/1.65 var(--font-body); margin-top: var(--space-xs); }
 .intro-subtitle { margin-top: var(--space-sm); color: var(--color-accent); }
+.intro-copy + .intro-copy { margin-top: var(--space-xs); }
+.masthead-academic { isolation: isolate; }
+.masthead-academic::before, .records-menu > div::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--paper-texture) repeat; background-size: 768px auto; opacity: var(--paper-grain-opacity); mix-blend-mode: multiply; border-radius: inherit; }
+.main-nav > a, .records-menu summary { min-height: 44px; padding: var(--space-2xs) 0.85rem; border: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent); border-radius: 6px; background: #ffffff24; transition: background-color var(--dur-short) ease, border-color var(--dur-short) ease, color var(--dur-short) ease; }
+.main-nav > a:hover, .main-nav > a:focus-visible, .records-menu summary:hover, .records-menu[open] summary { background: color-mix(in srgb, var(--color-accent) 7%, transparent); color: var(--color-accent); border-color: color-mix(in srgb, var(--color-accent) 45%, transparent); }
 .records-menu { position: relative; }
-.records-menu summary { list-style: none; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: var(--space-2xs) var(--space-sm); border: 1px solid var(--color-rule); font-size: var(--text-sm); cursor: pointer; }
-.records-menu summary::after { content: '⌄'; margin-left: 0.5em; }
+.records-menu summary { list-style: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; font-size: var(--text-sm); cursor: pointer; }
+.records-menu summary::after { content: ''; width: 0.4rem; height: 0.4rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-0.12rem) rotate(45deg); transition: transform var(--dur-short) ease; }
+.records-menu[open] summary::after { transform: translateY(0.12rem) rotate(225deg); }
 .records-menu summary::-webkit-details-marker { display: none; }
 .records-menu summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 5px; }
-.records-menu[open] summary, .records-menu summary:hover { background: var(--color-paper-2); color: var(--color-accent); border-color: var(--color-accent); }
-.records-menu > div { position: absolute; top: calc(100% + 0.5rem); left: 0; min-width: 8rem; z-index: 30; background: var(--color-paper); border: 1px solid var(--color-rule); box-shadow: 0 8px 20px #182d2010; }
-.records-menu > div a { display: flex; border: 0; justify-content: flex-start; }
+.records-menu > div { isolation: isolate; position: absolute; top: calc(100% + 0.5rem); left: 0; min-width: 9rem; padding: 0.375rem; z-index: 30; background: var(--color-paper); border: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent); border-radius: 8px; box-shadow: 0 10px 28px #182d2018; }
+.records-menu > div a { display: flex; border: 0; border-radius: 4px; justify-content: space-between; gap: var(--space-lg); padding-inline: var(--space-sm); }
+.records-menu > div a::after { content: ''; flex: 0 0 0.35rem; height: 0.35rem; border-right: 1.5px solid currentColor; border-top: 1.5px solid currentColor; transform: rotate(45deg); opacity: 0.6; }
+.records-menu > div a:last-child { margin-top: 0.25rem; border-top: 1px solid color-mix(in srgb, var(--color-rule) 65%, transparent); border-top-left-radius: 0; border-top-right-radius: 0; }
 .section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-md); }
 .section-heading > a, .archive-links, .eyebrow { color: var(--color-accent); font-size: var(--text-sm); }
 .summary { margin-top: var(--space-md); max-width: 75ch; }
 .overview-entry h3 a, .note-preview h3 a { text-decoration: none; }
 .overview-entry h3 a:hover, .note-preview h3 a:hover { text-decoration: underline; }
 .research-overview .entry-heading { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
+.entry-timing { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2xs) var(--space-sm); font-size: var(--text-xs); }
+.interests-copy li + li { margin-top: var(--space-md); }
 .archive-links { display: flex; flex-wrap: wrap; gap: var(--space-lg); margin-top: var(--space-lg); }
 .experience-links { padding-block: var(--space-xl); border-top: 1px solid var(--color-rule); margin-top: var(--space-2xl); }
 .detail-page, .archive-page { padding-block: var(--space-2xl) var(--space-3xl); min-height: 65vh; }
 .detail-header { padding-bottom: var(--space-xl); border-bottom: 1px solid var(--color-rule); }
 .detail-header h1 { margin-top: var(--space-sm); max-width: 30ch; }
-.detail-header .period { margin-top: var(--space-md); }
+.detail-header .entry-timing { margin-top: var(--space-md); }
 .article-content { margin-top: var(--space-xl); }
 .article-content > p, .article-content > ul { max-width: 80ch; }
 .article-content p + p { margin-top: var(--space-md); }
@@ -49,8 +58,6 @@
 @media (min-width: 60rem) {
   .research-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xl); }
   .research-overview .entry + .entry { padding-top: 0; border: 0; }
-  .research-overview .entry-meta--supervisor { display: block; }
-  .research-overview .entry-supervisor { display: block; margin-top: var(--space-xs); }
   .project-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); }
   .project-overview .entry + .entry { padding-top: 0; border: 0; }
   .project-overview .entry-heading { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
@@ -66,6 +73,9 @@
 }
 @media print {
   .cv-view { background: white; }
+  .cv-section .interests-copy { margin-top: 0; max-width: none; }
+  .cv-section .interests-copy li + li { margin-top: 2pt; }
+  .cv-section .entry-timing { font-size: 8pt; }
   .cv-section .entry-supervisor { font-size: inherit; }
   html[lang="en-US"] .cv-document { font-size: 8.3pt; line-height: 1.35; }
   html[lang="en-US"] .cv-heading p { font-size: 8.3pt; }

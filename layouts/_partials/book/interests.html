@@ -1,0 +1,1 @@
+<ul class="interests-copy plain-list">{{ range .academic_interests }}<li><strong>{{ .title }}{{ if eq site.Language.Lang "zh" }}：{{ else }}: {{ end }}</strong>{{ .text }}</li>{{ end }}</ul>

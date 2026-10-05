@@ -17,7 +17,7 @@ The hero's primary heading is 王鑫 / Xin Wang, with the localized assistant ro
 
 Homepage order: introduction; education; skills & languages; academic interests; research overview; publication; GameLibrary and Digital Employee Benchmark; selected notes; hobby carousel; contact. Full diagrams and implementation explanations belong in detail pages. Campus experience, honors and other experiences belong in the experience page and academic CVs.
 
-Preserve the official WHU emblem only beside the homepage education title, GameLibrary's approved application icon beside web titles, a right-aligned bold supervisor, and the ordinary inherited-color contact label outside the email link. Keep the hobby counter visually hidden and available to screen readers. Preserve old homepage anchors and all four original page routes plus three PDF addresses.
+Preserve the official WHU emblem only beside the homepage education title, GameLibrary's approved application icon beside web titles, a right-aligned bold supervisor directly after the date, and the ordinary inherited-color contact label outside the email link. Keep the hobby counter visually hidden and available to screen readers. Preserve old homepage anchors and all four original page routes plus three PDF addresses.
 
 Reuse the accessible native dialog, bounded image zoom/pan, keyboard/touch controls and focus restoration. Keep direct-image no-JS fallback, native record-menu disclosure, native touch carousel, interruptible transitions and reduced-motion behavior. Content is visible without JavaScript. CV pages have no viewer/reveal/carousel scripts; printable academic CVs are compact text and each two A4 pages.
 
