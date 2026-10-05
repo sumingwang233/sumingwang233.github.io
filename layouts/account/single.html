@@ -1,0 +1,15 @@
+{{ define "main" }}{{ $t := index site.Data.account site.Language.Lang }}{{ $home := site.Home.RelPermalink }}
+<div class="document account-page"><header class="detail-header"><p class="eyebrow">王鑫 / Xin Wang</p><h1>{{ $t.account }}</h1><p>{{ $t.privacy }}</p></header>
+<noscript><p class="empty-state">{{ $t.no_script }}</p></noscript>
+<section class="account-panel" aria-label="{{ $t.account }}">
+  <p id="auth-message" role="status" aria-live="polite"></p>
+  <div id="account-session" hidden><p>{{ $t.signed_in }} <strong data-account-email></strong></p><div class="form-actions"><a class="site-button primary" href="{{ $home }}" data-continue>{{ $t.continue }} →</a><a class="site-button" href="{{ $home }}admin/" data-admin-link hidden>{{ $t.desk }}</a><button class="site-button" data-logout>{{ $t.logout }}</button></div></div>
+  <form id="auth-form" hidden>
+    <div class="auth-modes" aria-label="{{ $t.account }}"><button type="button" data-auth-mode="login" aria-pressed="true">{{ $t.login }}</button><button type="button" data-auth-mode="signup" aria-pressed="false">{{ $t.signup }}</button></div>
+    <label class="field" data-auth-email>{{ $t.email }}<input type="email" name="email" autocomplete="email" maxlength="254" required></label>
+    <label class="field" data-auth-password>{{ $t.password }}<input type="password" name="password" autocomplete="current-password" minlength="12" maxlength="128" required><span class="form-help">{{ $t.password_help }}</span></label>
+    <label class="field" data-auth-code hidden>{{ $t.code }}<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,8}" minlength="6" maxlength="8"><span class="form-help">{{ $t.verify_help }}</span></label>
+    <div class="form-actions"><button class="site-button primary" type="submit" id="auth-submit">{{ $t.login }}</button><button class="text-button" type="button" data-auth-mode="forgot">{{ $t.forgot }}</button><button class="text-button" type="button" data-auth-mode="verify">{{ $t.verify }}</button><button class="text-button" type="button" data-resend hidden>{{ $t.resend }}</button></div>
+  </form>
+  <a class="guest-link" href="{{ $home }}" data-visitor-link>{{ $t.visitor }} →</a>
+</section></div>{{ end }}

@@ -1,0 +1,4 @@
+{{ define "main" }}{{ $t := index site.Data.account site.Language.Lang }}
+<div class="document archive-page"><header class="detail-header"><p class="eyebrow">王鑫 / Xin Wang</p><h1>{{ .Title }}</h1></header>
+<section class="blog-feed-section" aria-labelledby="online-posts-title"><h2 id="online-posts-title">{{ $t.latest }}</h2><p data-blog-message role="status"></p><noscript><p>{{ $t.no_script }}</p></noscript><div class="notes-overview" data-blog-feed></div><button class="site-button" type="button" data-more-posts hidden>{{ $t.load_more }}</button></section>
+<section class="blog-feed-section" aria-labelledby="existing-notes-title"><h2 id="existing-notes-title">{{ $t.older_notes }}</h2>{{ partial "book/notes.html" . }}</section></div>{{ end }}

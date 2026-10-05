@@ -36,6 +36,9 @@ const server = http.createServer((req, res) => {
     fs.mkdirSync(path.join(site, 'files'), { recursive: true });
     fs.mkdirSync(path.join(root, '.local', 'previews'), { recursive: true });
     const page = await browser.newPage();
+    // These existing content checks browse as a visitor. Account flows have their own checks.
+    await page.addInitScript(() => sessionStorage.setItem('site-access', 'visitor'));
+    await page.route('https://*.supabase.co/**', route => route.fulfill({ json: [], headers: { 'access-control-allow-origin': '*' } }));
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     for (const [lang, route] of [['zh', '/cv/'], ['en', '/en/cv/']]) {
@@ -289,6 +292,8 @@ const server = http.createServer((req, res) => {
       }
     }
     const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
+    await touch.addInitScript(() => sessionStorage.setItem('site-access', 'visitor'));
+    await touch.route('https://*.supabase.co/**', route => route.fulfill({ json: [], headers: { 'access-control-allow-origin': '*' } }));
     touch.on('pageerror', error => errors.push(error.message));
     await touch.goto(base + '/');
     await touch.locator('.banner-link').tap();

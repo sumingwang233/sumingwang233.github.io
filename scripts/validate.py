@@ -142,6 +142,9 @@ def check_site(site, profile):
             present(experience, entry_facts(item, lang), prefix + 'experience')
         for group in ['honors', 'training', 'other_experience']:
             present(experience, profile[group][lang], prefix + 'experience')
+        for account_route in ['account', 'admin', 'blog', 'blog/post']:
+            parsed(site, prefix + account_route)
+        assert 'id="site-account-config"' not in (site / prefix / 'cv/index.html').read_text('utf8')
         for group, section in [('research', 'research'), ('projects', 'projects'), ('evaluation', 'projects')]:
             for item in profile[group]:
                 route = prefix + section + '/' + item['id']
@@ -190,8 +193,10 @@ def check_site(site, profile):
                 assert unquote(parsed_url.fragment) in ids.ids, f'Missing anchor {url}'
     for path in site.rglob('*'):
         if path.is_file():
-            assert path.suffix.lower() not in {'.docx', '.nvp', '.rw2', '.arw', '.dng', '.cr3', '.md', '.yaml', '.toml'}, f'Private/source format in site: {path}'
-            assert not {'.local', 'docs', '_data'} & set(path.relative_to(site).parts)
+            assert path.suffix.lower() not in {'.docx', '.nvp', '.rw2', '.arw', '.dng', '.cr3', '.md', '.yaml', '.toml', '.sql', '.env'}, f'Private/source format in site: {path}'
+            assert not {'.local', 'docs', '_data', 'supabase'} & set(path.relative_to(site).parts)
+            if path.suffix.lower() in {'.js', '.html', '.json'}:
+                assert not re.search(r'sb_secret_[A-Za-z0-9_-]+', path.read_text('utf8')), f'Secret Supabase key in site: {path}'
     for path in (site / 'assets/images/photography').glob('*.webp'):
         with Image.open(path) as im:
             assert not im.getexif() and not any(k in im.info for k in ['exif', 'xmp', 'comment', 'icc_profile']), f'Photo metadata: {path.name}'
