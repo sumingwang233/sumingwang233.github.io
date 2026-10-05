@@ -1,7 +1,7 @@
 /* Content is visible by default; enhance only off-screen content once. */
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 if (!motionPreference.matches && 'IntersectionObserver' in window) {
-  const targets = [...document.querySelectorAll('.document-section > h2, .document-section > .entry, .document-section > .publication, .document-section > .interests-copy, .skills-list > div, .closing-contact')];
+  const targets = [...document.querySelectorAll('.document-section > h2, .section-heading > h2, .document-section .entry, .document-section .publication, .document-section > .interests-copy, .skills-list > div, .closing-contact')];
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (entry.isIntersecting && entry.target.classList.contains('reveal--pending')) reveal(entry.target);

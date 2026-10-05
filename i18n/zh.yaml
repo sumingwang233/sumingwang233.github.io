@@ -1,0 +1,150 @@
+book_research:
+  other: 研究
+book_publications:
+  other: 论文
+book_projects:
+  other: 作品
+book_experience:
+  other: 经历
+book_cv:
+  other: 简历
+html_lang:
+  other: zh-CN
+home:
+  other: 首页
+research:
+  other: 研究
+publications:
+  other: 论文
+projects:
+  other: 作品
+cv:
+  other: 简历
+switch:
+  other: English
+switch_url:
+  other: /en/
+contact:
+  other: 邮件联系
+closing_contact:
+  other: 联系我：
+cv_download:
+  other: 学术简历
+job_resume_download:
+  other: 求职简历
+job_resume_file:
+  other: /files/job-resume-public.pdf
+cv_file:
+  other: /files/cv-zh.pdf
+cv_page:
+  other: /cv/
+research_heading:
+  other: 研究经历
+publications_heading:
+  other: 发表论文
+projects_heading:
+  other: 软件开发 ＆ AI 实践
+education_heading:
+  other: 教育背景
+evaluation_heading:
+  other: AI 评测实践
+training_heading:
+  other: 其他训练
+skills_heading:
+  other: 技能 ＆ 语言
+honors_heading:
+  other: 奖励与荣誉
+other_heading:
+  other: 其他经历
+campus_heading:
+  other: 校园经历
+hobbies:
+  other: 兴趣
+hobbies_heading:
+  other: 兴趣爱好
+hobbies_intro:
+  other: 研究与开发之外，我喜欢单机游戏、摄影、骑行和健身 · 这里的照片均由我拍摄
+carousel:
+  other: 图文轮播
+slide:
+  other: 爱好
+hobbies_swipe:
+  other: 左右滑动
+hobbies_keyboard:
+  other: 左右滑动，或使用箭头键切换爱好
+previous_slide:
+  other: 上一个爱好
+next_slide:
+  other: 下一个爱好
+choose_slide:
+  other: 选择爱好
+repository:
+  other: 查看源码 ↗
+doi:
+  other: 论文 DOI ↗
+updated:
+  other: 更新于
+skip:
+  other: 跳至正文
+menu:
+  other: 浏览
+cv_title:
+  other: 学术简历
+cv_print:
+  other: 打印 / 保存 PDF
+back:
+  other: 返回主页
+cv_other:
+  other: English CV
+cv_other_file:
+  other: /files/cv-en.pdf
+cv_other_page:
+  other: /en/cv/
+research_interests:
+  other: 学术兴趣
+footer:
+  other: 心理学研究与软件原型
+cv_notes:
+  other: 公开版本 · 仅提供邮箱与公开链接
+full_image:
+  other: 查看完整图片
+supervisor:
+  other: 指导教师：
+university_emblem:
+  other: 武汉大学校徽
+image_close:
+  other: 关闭图片
+image_zoom_controls:
+  other: 图片缩放
+image_zoom_in:
+  other: 放大
+image_zoom_out:
+  other: 缩小
+image_reset:
+  other: 适合画面
+image_zoom_hint:
+  other: 滚轮或 ＋／− 缩放 · 放大后拖动查看 · Esc 关闭
+image_error:
+  other: 图片暂时无法加载，请关闭后重试
+image_pending:
+  other: 配图待补
+records:
+  other: 记录
+experience:
+  other: 经历
+details:
+  other: 阅读详情 →
+all_projects:
+  other: 查看全部四项 →
+all_research:
+  other: 全部研究 →
+notes_heading:
+  other: 笔记精选
+all_notes:
+  other: 全部笔记 →
+zh_article:
+  other: 中文正文
+journal_empty:
+  other: 尚未发布日记，等待真实记录
+photos_intro:
+  other: 一些亲手拍下的风景、校园和城市日常

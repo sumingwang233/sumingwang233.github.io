@@ -5,8 +5,8 @@ const path = require('node:path');
 const http = require('node:http');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
-const site = path.join(root, '_site');
-const profile = JSON.parse(fs.readFileSync(path.join(root, '_data', 'profile.json'), 'utf8'));
+const site = path.join(root, 'public');
+const profile = JSON.parse(fs.readFileSync(path.join(root, '.local', 'public-profile.json'), 'utf8'));
 async function revealForScreenshot(page) {
   // Exercise native scroll reveals so a full-page preview includes the whole page.
   await page.evaluate(async () => {
@@ -65,8 +65,12 @@ const server = http.createServer((req, res) => {
         if (route === '/' || route === '/en/') {
           const lang = route === '/' ? 'zh' : 'en';
           assert.equal(await page.locator('.contact-links a').count(), 2);
+          for (const anchor of ['education', 'skills', 'academic-interests', 'research', 'publications', 'projects', 'campus', 'campus-title', 'campus-photography', 'campus-club-design', 'honors', 'honors-title', 'other', 'other-title', 'hobbies']) {
+            assert.equal(await page.locator('#' + anchor).count(), 1, `Missing legacy homepage anchor ${anchor}`);
+          }
           assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
-          assert.equal(await page.locator('#intro-title').innerText(), profile.person.role[lang]);
+          assert.equal(await page.locator('#intro-title').innerText(), `${profile.person.name[lang]} ${profile.person.name[lang === 'zh' ? 'en' : 'zh']}`);
+          assert.equal(await page.locator('.intro .role').innerText(), profile.person.role[lang]);
           assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
           assert(await page.locator('#gamelibrary .application-icon').evaluate(e => e.naturalWidth === 64 && e.getBoundingClientRect().height > 20 && e.getBoundingClientRect().height < 40));
           assert(await page.locator('.closing-contact > span').evaluate(e => !e.closest('a') && getComputedStyle(e).color === getComputedStyle(e.parentElement).color && getComputedStyle(e).textDecorationLine === 'none'));
@@ -92,54 +96,41 @@ const server = http.createServer((req, res) => {
     const jobResume = await page.request.get(base + '/files/job-resume-public.pdf');
     assert.equal(jobResume.status(), 200);
     assert((await jobResume.body()).subarray(0, 4).toString() === '%PDF');
-    assert.equal(await page.locator('#campus .entry').count(), 2);
-    assert.equal(await page.locator('#campus .entry-meta').count(), 0);
-    assert.equal(await page.locator('#campus-photography h3').innerText(), '党宣部记者团 · 摄影部副部长');
     assert.deepEqual(await page.locator('.document > section').evaluateAll(nodes => nodes.slice(1, 5).map(n => n.id)), ['education', 'skills', 'academic-interests', 'research']);
     assert.equal(await page.locator('.intro-copy').count(), 1);
     assert.equal(await page.locator('#academic-interests p').innerText(), profile.person.interests.zh);
     assert.equal(await page.locator('#skills-title').innerText(), '技能 ＆ 语言');
     assert.equal(await page.locator('#skills dd').first().innerText(), 'Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）');
     assert.equal(await page.locator('.intro a[href^="mailto:"]').count(), 0);
-    assert.equal(await page.locator('#honors li').nth(1).innerText(), '“外研社·国才杯·理解当代中国”英语组短视频大赛武汉大学校赛金奖');
     assert.equal(await page.locator('.closing-contact p').count(), 0);
     assert.equal(await page.locator('.closing-contact > span').textContent(), '联系我：');
     assert.equal(await page.locator('.closing-contact a').textContent(), 'sumingwang@qq.com ↗');
     assert.equal(await page.locator('#cleft-qualitative-2026 > .entry-meta').innerText(), '2026.08.19');
     assert.equal(await page.locator('#projects-title').innerText(), '软件开发 ＆ AI 实践');
-    assert.equal(await page.locator('h1#intro-title').innerText(), '武汉大学心理健康与教育中心助理');
+    assert.equal(await page.locator('h1#intro-title').innerText(), '王鑫 Xin Wang');
     assert.equal(await page.locator('#emotion-self-verification .entry-supervisor').innerText(), '指导教师：马鑫');
     assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => getComputedStyle(e).fontWeight === '700' && Math.abs(e.getBoundingClientRect().right - e.parentElement.getBoundingClientRect().right) < 1));
     assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('.section-intro, #evaluation').count(), 0);
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
-    assert.equal(await page.locator('#projects > .plain-list li').count(), 2);
+    assert.equal(await page.locator('#projects .overview-entry').count(), 2);
+    assert.equal(await page.locator('#research .overview-entry').count(), 3);
+    assert.equal(await page.locator('#projects .architecture-figure').count(), 0);
     assert.equal(await page.locator('#whu-psychology .entry-meta').count(), 0);
     assert.equal(await page.locator('#whu-psychology h3').innerText(), '武汉大学 · 哲学学院 · 心理学本科');
     assert.equal(await page.locator('#whu-psychology .university-emblem').getAttribute('src'), '/assets/images/whu-emblem.png');
     assert(await page.locator('#whu-psychology .university-emblem').evaluate(e => Math.abs(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e.parentElement).fontSize) - 1.3) < 0.02));
     assert.equal(await page.locator('#whu-psychology .entry-points li').first().innerText(), 'GPA：3.81 / 4.00');
     assert(await page.locator('#whu-psychology .entry-points').evaluate(e => e.clientWidth > 800));
-    assert.equal(await page.locator('#gamelibrary .architecture-node').count(), 6);
-    assert.equal(await page.locator('#gamelibrary .feature').count(), 6);
-    assert.equal(await page.locator('#dormitory-cooking .architecture-node').count(), 6);
-    assert.equal(await page.locator('#dormitory-cooking .feature').count(), 6);
-    assert.equal(await page.locator('#dormitory-cooking img').count(), 0);
-    assert.equal(await page.locator('#undergraduate-thesis .mediation-flow .architecture-node').count(), 4);
-    assert.equal(await page.locator('.project-figure img').count(), 1);
-    assert.equal(await page.locator('.figure-pending').count(), 2);
-    assert.equal(await page.locator('#angelalign-benchmark .mediation-flow .architecture-node').count(), 4);
-    assert.equal(await page.locator('#angelalign-benchmark .evaluation-dimensions .architecture-node').count(), 3);
+    assert.equal(await page.locator('.project-figure img, .architecture-figure, .figure-pending').count(), 0);
     assert.equal(await page.locator('#whu-psychology figure, #other figure').count(), 0);
-    assert.equal(await page.locator('#other .plain-list li').count(), 2);
     assert.equal(await page.locator('.masthead-meta > span').innerText(), '个人主页');
     assert.equal(await page.locator('.banner-link img').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
     assert.equal(await page.locator('.home-banner figcaption').count(), 0);
     assert.equal(await page.locator('.home-banner .portrait img').getAttribute('src'), '/assets/images/portrait-lifestyle.jpg');
     assert.equal(await page.locator('.masthead-academic').evaluate(e => getComputedStyle(e).position), 'sticky');
     assert.equal(await page.locator('.reveal--pending').count(), 0);
-    assert.equal(await page.locator('#emotion-self-verification figcaption').innerText(), '研究流程图 · 点击查看大图');
     assert(await page.locator('.portrait').evaluate(e => {
       const r = e.getBoundingClientRect();
       return r.width === r.height && r.width <= 144 && r.width >= 96 && getComputedStyle(e).borderRadius === '50%';
@@ -153,7 +144,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#hobbies .hobby').count(), 4);
     assert.equal(await page.locator('.hobby').first().locator('figcaption p').innerText(), '东湖の秋');
     assert.equal(await page.locator('.hobbies-hint').innerText(), '左右滑动');
-    await page.locator('.main-nav a[href="#hobbies"]').click();
+    await page.locator('#hobbies').scrollIntoViewIfNeeded();
     assert.equal(await page.locator('#hobbies-title').innerText(), '兴趣爱好');
     await page.locator('.hobbies-track').evaluate(e => { e.style.display = 'none'; window.dispatchEvent(new Event('resize')); });
     await page.locator('.hobbies-track').evaluate(e => { e.style.display = ''; window.dispatchEvent(new Event('resize')); });
@@ -205,7 +196,7 @@ const server = http.createServer((req, res) => {
         assert(middle > 0 && middle < end - 2, `${route} @ ${width}: missing smooth anchor travel`);
         await page.waitForFunction(top => Math.abs(scrollY - top) < 2, end);
         assert(await page.locator('#research').evaluate(e => e.getBoundingClientRect().top >= document.querySelector('.masthead-academic').getBoundingClientRect().bottom));
-        assert(await page.locator('.main-nav a').evaluateAll(links => links.every(e => getComputedStyle(e).borderTopStyle === 'solid' && e.getBoundingClientRect().height >= 44)));
+        assert(await page.locator('.main-nav > a').evaluateAll(links => links.every(e => getComputedStyle(e).borderTopStyle === 'solid' && e.getBoundingClientRect().height >= 44)));
         await page.emulateMedia({ reducedMotion: 'reduce' });
         assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), 'auto');
       }
@@ -215,7 +206,7 @@ const server = http.createServer((req, res) => {
       for (const width of [375, 1280]) {
         await page.setViewportSize({ width, height: 900 });
         await page.goto(base + route);
-        const link = page.locator('#emotion-self-verification .figure-link');
+        const link = page.locator('.banner-link');
         const url = page.url(), pageCount = page.context().pages().length;
         await link.click();
         const viewer = page.locator('.image-viewer');
@@ -276,7 +267,7 @@ const server = http.createServer((req, res) => {
     const touch = await browser.newPage({ viewport: { width: 375, height: 900 }, hasTouch: true, isMobile: true, reducedMotion: 'reduce' });
     touch.on('pageerror', error => errors.push(error.message));
     await touch.goto(base + '/');
-    await touch.locator('#emotion-self-verification .figure-link').tap();
+    await touch.locator('.banner-link').tap();
     await touch.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
     await touch.locator('.image-viewer [data-zoom="1"]').tap();
     const touchBox = await touch.locator('.image-viewer-stage').boundingBox();
@@ -355,15 +346,6 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.hobby').first().locator('img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
     }
     await page.goto(base + '/');
-    for (const width of [375, 1280]) {
-      await page.setViewportSize({ width, height: 900 });
-      for (const id of ['emotion-self-verification', 'undergraduate-thesis']) {
-        assert(await page.locator('#' + id).evaluate((e, wide) => {
-          const body = e.querySelector('.entry-body').getBoundingClientRect(), figure = e.querySelector('figure').getBoundingClientRect();
-          return wide ? Math.abs(body.top - figure.top) < 2 && (body.right <= figure.left || figure.right <= body.left) : figure.top >= body.bottom;
-        }, width >= 960), `${id}: incorrect side-by-side/stacked layout at ${width}`);
-      }
-    }
     await page.locator('.language-link').click();
     assert(new URL(page.url()).pathname === '/en/');
     assert.equal(await page.locator('.contact-links a[download]').first().innerText(), 'Academic CV');
@@ -377,7 +359,80 @@ const server = http.createServer((req, res) => {
       assert.equal(response.status(), 200);
       assert((await response.body()).subarray(0,4).toString() === '%PDF');
     }
+    // Native Hugo routes retain the complete material in their detail pages.
+    let addedViewports = 0;
+    for (const prefix of ['', '/en']) {
+      const routes = ['research', 'projects', 'publications', 'experience', 'records', 'notes', 'photos', 'journal'];
+      routes.push(...profile.research.map(x => `research/${x.id}`), ...[...profile.projects, ...profile.evaluation].map(x => `projects/${x.id}`), ...profile.publications.map(x => `publications/${x.id}`));
+      if (!prefix) routes.push('notes/self-concept-experiment', 'notes/gamelibrary-architecture');
+      for (const route of routes) {
+        for (const width of [375, 1280]) {
+          await page.setViewportSize({ width, height: 900 });
+          const response = await page.goto(`${base}${prefix}/${route}/`);
+          assert.equal(response.status(), 200);
+          await page.evaluate(async () => {
+            await document.fonts.ready;
+            await Promise.all([...document.images].map(im => { im.loading = 'eager'; return im.decode(); }));
+          });
+          assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${route} @ ${width}: overflow`);
+          assert.equal(await page.locator('main h1').count(), 1);
+          assert.equal(await page.locator('.language-link').count(), 1);
+          assert(await page.locator('.language-link').getAttribute('href') !== page.url());
+          if (['photos', 'research/emotion-self-verification', 'projects/gamelibrary'].includes(route)) {
+            await page.screenshot({ path: path.join(root, '.local', 'previews', `${prefix ? 'en' : 'zh'}-${route.replaceAll('/', '-')}-${width}.png`), fullPage: true });
+          }
+          addedViewports++;
+        }
+      }
+      await page.goto(`${base}${prefix}/projects/gamelibrary/`);
+      assert.equal(await page.locator('.architecture-node').count(), 6);
+      assert.equal(await page.locator('.feature').count(), 6);
+      await page.locator('.language-link').click();
+      assert.equal(new URL(page.url()).pathname, `${prefix ? '' : '/en'}/projects/gamelibrary/`);
+      await page.goto(`${base}${prefix}/projects/dormitory-cooking/`);
+      assert.equal(await page.locator('.feature').count(), 6);
+      await page.goto(`${base}${prefix}/projects/angelalign-benchmark/`);
+      assert.equal(await page.locator('.evaluation-dimensions .architecture-node').count(), 3);
+      await page.goto(`${base}${prefix}/research/undergraduate-thesis/`);
+      assert.equal(await page.locator('.mediation-flow .architecture-node').count(), 4);
+      await page.goto(`${base}${prefix}/experience/`);
+      assert.equal(await page.locator('#campus .entry').count(), 2);
+      assert.equal(await page.locator('#campus .entry-meta').count(), 0);
+      await page.goto(`${base}${prefix}/photos/`);
+      assert.equal(await page.locator('.photo-grid figure').count(), 12);
+      assert.equal(await page.locator('.photo-grid img[loading="lazy"]').count(), 12);
+      await page.locator('.photo-grid .figure-link').first().click();
+      await page.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
+      await page.locator('.image-viewer [data-zoom="1"]').click();
+      assert.equal(await page.locator('.image-viewer output').innerText(), '150%');
+      await page.keyboard.press('Escape');
+      await page.goto(`${base}${prefix}/research/emotion-self-verification/`);
+      assert(await page.locator('.entry-supervisor').evaluate(e => getComputedStyle(e).fontWeight === '700' && Math.abs(e.getBoundingClientRect().right - e.parentElement.getBoundingClientRect().right) < 1));
+      await page.locator('.project-figure .figure-link').click();
+      await page.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
+      assert((await page.locator('.image-viewer img').getAttribute('src')).endsWith('emotion-experiment.png'));
+      await page.keyboard.press('Escape');
+      await page.goto(`${base}${prefix}/journal/`);
+      assert.equal(await page.locator('.empty-state').count(), 1);
+      assert.equal(await page.locator('.overview-entry').count(), 0);
+      await page.goto(`${base}${prefix}/`);
+      await page.locator('.records-menu summary').click();
+      assert(await page.locator('.records-menu a[href$="/photos/"]').isVisible());
+      await page.locator('.records-menu a[href$="/photos/"]').click();
+      assert.equal(new URL(page.url()).pathname, `${prefix}/photos/`);
+    }
+    await page.goto(base + '/en/notes/');
+    assert.equal(await page.locator('.note-preview a[lang="zh"]').count(), 2);
+    assert((await page.locator('.note-preview .entry-meta').first().innerText()).includes('Chinese-language article'));
+    await page.locator('.note-preview a').first().click();
+    assert(new URL(page.url()).pathname.startsWith('/notes/'));
+    const fallback = await browser.newContext({ javaScriptEnabled: false });
+    const fallbackPage = await fallback.newPage({ viewport: { width: 375, height: 900 } });
+    await fallbackPage.goto(base + '/photos/');
+    await fallbackPage.locator('.photo-grid .figure-link').first().click();
+    assert(new URL(fallbackPage.url()).pathname.endsWith('-full.webp'));
+    await fallback.close();
     assert.deepEqual(errors, []);
-    console.log('PASS: 28 viewports, annotation content, official emblem, smooth navigation, in-page zoom/drag/keyboard/touch viewer, one-time reveals, no-JS fallback, reduced motion, carousel and CV PDFs');
+    console.log(`PASS: 28 original + ${addedViewports} new viewports; complete routes, language/record menus, details, photos, original anchors, viewer, carousel, reduced motion, no-JS and CV PDFs`);
   } finally { await browser.close(); server.close(); }
 })().catch(error => { console.error(error.stack || error.message); server.close(); process.exitCode = 1; });

@@ -1,0 +1,69 @@
+schema: hugoblox/author/v1
+slug: me
+is_owner: true
+name:
+  display: 王鑫
+  given: Xin
+  family: Wang
+  alternate: Xin Wang
+role: 武汉大学心理健康与教育中心助理
+bio: 我毕业于武汉大学心理学本科，目前在心理中心参与情绪调节与自我验证研究。我的工作涉及行为实验设计、心理测量与数据分析，也包括个人软件和游戏原型的设计与 AI 辅助开发
+tagline: 个人主页
+motto: Be Water, my friend
+interests_text: 关注情绪调节、自我概念与心理测量，以及游戏中的玩家动机、情绪体验和自我调节。希望结合行为实验、测量与软件原型，研究互动反馈和奖励机制如何影响行为选择
+links:
+- icon: at-symbol
+  url: mailto:sumingwang@qq.com
+- icon: brands/github
+  url: https://github.com/sumingwang233
+contact:
+  email: sumingwang@qq.com
+  github: https://github.com/sumingwang233
+education:
+- id: whu-psychology
+  title: 武汉大学 · 哲学学院 · 心理学本科
+  organization: ''
+  period: 2022—2026
+  bullets:
+  - GPA：3.81 / 4.00
+  - 相关课程：心理统计 96；实验心理学实验 95；情绪心理学 93；认知神经科学 95；生理心理学 95；认知心理学 93
+skills:
+- id: experiments-analysis
+  title: 实验＆分析
+  text: Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）
+- id: prototyping
+  title: 软件开发
+  text: AI产品开发；独立游戏设计；C#
+- id: languages
+  title: 语言
+  text: IELTS 7.0（听力 7.5、阅读 8.5、写作 6.5、口语 6.0）；CET-6 600；CET-4 655
+hobbies:
+- id: photography
+  title: 摄影
+  text: 东湖の秋
+  image: /assets/images/hobby-photography.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: 我拍摄的东湖秋景，阳光穿过金黄与绿色的树叶
+- id: games
+  title: 单机游戏
+  text: 玩单机，也做游戏原型 · 我的游戏桌面
+  image: /assets/images/hobby-games.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: 我的游戏桌面照片，手柄、食物与背景中的游戏屏幕
+- id: cycling
+  title: 骑行
+  text: 沿途看风景 · 湖边的自行车
+  image: /assets/images/hobby-cycling.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: 我拍摄的湖边自行车，树影与湖面构成背景
+- id: fitness
+  title: 健身
+  text: 给运动留一点时间 · 操场夜景
+  image: /assets/images/hobby-fitness.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: 我拍摄的操场夜景，低视角的跑道与远处的运动人群
+updated: '2026-10-05'

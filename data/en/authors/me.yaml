@@ -1,0 +1,69 @@
+schema: hugoblox/author/v1
+slug: me
+is_owner: true
+name:
+  display: Xin Wang
+  given: Xin
+  family: Wang
+  alternate: 王鑫
+role: Assistant, Mental Health and Education Center, Wuhan University
+bio: I graduated with a bachelor's degree in psychology from Wuhan University and currently contribute to emotion regulation and self-verification research at its Mental Health and Education Center. My work spans behavioral experiments, psychological measurement and data analysis, alongside the design and AI-assisted development of personal software and game prototypes
+tagline: Personal homepage
+motto: Be Water, my friend
+interests_text: My interests include emotion regulation, self-concept and psychological measurement, as well as player motivation, emotional experience and self-regulation in games. I aim to combine behavioral experiments, measurement and software prototypes to study how interactive feedback and rewards shape behavioral choices
+links:
+- icon: at-symbol
+  url: mailto:sumingwang@qq.com
+- icon: brands/github
+  url: https://github.com/sumingwang233
+contact:
+  email: sumingwang@qq.com
+  github: https://github.com/sumingwang233
+education:
+- id: whu-psychology
+  title: Wuhan University · School of Philosophy · Bachelor's degree in Psychology
+  organization: ''
+  period: 2022–2026
+  bullets:
+  - 'GPA: 3.81 / 4.00'
+  - 'Selected coursework: Psychological Statistics 96; Experimental Psychology Laboratory 95; Psychology of Emotion 93; Cognitive Neuroscience 95; Physiological Psychology 95; Cognitive Psychology 93'
+skills:
+- id: experiments-analysis
+  title: Experiments & analysis
+  text: Python / PsychoPy behavioral experiment design; E-Prime, MatLab; SPSS, Mplus; NVivo (qualitative analysis)
+- id: prototyping
+  title: Software development
+  text: AI product development; independent game design; C#
+- id: languages
+  title: Languages
+  text: IELTS 7.0 (L 7.5, R 8.5, W 6.5, S 6.0); CET-6 600; CET-4 655
+hobbies:
+- id: photography
+  title: Photography
+  text: Autumn at East Lake
+  image: /assets/images/hobby-photography.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: My photograph of autumn at East Lake, with sunlight through golden and green leaves
+- id: games
+  title: Single-player games
+  text: Playing solo and building game prototypes · My gaming desk
+  image: /assets/images/hobby-games.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: My gaming desk photograph, with a controller, food and a game on the screen behind
+- id: cycling
+  title: Cycling
+  text: Taking in the scenery along the way · A bicycle by the lake
+  image: /assets/images/hobby-cycling.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: My photograph of a bicycle by the lake, framed by trees and the water
+- id: fitness
+  title: Fitness
+  text: Making time for movement · The sports field at night
+  image: /assets/images/hobby-fitness.jpg
+  image_width: 1600
+  image_height: 1067
+  image_alt: My nighttime sports-field photograph, with a low view of the track and people in the distance
+updated: '2026-10-05'

@@ -1,0 +1,1 @@
+{{ $p := .Page }}{{ with .Get "path" }}{{ $p = site.GetPage . }}{{ end }}{{ partial "book/illustration.html" $p.Params }}

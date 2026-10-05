@@ -2,7 +2,9 @@
   "name": "xin-wang-academic-homepage",
   "version": "1.0.0",
   "private": true,
-  "description": "PDF generation and browser verification for a Jekyll academic homepage",
-  "scripts": {"verify": "node scripts/browser-check.cjs"},
+  "packageManager": "pnpm@10.14.0",
+  "description": "HugoBlox Academic-CV homepage and browser verification",
+  "scripts": {"dev": "hugo server --disableFastRender", "build": "hugo --minify --cleanDestinationDir", "verify": "node scripts/browser-check.cjs", "pagefind": "pagefind --site public"},
+  "dependencies": {"@tailwindcss/cli": "^4.1.12", "@tailwindcss/typography": "^0.5.10", "pagefind": "^1.4.0", "preact": "^10.27.2", "tailwindcss": "^4.1.12"},
   "devDependencies": {"playwright": "1.62.1"}
 }

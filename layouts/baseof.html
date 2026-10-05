@@ -1,0 +1,20 @@
+<!doctype html>
+<!-- Built with HugoBlox Academic-CV; book-paper theme overrides. -->
+{{ $p := partial "book/profile.html" . }}{{ $cv := eq .Type "cv" }}
+<html lang="{{ site.Language.Locale }}"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ $p.name.display }}{{ end }}</title>
+<meta name="description" content="{{ .Params.summary | default $p.bio }}"><meta name="author" content="Xin Wang">
+<link rel="canonical" href="{{ .Permalink }}">{{ range .AllTranslations }}<link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">{{ end }}
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}"><meta property="og:title" content="{{ .Title }}"><meta property="og:description" content="{{ .Params.summary | default $p.bio }}"><meta property="og:url" content="{{ .Permalink }}">
+<link rel="icon" href="/assets/images/favicon-avatar.png" type="image/png" sizes="64x64">
+<link rel="preload" href="/assets/fonts/noto-serif-sc.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/assets/css/academic.css"><link rel="stylesheet" href="/assets/css/book.css">
+{{ if not $cv }}<script src="/assets/js/hobbies.js" defer></script><script src="/assets/js/reveal.js" defer></script><script src="/assets/js/images.js" defer></script>{{ end }}
+{{ $schema := dict "@context" "https://schema.org" "@type" "Person" "name" "Xin Wang" "alternateName" "王鑫" "url" site.Home.Permalink "sameAs" (slice $p.contact.github) "email" (printf "mailto:%s" $p.contact.email) }}<script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
+</head><body{{ if $cv }} class="cv-view"{{ end }}>
+<a class="skip-link" href="#content">{{ i18n "skip" }}</a>
+{{ if $cv }}<nav class="cv-tools" aria-label="{{ i18n "cv" }}"><a href="{{ site.Home.RelPermalink }}">← {{ i18n "back" }}</a><a href="{{ i18n "cv_file" }}" download>{{ i18n "cv_download" }}</a><button type="button" onclick="window.print()">{{ i18n "cv_print" }}</button>{{ partial "book/language.html" . }}</nav>{{ else }}{{ partial "book/header.html" . }}{{ end }}
+<main id="content" tabindex="-1">{{ block "main" . }}{{ end }}</main>
+{{ if not $cv }}{{ partial "book/image-viewer.html" . }}<footer class="footer-academic"><span>© {{ now.Year }} {{ $p.name.display }}</span><span>{{ i18n "updated" }} {{ $p.updated }}</span><a href="{{ $p.contact.github }}" rel="noopener">GitHub ↗</a><a href="https://github.com/HugoBlox/hugo-theme-academic-cv">HugoBlox</a></footer>{{ end }}
+</body></html>

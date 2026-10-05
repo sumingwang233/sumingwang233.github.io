@@ -1,5 +1,0 @@
-<figure class="architecture-figure" aria-label="{{ include.item.image_caption[lang] }}">
-  <div class="mediation-flow">{% for node in include.item.model %}<div class="architecture-node">{% if node.detail %}<strong>{{ node[lang] }}</strong><span>{{ node.detail[lang] }}</span>{% else %}{{ node[lang] }}{% endif %}</div>{% unless forloop.last %}<span class="model-arrow" aria-hidden="true">→</span>{% endunless %}{% endfor %}</div>
-  {% if include.item.dimensions %}<div class="evaluation-dimensions">{% for dimension in include.item.dimensions %}<div class="architecture-node">{{ dimension[lang] }}</div>{% endfor %}</div><p class="evaluation-criteria">{{ include.item.criteria[lang] }}</p>{% endif %}
-  <figcaption>{{ include.item.image_caption[lang] }}</figcaption>
-</figure>
