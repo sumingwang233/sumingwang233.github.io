@@ -4,7 +4,6 @@ zh:
   visitor: 访客访问
   member: 账户访问
   welcome: 欢迎来到我的主页
-  welcome_copy: 选择访客直接浏览，或使用邮箱账户登录。两种方式均可阅读公开内容。
   login: 登录
   signup: 注册
   logout: 退出登录
@@ -105,7 +104,6 @@ en:
   visitor: Continue as visitor
   member: Use an account
   welcome: Welcome to my homepage
-  welcome_copy: Browse as a visitor or sign in with your email. Public content is available with either option.
   login: Sign in
   signup: Register
   logout: Sign out
