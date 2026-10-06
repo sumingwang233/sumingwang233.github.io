@@ -1,3 +1,16 @@
+/* Native disclosures stay usable without JavaScript. */
+const navMenus = [...document.querySelectorAll('.main-nav details')];
+document.addEventListener('click', event => {
+  for (const menu of navMenus) {
+    if (!menu.contains(event.target) || event.target.closest('a')) menu.open = false;
+  }
+});
+document.addEventListener('keydown', event => {
+  if (event.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+  const open = navMenus.find(menu => menu.open);
+  if (open) { event.preventDefault(); open.open = false; open.querySelector('summary').focus(); }
+});
+
 /* Content is visible by default; enhance only off-screen content once. */
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 if (!motionPreference.matches && 'IntersectionObserver' in window) {

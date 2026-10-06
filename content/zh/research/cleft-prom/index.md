@@ -3,6 +3,7 @@ id: cleft-prom
 title: 唇腭裂患者报告结局测量工具
 organization: PROM 开发 · 省级大学生创新项目
 period: 2023—2025
+supervisor: 袁文钧、匡文颖
 methods:
 - Psychometrics
 - Cognitive interviews

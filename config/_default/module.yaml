@@ -27,7 +27,7 @@ mounts:
     target: assets
   - source: assets/images
     target: static/assets/images
-    files: [book-paper-rough.png, emotion-experiment.png, favicon-avatar.png, gamelibrary-icon.png, hobby-cycling.jpg, hobby-fitness.jpg, hobby-games.jpg, hobby-photography.jpg, portrait-lifestyle.jpg, whu-emblem.png, 'photography/**']
+    files: [book-paper-rough.png, emotion-experiment.png, favicon-avatar.png, gamelibrary-icon.png, hobby-cycling.jpg, hobby-fitness.jpg, hobby-games.jpg, hobby-photography.jpg, portrait-lifestyle.jpg, whu-emblem.png, 'photography/**', 'hobbies/**']
   - source: assets/fonts
     target: static/assets/fonts
     files: [noto-serif-sc.woff2, noto-sans-sc.woff2, NotoSerifSC-OFL.txt, NotoSansSC-OFL.txt]

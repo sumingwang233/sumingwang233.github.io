@@ -3,6 +3,7 @@ id: cleft-prom
 title: Cleft Lip and/or Palate PROM
 organization: PROM development · Provincial undergraduate innovation project
 period: 2023–2025
+supervisor: Wenjun Yuan, Wenying Kuang
 methods:
 - Psychometrics
 - Cognitive interviews

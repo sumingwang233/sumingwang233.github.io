@@ -31,6 +31,7 @@ def load_profile():
     assert authors['zh']['contact'] == authors['en']['contact']
     result['person'] = {key: {lang: authors[lang][source] for lang in authors} for key, source in [('role', 'role'), ('intro', 'bio'), ('lead', 'motto'), ('tagline', 'tagline')]}
     result['person']['name'] = {lang: authors[lang]['name']['display'] for lang in authors}
+    result['personal_statement'] = {lang: authors[lang]['personal_statement'] for lang in authors}
     for key in ['education', 'skills', 'hobbies', 'academic_interests']:
         result[key] = combine(authors['zh'][key], authors['en'][key], key)
     for section, groups in [('research', ['research']), ('projects', ['projects', 'evaluation']), ('publications', ['publications'])]:

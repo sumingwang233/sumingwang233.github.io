@@ -16,10 +16,10 @@ weight: 1
 translationKey: emotion-self-verification
 authors:
 - me
-summary: In Study 3 of the research series, distinguish negative self-concept activation from negative emotion induction and examine their effects on emotion-regulation goals; lead experimental design and PsychoPy implementation
+summary: Participate throughout the research series, initially focusing on data analysis (E-Prime) and conducting experiments; now lead the experimental design and PsychoPy implementation of Study 3, distinguishing negative self-schema from negative emotion, and recruit research-team members and experiment participants
 featured: false
 highlights:
-- In Study 3 of the research series, distinguish negative self-concept activation from negative emotion induction and examine their effects on emotion-regulation goals; lead experimental design and PsychoPy implementation
+- Participate throughout the research series, initially focusing on data analysis (E-Prime) and conducting experiments; now lead the experimental design and PsychoPy implementation of Study 3, distinguishing negative self-schema from negative emotion, and recruit research-team members and experiment participants
 - Completed stimulus-selection pilot analyses and a report. The experimental system supports randomized feedback, manipulation checks, audio recording, event logs and data export
 ---
 

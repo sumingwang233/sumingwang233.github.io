@@ -17,7 +17,7 @@ button:disabled { cursor: wait; opacity: 0.6; }
 .account-page, .writing-page { padding-block: var(--space-2xl) var(--space-3xl); min-height: 75vh; }
 .account-page { max-width: 46rem; }
 .account-panel { padding-block: 2rem; }
-.account-panel p[role="status"], #editor-message { min-height: 1.7em; margin-bottom: 1rem; }
+#auth-message:not(:empty), #editor-message { min-height: 1.7em; margin-bottom: 1rem; }
 .form-actions { display: flex; align-items: center; gap: 0.75rem 1.25rem; flex-wrap: wrap; margin-block: 1.25rem; }
 .field { display: flex; flex-direction: column; gap: 0.5rem; margin-block: 1.25rem; font-size: var(--text-sm); }
 .field input, .field textarea, .field select { width: 100%; max-width: 100%; min-height: 44px; border: 1px solid var(--color-rule); border-radius: 5px; padding: 0.75rem; font: 400 1rem/1.7 var(--font-body); color: var(--color-ink); background: #fffffb80; }
@@ -25,7 +25,9 @@ button:disabled { cursor: wait; opacity: 0.6; }
 .auth-modes { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
 .auth-modes button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; }
 .auth-modes button[aria-pressed="true"] { border-bottom-color: var(--color-accent); color: var(--color-accent); }
-.guest-link { display: inline-block; margin-top: 1.5rem; }
+.guest-link { display: inline-block; margin-top: 1.5rem; color: var(--color-accent); }
+.password-strength { display: grid; gap: 0.4rem; margin-top: -0.5rem; }
+.password-strength meter { width: min(100%, 20rem); height: 0.75rem; }
 .writing-desk { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2rem; margin-top: 2rem; }
 .writing-index { align-self: start; }
 .post-index { list-style: none; padding: 0; margin: 1rem 0; max-height: 30rem; overflow-y: auto; }

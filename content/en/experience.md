@@ -18,10 +18,15 @@ campus:
   bullets:
   - Independently iterated club logos and designed posters and publicity materials to establish a consistent visual identity
   - Provided visual support for recruitment and club activities, maintaining consistent publicity materials to simplify later content production
+- id: campus-cycling-maintenance
+  title: Head of Maintenance · Cycling Association
+- id: campus-philosophy-media
+  title: Deputy Head · School of Philosophy Integrated Media Center
 honors:
 - 'Wuhan University: Second-Class Scholarship and National Encouragement Scholarship (2022–2023); Outstanding Student Leader (2024–2025)'
 - Gold Award, Wuhan University round of the FLTRP·ETIC “Understanding Contemporary China” English short-video competition
 other_experience:
+- 'Angelalign: AI Product Manager (Jun 2026)'
 - 'Xinzhi Peiban: online mentoring and content planning, part-time (Jul 2026–Present)'
 - Psychiatry placement, Renmin Hospital of Wuhan University (Summer 2025)
 training:
