@@ -25,3 +25,8 @@ hugoblox:
     style: minimal
   analytics:
     provider: ""
+account:
+  # Public browser key; never use a secret/service_role key here.
+  enabled: true
+  url: 'https://oiyqalcjbabcubxlhvsw.supabase.co'
+  publishable_key: 'sb_publishable_lbWDJhi45LztiSBaMUmznA_yvIF2HPC'

@@ -40,3 +40,11 @@ Use Hugo Extended 0.162.0, pnpm 10.14.0 and the pinned modules/lockfile. Local b
 Run `python scripts/prepare_assets.py`, `python scripts/validate.py`, `pnpm run build`, `pnpm run verify`, and `python scripts/validate.py --site public`. Inspect desktop/mobile homepage, representative details, gallery and all four CV PDF pages. Checks cover canonical bilingual content, full detail/CV facts, author order, local links, original 28 plus new viewports, viewer/carousel/navigation, no-JS/reduced motion, photo metadata and PDF privacy.
 
 Use a dedicated branch and review PR; attach created PRs to the chat. User authorization in the current conversation controls publication. PRs validate only; approved main changes deploy via GitHub Actions. A failure must keep the prior deployment; recover with a correction or revert, never force-push. Sites is a separate deployment and is not updated by this migration.
+
+## Accounts and online blog
+
+Supabase Auth owns persistent email accounts. `public.blog_posts` owns online writing; original academic facts and notes remain in the native Hugo sources above. Browser access choice is per visit, with anonymous visitors able to read public content. Do not create fake local users or grant administrators by comparing browser emails/user metadata.
+
+Administrator permission lives in the private database allowlist and is bootstrapped only after `sumingwang@qq.com` is verified. RLS protects post writes, drafts and private media. Only the public URL/publishable key belongs in site config. Never put service_role, SMTP, database credentials, registration passwords or verification codes in source, tests, previews or deployment artifacts. The synthetic credentials in isolated tests are not real accounts and must never be sent to the production project.
+
+Reuse the editor's sanitized Markdown and existing image viewer. Preserve save failure/conflict handling, guest/offline/no-JS access and CV exclusion. Images are re-exported without metadata. Run `pnpm run verify` for SQL permission and account UI checks as well as the original browser/PDF checks. Real email delivery and owner authorization require a separate production check; simulated tests do not prove them. Setup and backup guidance is in `supabase/README.md`.

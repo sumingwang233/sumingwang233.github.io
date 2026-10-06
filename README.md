@@ -54,3 +54,9 @@ python scripts/validate.py --site public
 GitHub Pages 来源为 GitHub Actions。一个迁移 PR 完成内容、构建与验证切换；PR 只验证，合并到 `main` 且检查成功后才部署 `public`。审阅产物只上传明确列出的公开截图和学术 CV PDF。失败时保留已有部署；回退使用 revert 或修正提交，不强推。
 
 独立 Sites 版本另行维护，此次迁移不更新。本站未启用访问追踪、Scholar 抓取、后台定时任务或付费 AI API。
+
+## 账户与在线博客
+
+访客直接阅读；邮箱账户通过 Supabase 注册、验证、登录与找回密码。站主可在 `/admin/` 保存草稿、配图、预览并发布到 `/blog/`，正文和账户存入数据库。权限由数据库控制，前端不包含私密密钥。
+
+接入、管理员授权、邮件模板、备份与真实收信验收见 [supabase/README.md](supabase/README.md)。已有研究、项目、简历及笔记继续使用原有 Markdown/YAML 内容源。

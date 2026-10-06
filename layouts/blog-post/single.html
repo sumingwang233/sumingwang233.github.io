@@ -1,0 +1,2 @@
+{{ define "main" }}{{ $t := index site.Data.account site.Language.Lang }}
+<div class="document detail-page" id="online-post"><a href="{{ site.Home.RelPermalink }}blog/">← {{ $t.archive }}</a><p data-blog-message role="status">{{ $t.loading }}</p><noscript><p>{{ $t.no_script }}</p></noscript><article hidden><header class="detail-header"><p class="eyebrow" data-post-meta></p><h1 data-post-title></h1><p class="intro-copy" data-post-excerpt></p></header><div class="article-content blog-body" data-post-body></div></article></div>{{ end }}
