@@ -61,13 +61,11 @@ campus_heading:
 hobbies:
   other: Interests
 hobbies_heading:
-  other: Beyond research & code
+  other: Hobbies & Skills
 carousel:
   other: Carousel
 slide:
   other: Interest
-hobbies_swipe:
-  other: Swipe horizontally
 hobbies_keyboard:
   other: Swipe horizontally or use the arrow keys to explore
 previous_slide:
