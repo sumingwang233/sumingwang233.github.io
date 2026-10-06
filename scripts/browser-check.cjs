@@ -455,7 +455,7 @@ const server = http.createServer((req, res) => {
       await page.goto(`${base}${prefix}/research/undergraduate-thesis/`);
       assert.equal(await page.locator('.mediation-flow .architecture-node').count(), 4);
       await page.goto(`${base}${prefix}/experience/`);
-      assert.equal(await page.locator('#campus .entry').count(), 2);
+      assert.equal(await page.locator('#campus .entry').count(), 4);
       assert.equal(await page.locator('#campus .entry-meta').count(), 0);
       await page.goto(`${base}${prefix}/photos/`);
       assert.equal(await page.locator('.photo-grid figure').count(), 12);
@@ -481,7 +481,6 @@ const server = http.createServer((req, res) => {
       await page.locator('.records-menu a[href$="/photos/"]').click();
       assert.equal(new URL(page.url()).pathname, `${prefix}/photos/`);
       await page.goto(`${base}${prefix}/experience/`);
-      assert.equal(await page.locator('#campus .entry').count(), 4);
       assert.equal(await page.locator('#campus').evaluate(e => getComputedStyle(e).borderTopWidth), '0px');
       assert.equal(await page.locator('#campus').evaluate(e => getComputedStyle(e).marginTop), '0px');
     }

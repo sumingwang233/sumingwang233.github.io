@@ -109,7 +109,8 @@ def parsed(site, route):
 
 def present(text, facts, route):
     for fact in facts:
-        assert ' '.join(str(fact).replace('**', '').split()) in text, f'{route}: missing public content: {str(fact)[:70]}'
+        # Inline emphasis may split a text node; compare content without layout whitespace.
+        assert re.sub(r'\s+', '', str(fact).replace('**', '')) in re.sub(r'\s+', '', text), f'{route}: missing public content: {str(fact)[:70]}'
 
 def entry_facts(item, lang, figure=False):
     facts = [item[key][lang] for key in ['title', 'organization', 'supervisor', 'period', 'text'] if key in item]
