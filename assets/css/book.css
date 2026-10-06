@@ -86,7 +86,10 @@
   .cv-section .entry-timing { font-size: 8pt; }
   .cv-section .entry-supervisor { font-size: inherit; }
   html[lang="en-US"] .cv-document { font-size: 8.3pt; line-height: 1.35; }
-  html[lang="en-US"] .cv-heading p { font-size: 8.3pt; }
-  html[lang="en-US"] .cv-section { margin-top: 7pt; }
+  html[lang="en-US"] .cv-heading p { font-size: 8.3pt; margin-top: 3pt; }
+  html[lang="en-US"] .cv-section { margin-top: 5pt; }
+  html[lang="en-US"] .cv-section .entry, html[lang="en-US"] .cv-section .publication { margin-top: 3pt; }
+  html[lang="en-US"] .cv-section li + li { margin-top: 1pt; }
+  html[lang="en-US"] .cv-section .authors { line-height: inherit; }
   html[lang="en-US"] .cv-section .entry h3, html[lang="en-US"] .cv-section .publication h3 { font-size: 8.6pt; }
 }
