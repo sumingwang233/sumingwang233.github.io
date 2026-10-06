@@ -63,6 +63,7 @@
   .records-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (min-width: 60rem) {
+  .intro-copy, .intro .personal-statement { max-width: none; }
   .research-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xl); }
   .research-overview .entry + .entry { padding-top: 0; border: 0; }
   .project-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); }
