@@ -61,13 +61,11 @@ campus_heading:
 hobbies:
   other: 兴趣
 hobbies_heading:
-  other: 兴趣爱好
+  other: 爱好特长
 carousel:
   other: 图文轮播
 slide:
   other: 爱好
-hobbies_swipe:
-  other: 左右滑动
 hobbies_keyboard:
   other: 左右滑动，或使用箭头键切换爱好
 previous_slide:

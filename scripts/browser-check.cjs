@@ -151,7 +151,8 @@ const server = http.createServer((req, res) => {
     assert(await page.locator('#whu-psychology .entry-points').evaluate(e => e.clientWidth > 800));
     assert.equal(await page.locator('.project-figure img, .architecture-figure, .figure-pending').count(), 0);
     assert.equal(await page.locator('#whu-psychology figure, #other figure').count(), 0);
-    assert.equal(await page.locator('.masthead-meta > span').innerText(), '个人主页');
+    assert.equal(await page.locator('.masthead-meta > span').count(), 0);
+    assert.equal(await page.locator('.wordmark img').getAttribute('src'), '/assets/images/favicon-avatar.png');
     assert.equal(await page.locator('.banner-link img').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
     assert.equal(await page.locator('.home-banner figcaption').count(), 0);
     assert.equal(await page.locator('.home-banner .portrait img').getAttribute('src'), '/assets/images/portrait-lifestyle.jpg');
@@ -170,9 +171,9 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.main-nav a').first().getAttribute('href'), '#research');
     assert.equal(await page.locator('#hobbies .hobby').count(), 4);
     assert.equal(await page.locator('.hobby').first().locator('figcaption p').innerText(), '东湖の秋');
-    assert.equal(await page.locator('.hobbies-hint').innerText(), '左右滑动');
+    assert.equal(await page.locator('.hobbies-hint').count(), 0);
     await page.locator('#hobbies').scrollIntoViewIfNeeded();
-    assert.equal(await page.locator('#hobbies-title').innerText(), '兴趣爱好');
+    assert.equal(await page.locator('#hobbies-title').innerText(), '爱好特长');
     await page.locator('.hobbies-track').evaluate(e => { e.style.display = 'none'; window.dispatchEvent(new Event('resize')); });
     await page.locator('.hobbies-track').evaluate(e => { e.style.display = ''; window.dispatchEvent(new Event('resize')); });
     assert.equal(await page.locator('[aria-current="true"]').getAttribute('data-slide'), '0');
