@@ -126,6 +126,28 @@ image_pending:
   other: 配图待补
 records:
   other: 记录
+nav_about:
+  other: 关于我
+nav_home:
+  other: 主页
+hobby_photography:
+  other: 摄影
+hobby_games:
+  other: 游戏
+hobby_cycling:
+  other: 骑行
+hobby_fitness:
+  other: 健身
+nav_all:
+  other: 全部
+photo_pause:
+  other: 暂停照片轮换
+photo_resume:
+  other: 继续照片轮换
+photo_previous:
+  other: 上一张照片
+photo_next:
+  other: 下一张照片
 experience:
   other: 经历
 details:

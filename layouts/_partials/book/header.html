@@ -1,3 +1,15 @@
 {{ $p := partial "book/profile.html" . }}{{ $home := site.Home.RelPermalink }}
-<header class="masthead-academic"><div class="masthead-inner"><div class="masthead-meta"><a class="wordmark" href="{{ $home }}" aria-label="{{ $p.name.display }} · {{ i18n "home" }}"><img src="/assets/images/favicon-avatar.png" width="44" height="44" alt=""></a></div>
-<nav class="main-nav" aria-label="{{ i18n "menu" }}">{{ range slice "research" "publications" "projects" }}<a href="{{ if $.IsHome }}#{{ . }}{{ else }}{{ $home }}{{ . }}/{{ end }}">{{ i18n (printf "book_%s" .) }}</a>{{ end }}<details class="records-menu"><summary>{{ i18n "records" }}</summary><div><a href="{{ $home }}blog/">{{ (index site.Data.account site.Language.Lang).all_blog }}</a>{{ range slice "notes" "photos" "journal" }}{{ with site.GetPage . }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}<a href="{{ $home }}records/">{{ i18n "records" }}</a></div></details><a href="{{ $home }}experience/">{{ i18n "book_experience" }}</a><a href="{{ $home }}cv/">{{ i18n "book_cv" }}</a><a href="{{ $home }}account/" data-account-nav>{{ (index site.Data.account site.Language.Lang).account }}</a></nav>{{ partial "book/language.html" . }}</div></header>
+<header class="masthead-academic"><div class="masthead-inner"><div class="masthead-meta"><a class="wordmark" href="{{ $home }}" aria-label="{{ $p.name.display }} · {{ i18n "home" }}"><img src="/assets/images/favicon-avatar.png" width="44" height="44" alt=""><span>{{ i18n "nav_home" }}</span></a></div>
+<nav class="main-nav" aria-label="{{ i18n "menu" }}">
+  <details class="nav-menu about-menu" name="main-navigation"><summary>{{ i18n "nav_about" }}</summary><div>
+    {{ range slice "research" "publications" "projects" }}<a href="{{ if $.IsHome }}#{{ . }}{{ else }}{{ $home }}{{ . }}/{{ end }}">{{ i18n (printf "book_%s" .) }}</a>{{ end }}
+    <a href="{{ $home }}experience/">{{ i18n "book_experience" }}</a>
+  </div></details>
+  <details class="nav-menu records-menu" name="main-navigation"><summary>{{ i18n "notes_heading" }}</summary><div>
+    <a href="{{ $home }}blog/">{{ i18n "nav_all" }}</a>
+    <a href="{{ $home }}blog/?category=research">{{ (index site.Data.account site.Language.Lang).research }}</a>
+    {{ with site.GetPage "photos" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+    <a href="{{ $home }}blog/?category=essay">{{ (index site.Data.account site.Language.Lang).essay }}</a>
+  </div></details>
+  <a href="{{ $home }}cv/">{{ i18n "book_cv" }}</a><a href="{{ $home }}account/" data-account-nav>{{ (index site.Data.account site.Language.Lang).account }}</a>
+</nav>{{ partial "book/language.html" . }}</div></header>

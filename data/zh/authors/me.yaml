@@ -15,6 +15,9 @@ bio: |-
   工作之余，我会投入时间与精力探索个人兴趣，包括个人软件与独立游戏的设计及 AI 辅助开发。
 tagline: 个人主页
 motto: Be Water, my friend
+personal_statement:
+  quote: 心理学先是失去了灵魂，然后失去了心灵，接着又失去了意识，它仍然保留着某种行为。
+  resolve: 而我想找回这些失去的东西。
 academic_interests:
 - id: emotion-self-concept
   title: 情绪调节、自我概念与心理测量
@@ -39,11 +42,11 @@ education:
   organization: ''
   period: 2022—2026
   bullets:
-  - GPA：3.81 / 4.00
-  - 相关课程：心理统计 96；实验心理学实验 95；情绪心理学 93；认知神经科学 95；生理心理学 95；认知心理学 93
+  - GPA：**3.81** / 4.00
+  - 相关课程：心理统计 96；实验心理学实验 95；情绪心理学 93；认知神经科学 95；生理心理学 95；现代心理学视野 100
 skills:
 - id: experiments-analysis
-  title: 实验＆分析
+  title: 心理学实验 ＆ 分析
   text: Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）
 - id: prototyping
   title: 软件开发
@@ -59,6 +62,15 @@ hobbies:
   image_width: 1600
   image_height: 1067
   image_alt: 我拍摄的东湖秋景，阳光穿过金黄与绿色的树叶
+  photos:
+  - image: /assets/images/photography/landscape-02-full.webp
+    thumbnail: /assets/images/photography/landscape-02-thumb.webp
+    image_alt: 我拍摄的雾中东湖湖面
+    text: 雾中的湖面
+  - image: /assets/images/photography/landscape-04-full.webp
+    thumbnail: /assets/images/photography/landscape-04-thumb.webp
+    image_alt: 我拍摄的东湖树影与夕光
+    text: 树影与夕光
 - id: games
   title: 单机游戏
   text: 玩单机，也做游戏原型 · 我的游戏桌面
@@ -73,6 +85,13 @@ hobbies:
   image_width: 1600
   image_height: 1067
   image_alt: 我拍摄的湖边自行车，树影与湖面构成背景
+  photos:
+  - image: /assets/images/hobbies/cycling-02.webp
+    image_alt: 我拍摄的山地车近景，车牌与轮胎
+    text: 山地车近景
+  - image: /assets/images/hobbies/cycling-03.webp
+    image_alt: 我拍摄的东湖林间自行车，停在树旁的小径上
+    text: 林间的自行车
 - id: fitness
   title: 健身
   text: 给运动留一点时间 · 操场夜景
@@ -80,4 +99,11 @@ hobbies:
   image_width: 1600
   image_height: 1067
   image_alt: 我拍摄的操场夜景，低视角的跑道与远处的运动人群
+  photos:
+  - image: /assets/images/hobbies/fitness-02.webp
+    image_alt: 我拍摄的桂园操场夜景，跑道上经过的人群
+    text: 夜间的跑道
+  - image: /assets/images/hobbies/fitness-03.webp
+    image_alt: 我拍摄的桂园操场夜景，运动场与场边的人们
+    text: 操场一角
 updated: '2026-10-05'

@@ -3,6 +3,7 @@ id: undergraduate-thesis
 title: Self-Concept Positivity & Depressive Affect
 organization: Undergraduate thesis · Serial mediation study
 period: 2025–2026
+supervisor: Jie Li
 methods:
 - SPSS
 - Mplus

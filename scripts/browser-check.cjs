@@ -148,6 +148,9 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#whu-psychology .university-emblem').getAttribute('src'), '/assets/images/whu-emblem.png');
     assert(await page.locator('#whu-psychology .university-emblem').evaluate(e => Math.abs(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e.parentElement).fontSize) - 1.3) < 0.02));
     assert.equal(await page.locator('#whu-psychology .entry-points li').first().innerText(), 'GPA：3.81 / 4.00');
+    assert.equal(await page.locator('#whu-psychology .entry-points strong').innerText(), '3.81');
+    assert.equal(await page.locator('.personal-statement strong').innerText(), '而我想找回这些失去的东西。');
+    assert.equal(await page.locator('.wordmark span').innerText(), '主页');
     assert(await page.locator('#whu-psychology .entry-points').evaluate(e => e.clientWidth > 800));
     assert.equal(await page.locator('.project-figure img, .architecture-figure, .figure-pending').count(), 0);
     assert.equal(await page.locator('#whu-psychology figure, #other figure').count(), 0);
@@ -218,6 +221,7 @@ const server = http.createServer((req, res) => {
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto(base + route);
         const end = await page.locator('#research').evaluate(e => e.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) - parseFloat(getComputedStyle(e).scrollMarginTop));
+        await page.locator('.about-menu summary').click();
         await page.locator('.main-nav a[href="#research"]').click();
         await page.waitForTimeout(80);
         const middle = await page.evaluate(() => scrollY);
@@ -375,6 +379,31 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.hobbies-track').evaluate(e => e.scrollLeft), 0);
       assert.equal(await page.locator('.hobby').first().locator('img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
     }
+    // Only the visible theme rotates. Pause, dialogs, reduced motion and a missing gallery stop it.
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto(base + '/');
+    await page.locator('#hobbies').scrollIntoViewIfNeeded();
+    await page.mouse.move(0, 0);
+    assert.deepEqual(await page.locator('.hobby').evaluateAll(slides => slides.map(slide => 1 + (slide.querySelector('template')?.content.querySelectorAll('a').length || 0))), [3, 1, 3, 3]);
+    const photo = page.locator('.hobby').first().locator('img');
+    const cover = await photo.getAttribute('src');
+    await page.waitForFunction(src => document.querySelector('.hobby img').getAttribute('src') !== src, cover, { timeout: 10000 });
+    assert.equal(await page.locator('.hobby-dots [aria-current="true"]').getAttribute('data-slide'), '0');
+    await page.locator('[data-photo-toggle]').click();
+    const pausedPhoto = await photo.getAttribute('src');
+    await page.waitForTimeout(6500);
+    assert.equal(await photo.getAttribute('src'), pausedPhoto);
+    await page.locator('[data-photo-direction="1"]').click();
+    await page.waitForFunction(src => document.querySelector('.hobby img').getAttribute('src') !== src, pausedPhoto);
+    await page.locator('.hobby .figure-link').first().click();
+    assert.equal(await page.locator('.image-viewer img').evaluate(e => e.src), await page.locator('.hobby .figure-link').first().evaluate(e => e.href));
+    await page.keyboard.press('Escape');
+    await page.locator('[data-slide="1"]').click();
+    await page.waitForFunction(() => document.querySelector('[data-slide="1"]').getAttribute('aria-current') === 'true');
+    assert(await page.locator('.photo-controls').isHidden());
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.locator('[data-slide="0"]').click();
+    assert(await page.locator('[data-photo-toggle]').isDisabled());
     await page.goto(base + '/');
     await page.locator('.language-link').click();
     assert(new URL(page.url()).pathname === '/en/');
@@ -447,9 +476,14 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.overview-entry').count(), 0);
       await page.goto(`${base}${prefix}/`);
       await page.locator('.records-menu summary').click();
+      assert.deepEqual(await page.locator('.records-menu > div a').allTextContents(), prefix ? ['All', 'Game psychology', 'Photography', 'Essays'] : ['全部', '游戏心理学', '摄影', '随笔']);
       assert(await page.locator('.records-menu a[href$="/photos/"]').isVisible());
       await page.locator('.records-menu a[href$="/photos/"]').click();
       assert.equal(new URL(page.url()).pathname, `${prefix}/photos/`);
+      await page.goto(`${base}${prefix}/experience/`);
+      assert.equal(await page.locator('#campus .entry').count(), 4);
+      assert.equal(await page.locator('#campus').evaluate(e => getComputedStyle(e).borderTopWidth), '0px');
+      assert.equal(await page.locator('#campus').evaluate(e => getComputedStyle(e).marginTop), '0px');
     }
     await page.goto(base + '/en/notes/');
     assert.equal(await page.locator('.note-preview a[lang="zh"]').count(), 2);

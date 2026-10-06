@@ -10,8 +10,16 @@ zh:
   continue: 继续浏览
   email: 邮箱
   password: 密码
-  password_help: 使用 12–128 个字符，避免与其他网站共用密码
-  forgot: 忘记密码
+  password_new: 请设置新密码
+  password_confirm: 再次输入密码
+  password_mismatch: 两次输入的密码不一致
+  password_strength: 密码强度（估计）
+  strength_empty: 尚未输入
+  strength_weak: 弱
+  strength_medium: 中等
+  strength_strong: 强
+  password_help: 请使用12个以上字符
+  forgot: 忘记密码？
   send_reset: 发送重置邮件
   verify: 验证邮箱
   code: 邮件验证码
@@ -45,7 +53,7 @@ zh:
   body_help: 使用段落、小标题和配图组织正文，支持 Markdown
   category: 栏目
   essay: 随笔
-  research: 研究笔记
+  research: 游戏心理学
   development: 开发记录
   photography: 摄影
   language: 正文语言
@@ -110,8 +118,16 @@ en:
   continue: Continue browsing
   email: Email
   password: Password
-  password_help: Use 12–128 characters and a password unique to this site
-  forgot: Forgot password
+  password_new: Set a new password
+  password_confirm: Enter the password again
+  password_mismatch: The passwords do not match
+  password_strength: Password strength (estimate)
+  strength_empty: Not entered
+  strength_weak: Weak
+  strength_medium: Moderate
+  strength_strong: Strong
+  password_help: Please use at least 12 characters
+  forgot: Forgot password?
   send_reset: Send reset email
   verify: Verify email
   code: Email verification code
@@ -145,7 +161,7 @@ en:
   body_help: Organize your writing with paragraphs, headings and images. Markdown supported.
   category: Category
   essay: Essays
-  research: Research notes
+  research: Game psychology
   development: Development
   photography: Photography
   language: Content language

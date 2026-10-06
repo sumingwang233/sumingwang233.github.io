@@ -72,7 +72,8 @@ function start(config) {
   function setAuthMode(mode) {
     authMode = mode;
     if (!authForm) return;
-    const password = authForm.elements.password, code = authForm.elements.code;
+    const password = authForm.elements.password, code = authForm.elements.code, confirmation = authForm.elements.password_confirm;
+    const creating = mode === 'signup' || mode === 'recover';
     const hasPassword = ['login', 'signup', 'recover'].includes(mode);
     const hasCode = mode === 'verify' || mode === 'recovery-code';
     $('[data-auth-password]', authForm).hidden = !hasPassword;
@@ -82,6 +83,13 @@ function start(config) {
     // Older passwords remain valid at sign-in; only creation/reset enforce the stronger minimum.
     password.minLength = mode === 'login' ? 1 : 12;
     password.autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+    message($('[data-password-label]', authForm), creating ? t.password_new : t.password);
+    $('[data-auth-confirm]', authForm).hidden = !creating;
+    $('[data-password-strength]', authForm).hidden = !creating;
+    confirmation.required = creating;
+    confirmation.disabled = !creating;
+    password.value = confirmation.value = '';
+    updatePasswordFeedback();
     code.required = hasCode;
     authForm.elements.email.required = mode !== 'recover';
     $('[data-resend]', authForm).hidden = mode !== 'verify';
@@ -90,6 +98,26 @@ function start(config) {
     authForm.hidden = !client;
     if (accountSession) accountSession.hidden = true;
   }
+  function updatePasswordFeedback() {
+    if (!authForm) return;
+    const password = authForm.elements.password.value, confirmation = authForm.elements.password_confirm;
+    confirmation.setCustomValidity(confirmation.value && confirmation.value !== password ? t.password_mismatch : '');
+    let strength = 0;
+    if (password) {
+      // This local estimate is guidance; server policy remains the authority.
+      const unique = new Set(password).size;
+      const common = /password|qwerty|letmein|123456|abcdef/i.test(password) || unique < 4;
+      const types = [/\p{Ll}/u, /\p{Lu}/u, /\p{N}/u, /[^\p{L}\p{N}\s]/u].filter(pattern => pattern.test(password)).length;
+      strength = password.length < 12 || common ? 1 : ((password.length >= 16 && unique >= 6) || (types >= 3 && unique >= 6)) ? 3 : 2;
+    }
+    const label = `${t.password_strength}${config.lang === 'zh' ? '：' : ': '}${[t.strength_empty, t.strength_weak, t.strength_medium, t.strength_strong][strength]}`;
+    const meter = $('[data-password-strength] meter', authForm), output = $('[data-strength-text]', authForm);
+    meter.value = strength;
+    meter.setAttribute('aria-valuetext', label);
+    if (output.textContent !== label) message(output, label);
+  }
+  authForm?.elements.password.addEventListener('input', updatePasswordFeedback);
+  authForm?.elements.password_confirm.addEventListener('input', updatePasswordFeedback);
   $$('[data-auth-mode]').forEach(button => button.addEventListener('click', () => { message(authMessage, ''); setAuthMode(button.dataset.authMode); }));
   const redirect = new URL(config.home + 'account/', location.origin).href;
   authForm?.addEventListener('submit', async event => {
@@ -99,6 +127,15 @@ function start(config) {
     const password = authForm.elements.password.value;
     const code = authForm.elements.code.value.trim();
     const mode = authMode;
+    if (mode === 'signup' || mode === 'recover') {
+      if (password.length < 12 || password.length > 128) { message(authMessage, t.password_help); return; }
+      if (password !== authForm.elements.password_confirm.value) {
+        authForm.elements.password_confirm.setCustomValidity(t.password_mismatch);
+        message(authMessage, t.password_mismatch);
+        authForm.elements.password_confirm.reportValidity();
+        return;
+      }
+    }
     const buttons = $$('button', authForm);
     buttons.forEach(button => button.disabled = true);
     message(authMessage, t.loading);
@@ -121,8 +158,11 @@ function start(config) {
         check(await client.auth.updateUser({ password }));
         authMode = 'login'; await refreshAccount(); message(authMessage, t.password_updated);
       }
-    } catch (error) { message(authMessage, errorText(error)); }
-    finally { authForm.elements.password.value = ''; authForm.elements.code.value = ''; buttons.forEach(button => button.disabled = false); }
+    } catch (error) {
+      if (error?.code === 'email_not_confirmed') setAuthMode('verify');
+      message(authMessage, errorText(error));
+    }
+    finally { authForm.elements.password.value = ''; authForm.elements.password_confirm.value = ''; authForm.elements.code.value = ''; updatePasswordFeedback(); buttons.forEach(button => button.disabled = false); }
   });
   $('[data-resend]')?.addEventListener('click', async event => {
     if (!authForm.elements.email.reportValidity()) return;
@@ -181,6 +221,16 @@ function start(config) {
   async function loadBlog() {
     const feed = $('[data-blog-feed]');
     if (!feed) return;
+    const requested = new URLSearchParams(location.search).get('category');
+    const category = !feed.hasAttribute('data-featured') && ['essay', 'research', 'development', 'photography'].includes(requested) ? requested : null;
+    if (category) {
+      message($('[data-blog-title]'), t[category]);
+      const notes = $('[data-existing-notes]');
+      if (notes) notes.hidden = true;
+      document.title = `${t[category]} · ${document.title.split(' · ').at(-1)}`;
+      // Keep the selected column when switching languages.
+      $$('.language-link').forEach(link => { const url = new URL(link.href); url.searchParams.set('category', category); link.href = url.href; });
+    }
     const status = $('[data-blog-message]');
     if (!client) { message(status, t.setup); return; }
     let offset = 0;
@@ -191,7 +241,9 @@ function start(config) {
       message(status, t.loading); if (more) more.disabled = true;
       try {
         // Both language archives identify the original language instead of inventing translations.
-        const items = check(await client.from('blog_posts').select('id,title,excerpt,category,language,published_at').eq('status', 'published').order('published_at', { ascending: false }).order('id').range(offset, offset + size - 1));
+        let query = client.from('blog_posts').select('id,title,excerpt,category,language,published_at').eq('status', 'published');
+        if (category) query = query.eq('category', category);
+        const items = check(await query.order('published_at', { ascending: false }).order('id').range(offset, offset + size - 1));
         feed.append(...items.map(postCard)); offset += items.length;
         message(status, offset === 0 && !featured ? t.empty_blog : '');
         if (more) more.hidden = items.length < size;

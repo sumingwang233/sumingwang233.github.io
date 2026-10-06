@@ -126,6 +126,28 @@ image_pending:
   other: Illustration to follow
 records:
   other: Records
+nav_about:
+  other: About me
+nav_home:
+  other: Home
+hobby_photography:
+  other: Photos
+hobby_games:
+  other: Games
+hobby_cycling:
+  other: Cycling
+hobby_fitness:
+  other: Fitness
+nav_all:
+  other: All
+photo_pause:
+  other: Pause photos
+photo_resume:
+  other: Resume photos
+photo_previous:
+  other: Previous photo
+photo_next:
+  other: Next photo
 experience:
   other: Experience
 details:

@@ -3,6 +3,7 @@ id: undergraduate-thesis
 title: 自我概念积极性与抑郁情绪
 organization: 毕业论文 · 链式中介机制研究
 period: 2025—2026
+supervisor: 李杰
 methods:
 - SPSS
 - Mplus

@@ -62,6 +62,13 @@ def validate_profile(profile):
             if 'image' in item:
                 assert item['image'].startswith('/assets/images/')
                 assert item['image_width'] > 0 and item['image_height'] > 0
+            if 'photos' in item:
+                assert 2 <= len(item['photos']) <= 4, 'A rotating theme needs 3–5 photos including its cover'
+                assert len({item['image'], *(photo['image'] for photo in item['photos'])}) == len(item['photos']) + 1
+                for photo in item['photos']:
+                    assert photo['image'].startswith('/assets/images/')
+                    assert photo.get('thumbnail', photo['image']).startswith('/assets/images/')
+                    assert set(photo['image_alt']) == set(photo['text']) == {'zh', 'en'}
             if 'architecture' in item:
                 arch = item['architecture']
                 for node in arch['clients'] + [arch[k] for k in ['host', 'application', 'domain', 'infrastructure']]:
@@ -102,7 +109,7 @@ def parsed(site, route):
 
 def present(text, facts, route):
     for fact in facts:
-        assert ' '.join(str(fact).split()) in text, f'{route}: missing public content: {str(fact)[:70]}'
+        assert ' '.join(str(fact).replace('**', '').split()) in text, f'{route}: missing public content: {str(fact)[:70]}'
 
 def entry_facts(item, lang, figure=False):
     facts = [item[key][lang] for key in ['title', 'organization', 'supervisor', 'period', 'text'] if key in item]
@@ -124,6 +131,7 @@ def check_site(site, profile):
     for lang, prefix in [('zh', ''), ('en', 'en/')]:
         home, text = parsed(site, prefix)
         present(text, [profile['person'][k][lang] for k in ['name', 'role', 'intro', 'lead']], prefix)
+        present(text, profile['personal_statement'][lang].values(), prefix)
         for group in ['education', 'skills', 'academic_interests']:
             for item in profile[group]:
                 present(text, entry_facts(item, lang), prefix)
@@ -201,6 +209,10 @@ def check_site(site, profile):
         with Image.open(path) as im:
             assert not im.getexif() and not any(k in im.info for k in ['exif', 'xmp', 'comment', 'icc_profile']), f'Photo metadata: {path.name}'
             assert max(im.size) >= (1000 if 'thumb' in path.name else 2000)
+    for path in (site / 'assets/images/hobbies').glob('*.webp'):
+        with Image.open(path) as im:
+            assert not im.getexif() and not any(k in im.info for k in ['exif', 'xmp', 'comment', 'icc_profile']), f'Photo metadata: {path.name}'
+            assert max(im.size) == 1600
     check_resume_pdf(site / 'files/job-resume-public.pdf', profile['contact']['email'])
 
 def self_check(profile):
