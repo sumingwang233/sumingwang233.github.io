@@ -25,7 +25,7 @@ def public_text(text):
         assert marker not in text, f'Private or template marker: {marker}'
     assert not re.search(r'(?<![A-Za-z])[A-Za-z]:[\\/](?!/)|/mnt/[a-z]/|/Users/|/home/', text), 'Local absolute path was found'
 
-def check_resume_pdf(path, email):
+def check_resume_pdf(path, email, allowed_urls=()):
     def inspect(text):
         text = unicodedata.normalize('NFKC', text)
         text = ''.join(char for char in text if unicodedata.category(char) != 'Cf')
@@ -43,7 +43,7 @@ def check_resume_pdf(path, email):
             if key not in {'format', 'encryption'}:
                 assert not value, 'Resume PDF metadata must be cleared'
         for page in doc:
-            assert not page.get_links(), 'Resume PDF contains a link'
+            assert all(link.get('uri') in allowed_urls for link in page.get_links()), 'Resume PDF contains an unapproved link'
             assert not list(page.annots() or []), 'Resume PDF contains an annotation or attached file'
             assert not list(page.widgets() or []), 'Resume PDF contains a form field'
 
@@ -51,7 +51,7 @@ def validate_profile(profile):
     assert profile['schema_version'] == 1
     assert set(profile['contact']) == {'email', 'github'}
     ids = []
-    for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'hobbies', 'campus_experience', 'academic_interests']:
+    for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'hobbies', 'campus_experience', 'academic_interests', 'contributions']:
         for item in profile[group]:
             ids.append(item['id'])
             for key in ['title', 'organization', 'supervisor', 'period', 'status', 'text', 'image_alt', 'image_caption']:
@@ -140,13 +140,17 @@ def check_site(site, profile):
             present(text, [item['title'][lang], item['bullets'][lang][0]], prefix)
         for hobby in profile['hobbies']:
             present(text, [hobby['title'][lang], hobby['text'][lang]], prefix)
-        _, cv = parsed(site, prefix + 'cv')
+        cv_parser, cv = parsed(site, prefix + 'cv')
         for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'campus_experience', 'academic_interests']:
             for item in profile[group]:
                 present(cv, entry_facts(item, lang), prefix + 'cv')
         for group in ['honors', 'training', 'other_experience']:
             present(cv, profile[group][lang], prefix + 'cv')
-        _, experience = parsed(site, prefix + 'experience')
+        experience_parser, experience = parsed(site, prefix + 'experience')
+        for item in profile['contributions']:
+            for parser, rendered, route in [(home, text, prefix), (cv_parser, cv, prefix + 'cv'), (experience_parser, experience, prefix + 'experience')]:
+                present(rendered, entry_facts(item, lang), route)
+                assert item['url'] in parser.urls, f'{route}: missing contribution link'
         for item in profile['campus_experience']:
             present(experience, entry_facts(item, lang), prefix + 'experience')
         for group in ['honors', 'training', 'other_experience']:
@@ -184,6 +188,10 @@ def check_site(site, profile):
             public_text(pdf_text)
             for fact in [profile['contact']['email'], '283', '100', '17', profile['publications'][0]['doi']]:
                 assert fact in pdf_text, f'{lang} PDF: missing {fact}'
+            pdf_urls = {link.get('uri') for page in pdf for link in page.get_links()}
+            for item in profile['contributions']:
+                present(pdf_text, entry_facts(item, lang), f'{lang} PDF')
+                assert item['url'] in pdf_urls, f'{lang} PDF: missing contribution link'
     for path in site.rglob('*.html'):
         public_text(path.read_text('utf8'))
         parser = Links(); parser.feed(path.read_text('utf8'))
@@ -214,7 +222,7 @@ def check_site(site, profile):
         with Image.open(path) as im:
             assert not im.getexif() and not any(k in im.info for k in ['exif', 'xmp', 'comment', 'icc_profile']), f'Photo metadata: {path.name}'
             assert max(im.size) == 1600
-    check_resume_pdf(site / 'files/job-resume-public.pdf', profile['contact']['email'])
+    check_resume_pdf(site / 'files/job-resume-public.pdf', profile['contact']['email'], [item['url'] for item in profile['contributions']])
 
 def self_check(profile):
     revised = copy.deepcopy(profile)
@@ -275,7 +283,7 @@ if __name__ == '__main__':
     for folder in ['content', 'data', 'i18n']:
         for path in (ROOT / folder).rglob('*'):
             if path.suffix in {'.md', '.yaml'}: public_text(path.read_text('utf8'))
-    check_resume_pdf(ROOT / 'files/job-resume-public.pdf', data['contact']['email'])
+    check_resume_pdf(ROOT / 'files/job-resume-public.pdf', data['contact']['email'], [item['url'] for item in data['contributions']])
     (ROOT / '.local').mkdir(exist_ok=True)
     (ROOT / '.local/public-profile.json').write_text(json.dumps(data, ensure_ascii=False), 'utf8')
     if args.site: check_site(args.site, data)

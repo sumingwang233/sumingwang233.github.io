@@ -29,6 +29,15 @@ other_experience:
 - 'Angelalign: AI Product Manager (Jun 2026)'
 - 'Xinzhi Peiban: online mentoring and content planning, part-time (Jul 2026–Present)'
 - Psychiatry placement, Renmin Hospital of Wuhan University (Summer 2025)
+contributions:
+- id: unsloth-contribution
+  title: Unsloth · PR contributor
+  text: 'Submitted PR #12889 (awaiting merge).'
+  url: https://github.com/unslothai/unsloth/pull/12889
+- id: psychology-podcast
+  title: Psychology knowledge podcast
+  text: Producing a Chinese-language psychology podcast on NetEase Cloud Music.
+  url: https://music.163.com/djradio?id=1496521002
 training:
 - '4th World AI for Science Competition, RNA–protein structure prediction: second-round qualification'
 - 'Datawhale 2026 AI Spring Training Camp: Outstanding Learner'

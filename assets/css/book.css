@@ -20,6 +20,8 @@
 .nav-menu > div a:last-child { margin-top: 0.25rem; border-top: 1px solid color-mix(in srgb, var(--color-rule) 65%, transparent); border-top-left-radius: 0; border-top-right-radius: 0; }
 .section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-md); }
 .section-heading > a, .archive-links, .eyebrow { color: var(--color-accent); font-size: var(--text-sm); }
+.contributions-heading { margin-top: var(--space-xl); }
+.contribution-link { color: var(--color-accent); }
 .summary { margin-top: var(--space-md); max-width: 75ch; }
 .overview-entry h3 a, .note-preview h3 a { text-decoration: none; }
 .overview-entry h3 a:hover, .note-preview h3 a:hover { text-decoration: underline; }

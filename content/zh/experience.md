@@ -29,6 +29,15 @@ other_experience:
 - 时代天使公司：AI 产品经理（2026.06）
 - 新知陪伴：线上带教与内容策划，兼职（2026.07—至今）
 - 武汉大学人民医院精神病科：毕业实习（2025 年夏）
+contributions:
+- id: unsloth-contribution
+  title: Unsloth · PR 贡献者
+  text: '已提交 PR #12889（待合并）。'
+  url: https://github.com/unslothai/unsloth/pull/12889
+- id: psychology-podcast
+  title: 心理学知识播客
+  text: 正在制作，通过网易云音乐分享心理学知识。
+  url: https://music.163.com/djradio?id=1496521002
 training:
 - 第四届世界科学智能大赛：RNA–蛋白复合物结构预测赛道，获复赛资格
 - Datawhale 2026 AI 春训营：优秀学习者

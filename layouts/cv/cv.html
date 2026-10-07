@@ -5,6 +5,7 @@
 <section class="cv-section"><h2>{{ i18n "publications_heading" }}</h2>{{ range where site.RegularPages "Section" "publications" }}{{ partial "book/publication.html" (dict "page" . "cv" true) }}{{ end }}</section>
 {{ range slice "research" "projects" }}<section class="cv-section"><h2>{{ if eq . "research" }}{{ i18n "research_heading" }}{{ else }}{{ i18n "projects_heading" }}{{ end }}</h2>{{ range where site.RegularPages "Section" . }}{{ partial "book/entry.html" (dict "item" (merge .Params (dict "title" .Title))) }}{{ end }}{{ if eq . "projects" }}<ul class="plain-list">{{ range $experience.Params.training }}<li>{{ . }}</li>{{ end }}</ul>{{ end }}</section>{{ end }}
 <section class="cv-section"><h2>{{ i18n "skills_heading" }}</h2>{{ range $p.skills }}<p><strong>{{ .title }}：</strong>{{ .text }}</p>{{ end }}</section>
+<section class="cv-section"><h2>{{ i18n "contributions_heading" }}</h2>{{ partial "book/contributions.html" $experience.Params.contributions }}</section>
 <section class="cv-section"><h2>{{ i18n "campus_heading" }}</h2>{{ range $experience.Params.campus }}{{ partial "book/entry.html" (dict "item" .) }}{{ end }}</section>
 {{ range slice (dict "label" "honors_heading" "items" $experience.Params.honors) (dict "label" "other_heading" "items" $experience.Params.other_experience) }}<section class="cv-section"><h2>{{ i18n .label }}</h2><ul class="plain-list">{{ range .items }}<li>{{ . }}</li>{{ end }}</ul></section>{{ end }}
 <p class="cv-endnote">{{ i18n "cv_notes" }} · {{ i18n "updated" }} {{ $p.updated }}</p></article>{{ end }}
