@@ -1,1 +1,1 @@
-<ul class="plain-list contributions">{{ range . }}<li id="{{ .id }}"><a class="contribution-link" href="{{ .url }}"><strong>{{ .title }}</strong> ↗</a> · {{ .text }}</li>{{ end }}</ul>
+{{ range . }}<article class="entry contribution" id="{{ .id }}"><div class="entry-body"><div class="entry-heading"><h3><a href="{{ .url }}">{{ .title }}</a></h3></div><p class="summary">{{ .text }}</p></div></article>{{ end }}

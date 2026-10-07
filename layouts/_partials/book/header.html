@@ -8,6 +8,7 @@
   <details class="nav-menu records-menu" name="main-navigation"><summary>{{ i18n "notes_heading" }}</summary><div>
     <a href="{{ $home }}blog/">{{ i18n "nav_all" }}</a>
     <a href="{{ $home }}blog/?category=research">{{ (index site.Data.account site.Language.Lang).research }}</a>
+    <a href="{{ $home }}blog/?category=development">{{ (index site.Data.account site.Language.Lang).development }}</a>
     {{ with site.GetPage "photos" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
     <a href="{{ $home }}blog/?category=essay">{{ (index site.Data.account site.Language.Lang).essay }}</a>
   </div></details>

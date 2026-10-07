@@ -41,6 +41,18 @@ button:disabled { cursor: wait; opacity: 0.6; }
 .editor-toolbar { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 1.5rem; }
 .editor-toolbar button { font-size: var(--text-xs); padding: 0.5rem 0.75rem; }
 .body-field textarea { min-height: 24rem; tab-size: 2; }
+.text-style { min-width: 0; margin-top: 1rem; padding: 0.75rem; border: 1px solid var(--color-rule); border-radius: 5px; }
+.text-style legend { padding-inline: 0.4rem; font-size: var(--text-sm); }
+.style-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.style-options .field { margin-block: 0.25rem; }
+.text-style .form-help { margin-block: 0.5rem 0; }
+.editor-preview { min-width: 0; padding: 1.25rem; border: 1px solid var(--color-rule); border-radius: 5px; background: #fffffb50; }
+.editor-preview h2 { margin-top: 0.5rem; overflow-wrap: anywhere; }
+.blog-body p, .blog-body li { font-size: inherit; line-height: inherit; }
+.blog-body h1 { font-size: 1.8em; margin-block: 2rem 1rem; }
+.blog-body h2 { font-size: 1.6em; }
+.blog-body h3 { font-size: 1.3em; }
+.blog-body[data-body-font]:not([data-body-font="default"]) :is(h1,h2,h3,h4,h5,h6) { font-family: inherit; letter-spacing: inherit; }
 .blog-feed-section { margin-top: var(--space-2xl); }
 .blog-feed-section h2 { margin-bottom: var(--space-lg); }
 [data-blog-feed]:empty { display: none; }
@@ -56,5 +68,6 @@ button:disabled { cursor: wait; opacity: 0.6; }
 .blog-body img { display: block; max-width: 100%; height: auto; margin-block: 1.5rem; }
 .blog-body a.figure-link { display: block; }
 @media (min-width: 60rem) { .writing-desk { grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; } }
+@media (min-width: 72rem) { .writing-sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; } .editor-preview { position: sticky; top: 6rem; max-height: calc(100dvh - 7rem); overflow: auto; } .writing-sheet:has(.editor-preview[hidden]) { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .site-button { transition: none; } }
 @media print { .access-choice, .account-panel, .writing-desk { display: none; } }
