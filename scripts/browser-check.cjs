@@ -47,6 +47,9 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.cv-heading h1').innerText(), `${profile.person.name[lang]} ${profile.person.name[lang === 'zh' ? 'en' : 'zh']}`);
       assert.equal(await page.locator('.cv-heading a').last().getAttribute('href'), profile.contact.github);
       assert.equal(await page.locator('.cv-heading a').last().innerText(), profile.contact.github.replace(/^https:\/\//, ''));
+      for (const item of profile.contributions) {
+        assert.equal(await page.locator('#projects').getByRole('link', { name: item.title[lang] }).getAttribute('href'), item.url);
+      }
       await page.pdf({ path: path.join(site, 'files', `cv-${lang}.pdf`), format: 'A4', printBackground: false, preferCSSPageSize: true, displayHeaderFooter: false });
     }
     for (const route of ['/', '/en/', '/cv/', '/en/cv/']) {
@@ -132,7 +135,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.closing-contact > span').textContent(), '联系我：');
     assert.equal(await page.locator('.closing-contact a').textContent(), 'sumingwang@qq.com ↗');
     assert.equal(await page.locator('#cleft-qualitative-2026 > .entry-meta').innerText(), '2026.08.19');
-    assert.equal(await page.locator('#projects-title').innerText(), '软件开发 ＆ AI 实践');
+    assert.equal(await page.locator('#projects-title').innerText(), '作品');
     assert.equal(await page.locator('h1#intro-title').innerText(), '王鑫 Xin Wang');
     assert.equal(await page.locator('#emotion-self-verification .entry-supervisor').innerText(), '指导教师：马鑫');
     assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => getComputedStyle(e).fontWeight === '700' && Math.abs(e.getBoundingClientRect().right - e.parentElement.getBoundingClientRect().right) < 1));
@@ -409,7 +412,7 @@ const server = http.createServer((req, res) => {
     assert(new URL(page.url()).pathname === '/en/');
     assert.equal(await page.locator('.contact-links a[download]').first().innerText(), 'Academic CV');
     assert.equal(await page.locator('.contact-links a').last().innerText(), 'Job resume (Chinese)');
-    assert.equal(await page.locator('#projects-title').innerText(), 'Software development & AI practice');
+    assert.equal(await page.locator('#projects-title').innerText(), 'Projects');
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
     assert.deepEqual(await page.locator('h1,h2,h3').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);

@@ -146,9 +146,10 @@ def check_site(site, profile):
                 present(cv, entry_facts(item, lang), prefix + 'cv')
         for group in ['honors', 'training', 'other_experience']:
             present(cv, profile[group][lang], prefix + 'cv')
-        experience_parser, experience = parsed(site, prefix + 'experience')
+        _, experience = parsed(site, prefix + 'experience')
+        projects_parser, projects_text = parsed(site, prefix + 'projects')
         for item in profile['contributions']:
-            for parser, rendered, route in [(home, text, prefix), (cv_parser, cv, prefix + 'cv'), (experience_parser, experience, prefix + 'experience')]:
+            for parser, rendered, route in [(home, text, prefix), (cv_parser, cv, prefix + 'cv'), (projects_parser, projects_text, prefix + 'projects')]:
                 present(rendered, entry_facts(item, lang), route)
                 assert item['url'] in parser.urls, f'{route}: missing contribution link'
         for item in profile['campus_experience']:
