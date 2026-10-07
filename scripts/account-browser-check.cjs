@@ -160,6 +160,16 @@ async function fixture(route) {
     await page.reload(); assert.equal(await page.locator('#access-choice[open]').count(),0);
     await page.goto(base + '/account/');
     await page.locator('#auth-form').waitFor({state:'visible'});
+    const supportsWebGL = await page.evaluate(() => {
+      const canvas = document.createElement('canvas'), gl = canvas.getContext('webgl2');
+      const supported = Boolean(gl);
+      gl?.getExtension('WEBGL_lose_context')?.loseContext();
+      return supported;
+    });
+    if (supportsWebGL) {
+      await page.locator('#login-scene[data-ready] canvas').waitFor({state:'visible'});
+      await page.screenshot({path:path.join(root,'.local/previews/login-scene.png')});
+    }
     await page.locator('[data-auth-mode=signup]').click();
     assert.equal(await page.locator('.account-page .eyebrow').count(), 0);
     assert.equal(await page.locator('[data-auth-mode=verify]').count(), 0);
