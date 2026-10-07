@@ -56,6 +56,7 @@ def load_profile():
             result[group].append(item)
     experience = {lang: frontmatter(ROOT / f'content/{lang}/experience.md')[0] for lang in authors}
     result['campus_experience'] = combine(experience['zh']['campus'], experience['en']['campus'])
+    result['contributions'] = combine(experience['zh']['contributions'], experience['en']['contributions'])
     for group in ['training', 'honors', 'other_experience']:
         result[group] = {lang: experience[lang][group] for lang in authors}
     return result
