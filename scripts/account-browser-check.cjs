@@ -291,6 +291,8 @@ async function fixture(route) {
     page.once('dialog',dialog=>dialog.accept()); await page.locator('[data-delete]').click();
     await page.waitForFunction(()=>document.querySelector('#editor-message').textContent === '文章已删除'); assert.equal(posts.size,0);
     await page.locator('#admin-posts button[data-id="/notes/gamelibrary-architecture/"]').click();
+    assert.equal(await input('category').inputValue(),'development');
+    assert((await input('body_md').inputValue()).includes('Tauri'), 'Opening an original note did not populate its body');
     await input('title').fill('GameLibrary 架构（编辑）');
     await input('body_md').fill('## Edited original note\n\nUpdated through the writing desk.');
     await page.clock.fastForward(31000);

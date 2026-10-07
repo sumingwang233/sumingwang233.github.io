@@ -390,7 +390,7 @@ function start(config) {
   function fillPost(item, draft) {
     post = item;
     editor.reset();
-    const content = draft?.post_version === item.version ? draft.content : item;
+    const content = draft && draft.post_version === item.version ? draft.content : item;
     for (const name of ['title','excerpt','body_md','category','language']) field(name).value = content[name];
     field('tags').value = (content.tags || []).join(', ');
     for (const [name, value] of Object.entries(content.body_style || {})) if (field(name)) field(name).value = value;
