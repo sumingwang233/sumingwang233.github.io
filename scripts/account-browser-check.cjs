@@ -8,7 +8,7 @@ const crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..'), site = path.join(root, 'public');
 const api = 'https://oiyqalcjbabcubxlhvsw.supabase.co';
 const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2' };
-const users = new Map(), tokens = new Map(), posts = new Map(), media = new Map();
+const users = new Map(), tokens = new Map(), posts = new Map(), drafts = new Map(), media = new Map();
 let failSave = false, delaySave = false;
 const makeUser = (email, admin = false) => ({ id: crypto.randomUUID(), email, password: 'a-valid-test-password', admin, confirmed: true });
 users.set('owner@example.test', makeUser('owner@example.test', true));
@@ -57,12 +57,33 @@ async function fixture(route) {
   }
   if (['/auth/v1/logout','/auth/v1/resend','/auth/v1/recover'].includes(url.pathname)) return reply({});
   if (url.pathname === '/rest/v1/rpc/is_site_admin') return reply(Boolean(user?.admin));
+  if (url.pathname === '/rest/v1/rpc/save_blog_draft') {
+    if (!user?.admin) return reply({ code: '42501' }, 403);
+    if (failSave) return reply({ code: 'connection_failed' }, 503);
+    if (delaySave) await new Promise(resolve => setTimeout(resolve, 600));
+    const current = posts.get(body.post_id);
+    if (!current || current.version !== body.expected_version || current.status !== 'published') return reply([]);
+    const updated_at = new Date().toISOString(), item = {...current, version:current.version+1, updated_at};
+    posts.set(item.id,item); drafts.set(item.id,{post_id:item.id, post_version:item.version, content:body.content, updated_at});
+    return reply([item]);
+  }
+  if (url.pathname === '/rest/v1/blog_post_drafts') {
+    if (!user?.admin) return reply([]);
+    let items = [...drafts.values()];
+    if (url.searchParams.has('post_id')) items = items.filter(item => item.post_id === url.searchParams.get('post_id').replace('eq.',''));
+    const offset = Number(url.searchParams.get('offset') || 0), limit = Number(url.searchParams.get('limit') || 1000);
+    return reply(items.slice(offset,offset+limit));
+  }
   if (url.pathname === '/rest/v1/blog_posts') {
     const eqId = url.searchParams.get('id')?.replace('eq.', '');
     const version = Number(url.searchParams.get('version')?.replace('eq.', ''));
     if (method === 'GET') {
       let items = [...posts.values()].filter(post => user?.admin || post.status === 'published');
       if (eqId) items = items.filter(item => item.id === eqId);
+      if (url.searchParams.has('source_path')) {
+        const source = url.searchParams.get('source_path');
+        items = items.filter(item => source.startsWith('in.(') ? source.slice(4,-1).split(',').map(value => value.replace(/^"|"$/g,'')).includes(item.source_path) : item.source_path === source.replace('eq.',''));
+      }
       if (url.searchParams.has('status')) items = items.filter(item => item.status === url.searchParams.get('status').replace('eq.', ''));
       if (url.searchParams.has('category')) items = items.filter(item => item.category === url.searchParams.get('category').replace('eq.', ''));
       const order = url.searchParams.get('order') || '';
@@ -77,11 +98,13 @@ async function fixture(route) {
     if (delaySave) await new Promise(resolve => setTimeout(resolve, 600));
     const now = new Date().toISOString();
     if (method === 'POST') {
-      const item = { ...body, id: crypto.randomUUID(), author_id: user.id, version: 1, created_at: now, updated_at: now, published_at: body.status === 'published' ? now : null };
-      posts.set(item.id, item); return reply([item], 201);
+      if (body.source_path && [...posts.values()].some(item => item.source_path === body.source_path)) return reply({code:'23505'},409);
+      const item = { source_path:null, body_style:{}, ...body, id: crypto.randomUUID(), author_id: user.id, version: 1, created_at: now, updated_at: now, published_at: body.status === 'published' ? body.published_at || now : null };
+      posts.set(item.id, item); return reply(req.headers().accept?.includes('vnd.pgrst.object') ? item : [item], 201);
     }
     const current = posts.get(eqId);
     if (!current || current.version !== version) return reply([]);
+    drafts.delete(eqId);
     if (method === 'DELETE') { posts.delete(eqId); return reply([{id:eqId}]); }
     const item = { ...current, ...body, version: current.version + 1, updated_at: now, published_at: current.published_at || (body.status === 'published' ? now : null) };
     posts.set(eqId, item); return reply([item]);
@@ -114,6 +137,7 @@ async function fixture(route) {
   context.on('page', page => page.on('pageerror', error => errors.push(error.message)));
   await context.route(api + '/**', fixture);
   const page = await context.newPage();
+  await page.clock.install();
   const login = async (target, email, password = 'a-valid-test-password') => {
     await target.goto(base + '/account/');
     await target.locator('#auth-form').waitFor({ state: 'visible' });
@@ -168,18 +192,27 @@ async function fixture(route) {
     await login(page,'owner@example.test'); await page.locator('[data-admin-link]').waitFor({state:'visible'});
     await page.reload(); await page.locator('#account-session').waitFor({state:'visible'});
     await page.locator('[data-admin-link]').click(); await page.locator('#writing-desk').waitFor({state:'visible'});
+    assert.equal(await page.locator('#admin-posts button').count(), 2, 'Original notes are missing from the writing desk');
     const input = name => page.locator(`#post-form [name=${name}]`);
     await input('title').fill('测试草稿 <script>'); await input('excerpt').fill('Summary');
     await input('body_md').fill('## Heading\n\nA useful paragraph.\n\n<script>window.pwned = true</script>\n<img src=x onerror="window.pwned=true">\n[Unsafe](javascript:alert(1))');
     await page.locator('[data-save]').click(); await page.waitForFunction(()=>document.querySelector('#editor-message').textContent === '已保存');
     assert.equal(posts.size,1); const firstId = [...posts.keys()][0];
     assert.equal(posts.get(firstId).status,'draft');
-    await page.locator('[data-preview]').click(); await page.locator('#post-preview').waitFor({state:'visible'});
+    await page.locator('#post-preview').waitFor({state:'visible'});
+    await input('font_size').fill('20'); await input('line_height').fill('2'); await input('letter_spacing').fill('1');
+    await input('body_md').fill((await input('body_md').inputValue()) + '\n\n**Live Markdown**');
+    await page.locator('[data-preview-body] strong').waitFor();
+    assert.equal(await page.locator('[data-preview-body]').evaluate(e => getComputedStyle(e).fontSize), '20px');
+    await page.clock.fastForward(31000);
+    await page.waitForFunction(()=>document.querySelector('#save-state').textContent.startsWith('已保存'));
+    assert.equal(posts.get(firstId).body_style.font_size,20);
+    assert(posts.get(firstId).body_md.includes('Live Markdown'), 'Timer did not save the changed draft');
     assert.equal(await page.evaluate(()=>Boolean(window.pwned)),false);
     assert.equal(await page.locator('#post-preview script, #post-preview [onerror], #post-preview a[href^="javascript"]').count(),0);
     await page.goto(base + '/blog/'); assert.equal(await page.locator('[data-blog-feed] article').count(),0);
     await page.goto(base + '/admin/'); await page.locator('#writing-desk').waitFor({state:'visible'});
-    await page.locator('#admin-posts button').first().click();
+    await page.locator(`#admin-posts button[data-id="${firstId}"]`).click();
     await page.waitForFunction(()=>document.querySelector('#post-form [name=title]').value.includes('测试草稿'));
     assert((await input('body_md').inputValue()).includes('A useful paragraph'));
     await input('tags').fill('one,two,three,four,five,six'); await page.locator('[data-save]').click();
@@ -196,7 +229,7 @@ async function fixture(route) {
     await input('body_md').fill('A different local draft, which must remain intact.'); await page.locator('[data-save]').click();
     await page.waitForFunction(()=>document.querySelector('#editor-message').textContent.includes('其他窗口更新'));
     assert((await input('body_md').inputValue()).includes('remain intact'));
-    page.once('dialog', dialog=>dialog.accept()); await page.locator('#admin-posts button').first().click();
+    page.once('dialog', dialog=>dialog.accept()); await page.locator(`#admin-posts button[data-id="${firstId}"]`).click();
     await page.waitForFunction(()=>document.querySelector('#post-form [name=body_md]').value.includes('A useful paragraph'));
     await input('title').fill('写作测试（仅本地）');
     await input('excerpt').fill('格式与发布流程的本地测试，不会提交到真实数据库');
@@ -208,6 +241,12 @@ async function fixture(route) {
     await page.locator('[data-save]').click(); await page.waitForFunction(()=>document.querySelector('#editor-message').textContent === '已保存');
     page.once('dialog', dialog=>dialog.accept()); await page.locator('[data-publish]').click();
     await page.waitForFunction(()=>document.querySelector('[data-post-state]').textContent === '已发布');
+    const publicTitle = posts.get(firstId).title;
+    await input('title').fill('Pending private title');
+    await page.clock.fastForward(31000);
+    await page.waitForFunction(()=>document.querySelector('#editor-message').textContent.includes('尚未发布'));
+    assert.equal(posts.get(firstId).title,publicTitle, 'Autosave changed a public post');
+    assert.equal(drafts.get(firstId).content.title,'Pending private title');
     assert.equal(posts.get(firstId).status,'published'); assert(await page.locator('[data-unpublish]').isVisible());
     for (const width of [320,375,768,1304]) {
       await page.setViewportSize({width,height:900}); assert(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth));
@@ -240,17 +279,39 @@ async function fixture(route) {
     for (const route of ['/account/','/en/account/','/admin/','/en/admin/','/blog/','/en/blog/','/en/blog/post/?id='+firstId]) {
       await reader.goto(base+route); assert(await reader.evaluate(()=>document.documentElement.scrollWidth <= innerWidth));
     }
-    await visitor.close();
     await page.setViewportSize({width:1304,height:880});
-    await page.goto(base+'/admin/'); await page.locator('#writing-desk').waitFor({state:'visible'}); await page.locator('#admin-posts button').first().click();
+    await page.goto(base+'/admin/'); await page.locator('#writing-desk').waitFor({state:'visible'}); await page.locator(`#admin-posts button[data-id="${firstId}"]`).click();
+    await page.waitForFunction(()=>document.querySelector('#post-form [name=title]').value === 'Pending private title');
     await page.locator('[data-unpublish]').waitFor({state:'visible'}); await page.locator('[data-unpublish]').click();
     await page.waitForFunction(()=>document.querySelector('[data-post-state]').textContent === '草稿');
     await page.goto(base+'/blog/post/?id='+firstId); await page.waitForFunction(()=>document.querySelector('[data-blog-message]').textContent.includes('尚未发布'));
-    await page.goto(base+'/admin/'); await page.locator('#writing-desk').waitFor({state:'visible'}); await page.locator('#admin-posts button').first().click();
+    await page.goto(base+'/admin/'); await page.locator('#writing-desk').waitFor({state:'visible'}); await page.locator(`#admin-posts button[data-id="${firstId}"]`).click();
     await page.locator('[data-delete]').waitFor({state:'visible'});
     page.once('dialog',dialog=>dialog.dismiss()); await page.locator('[data-delete]').click(); assert.equal(posts.size,1);
     page.once('dialog',dialog=>dialog.accept()); await page.locator('[data-delete]').click();
     await page.waitForFunction(()=>document.querySelector('#editor-message').textContent === '文章已删除'); assert.equal(posts.size,0);
+    await page.locator('#admin-posts button[data-id="/notes/gamelibrary-architecture/"]').click();
+    assert.equal(await input('category').inputValue(),'development');
+    assert((await input('body_md').inputValue()).includes('Tauri'), 'Opening an original note did not populate its body');
+    await input('title').fill('GameLibrary 架构（编辑）');
+    await input('body_md').fill('## Edited original note\n\nUpdated through the writing desk.');
+    await page.clock.fastForward(31000);
+    await page.waitForFunction(()=>document.querySelector('#editor-message').textContent.includes('尚未发布'));
+    const imported = [...posts.values()][0];
+    assert.equal(imported.source_path,'/notes/gamelibrary-architecture/');
+    assert.equal(imported.title,'GameLibrary 架构');
+    assert(await page.locator('[data-delete]').isHidden());
+    page.once('dialog',dialog=>dialog.accept()); await page.locator('[data-publish]').click();
+    await page.waitForFunction(()=>document.querySelector('#editor-message').textContent === '已保存');
+    await reader.goto(base+'/notes/gamelibrary-architecture/');
+    await reader.waitForFunction(()=>document.querySelector('[data-post-title]').textContent.includes('（编辑）'));
+    assert((await reader.locator('[data-post-body]').innerText()).includes('Updated through the writing desk.'));
+    await reader.goto(base+'/blog/?category=development');
+    await reader.locator('[data-blog-feed] article').waitFor();
+    assert.equal(await reader.locator('.note-preview:visible').count(),1, 'Imported source appears twice');
+    await page.goto(base+'/en/admin/'); await page.locator('#writing-desk').waitFor({state:'visible'});
+    assert.equal(await page.locator('#admin-posts button').count(),2, 'The English desk does not show all original content');
+    await visitor.close();
     await page.goto(base+'/account/'); await page.locator('#account-session').waitFor({state:'visible'}); await page.locator('[data-logout]').click();
     await page.locator('[data-auth-mode=forgot]').click(); await page.locator('[name=email]').fill('new-member@example.test'); await page.locator('#auth-submit').click();
     await page.waitForFunction(()=>document.querySelector('#auth-message').textContent.includes('重置邮件'));

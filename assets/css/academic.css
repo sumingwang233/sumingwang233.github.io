@@ -1,6 +1,6 @@
 /* Hallmark · macrostructure: Long Document · theme: Studio · enrichment: owner photograph · nav: compact masthead · footer: Ft2 */
 /* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 */
-@font-face { font-family: 'Noto Serif SC'; src: url('../fonts/noto-serif-sc.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Noto Serif SC'; src: url('../fonts/noto-serif-sc.woff2') format('woff2'); font-weight: 400 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Noto Sans SC'; src: url('../fonts/noto-sans-sc.woff2') format('woff2'); font-weight: 400 700; font-style: normal; font-display: swap; }
 * { box-sizing: border-box; }
 html { overflow-x: clip; scroll-padding-top: var(--anchor-offset); scroll-behavior: smooth; }

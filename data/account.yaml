@@ -50,11 +50,11 @@ zh:
   excerpt: 摘要
   excerpt_help: 不超过 240 字，简洁说明文章的主题
   body: 正文
-  body_help: 使用段落、小标题和配图组织正文，支持 Markdown
+  body_help: 支持 Markdown，输入时实时显示效果
   category: 栏目
   essay: 随笔
   research: 游戏心理学
-  development: 开发记录
+  development: 开发日记
   photography: 摄影
   language: 正文语言
   tags: 标签
@@ -71,11 +71,26 @@ zh:
   unsaved: 还有未保存的修改，确认放弃？
   saved: 已保存
   saving: 正在保存…
+  autosave_help: 每 30 秒自动保存修改；已发布文章的修改先存为草稿，点击发布后才更新正文
+  pending_draft: 已保存修改草稿，尚未发布
+  static_post: 已有笔记
   dirty: 有未保存的修改
   conflict: 文章已在其他窗口更新。为避免覆盖，保存已停止。请复制当前正文后重新打开文章。
   invalid_post: 发布前请填写至少 3 字的标题和至少 10 字的正文
   invalid_tags: 最多 5 个标签，每个 1–20 字
   preview: 预览
+  live_preview: 实时预览
+  text_style: 正文排版
+  style_help: 对整篇正文生效，随草稿保存
+  font_family: 字体
+  font_default: 网站默认
+  font_serif: 宋体风格
+  font_sans: 黑体风格
+  font_mono: 等宽字体
+  font_size: 字号（px）
+  line_height: 行间距（倍）
+  letter_spacing: 字间距（px）
+  invalid_style: 请在提示范围内设置字号与间距
   edit: 编辑
   image: 插入图片
   image_help: JPEG、PNG 或 WebP，不超过 10 MB；导出时自动清除图片元数据
@@ -85,6 +100,8 @@ zh:
   image_uploading: 正在处理并上传图片…
   heading: 小标题
   bold: 加粗
+  italic: 斜体
+  strike: 删除线
   list: 列表
   quote: 引用
   code_block: 代码
@@ -158,11 +175,11 @@ en:
   excerpt: Summary
   excerpt_help: Describe the topic in up to 240 characters
   body: Body
-  body_help: Organize your writing with paragraphs, headings and images. Markdown supported.
+  body_help: Markdown supported, with a live preview as you type
   category: Category
   essay: Essays
   research: Game psychology
-  development: Development
+  development: Development diary
   photography: Photography
   language: Content language
   tags: Tags
@@ -179,11 +196,26 @@ en:
   unsaved: Discard unsaved changes?
   saved: Saved
   saving: Saving…
+  autosave_help: Changes save automatically every 30 seconds. Edits to published posts stay in a private draft until you publish.
+  pending_draft: Changes saved as a draft, not yet published
+  static_post: Existing note
   dirty: Unsaved changes
   conflict: This post changed in another window. Saving stopped to prevent overwriting. Copy your text before reopening it.
   invalid_post: Publication requires a title of at least 3 characters and a body of at least 10 characters
   invalid_tags: Use up to 5 tags, each 1–20 characters
   preview: Preview
+  live_preview: Live preview
+  text_style: Body typography
+  style_help: Applies to the entire body and saves with your draft
+  font_family: Font
+  font_default: Site default
+  font_serif: Serif
+  font_sans: Sans serif
+  font_mono: Monospace
+  font_size: Font size (px)
+  line_height: Line spacing
+  letter_spacing: Letter spacing (px)
+  invalid_style: Set font size and spacing within the indicated ranges
   edit: Edit
   image: Insert image
   image_help: JPEG, PNG or WebP, up to 10 MB. Exported images have their metadata removed.
@@ -193,6 +225,8 @@ en:
   image_uploading: Processing and uploading image…
   heading: Heading
   bold: Bold
+  italic: Italic
+  strike: Strikethrough
   list: List
   quote: Quote
   code_block: Code

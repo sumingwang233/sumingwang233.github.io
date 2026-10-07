@@ -6,14 +6,21 @@
   <aside class="writing-index"><div class="form-actions"><button type="button" class="site-button primary" data-new-post>{{ $t.new_post }} +</button></div><ul id="admin-posts" class="post-index" aria-label="{{ $t.desk }}"></ul><button class="text-button" type="button" data-export>{{ $t.export }}</button><p class="form-help">{{ $t.export_help }}</p></aside>
   <div class="writing-sheet"><form id="post-form">
     <div class="editor-state"><span data-post-state>{{ $t.draft }}</span><output id="save-state" aria-live="polite"></output></div>
+    <p class="form-help">{{ $t.autosave_help }}</p>
     <label class="field title-field">{{ $t.title }}<input name="title" maxlength="160" placeholder="{{ $t.title }}" autocomplete="off"></label>
     <div class="editor-options"><label class="field">{{ $t.category }}<select name="category">{{ range slice "essay" "research" "development" "photography" }}<option value="{{ . }}">{{ index $t . }}</option>{{ end }}</select></label><label class="field">{{ $t.language }}<select name="language"><option value="zh">中文</option><option value="en">English</option></select></label></div>
     <label class="field">{{ $t.excerpt }}<textarea name="excerpt" rows="2" maxlength="240" aria-describedby="excerpt-help"></textarea><span class="form-help" id="excerpt-help">{{ $t.excerpt_help }}</span></label>
     <label class="field">{{ $t.tags }}<input name="tags" maxlength="104" aria-describedby="tags-help"><span class="form-help" id="tags-help">{{ $t.tags_help }}</span></label>
-    <div class="editor-toolbar" role="group" aria-label="{{ $t.toolbar }}">{{ range slice "heading" "bold" "list" "quote" "code_block" "link" }}<button type="button" data-format="{{ . }}">{{ index $t . }}</button>{{ end }}<button type="button" data-insert-image>{{ $t.image }}</button></div>
+    <div class="editor-toolbar" role="group" aria-label="{{ $t.toolbar }}">{{ range slice "heading" "bold" "italic" "strike" "list" "quote" "code_block" "link" }}<button type="button" data-format="{{ . }}">{{ index $t . }}</button>{{ end }}<button type="button" data-insert-image>{{ $t.image }}</button></div>
+    <fieldset class="text-style"><legend>{{ $t.text_style }}</legend><div class="style-options">
+      <label class="field">{{ $t.font_family }}<select name="font_family">{{ range slice "default" "serif" "sans" "mono" }}<option value="{{ . }}">{{ index $t (printf "font_%s" .) }}</option>{{ end }}</select></label>
+      <label class="field">{{ $t.font_size }}<input name="font_size" type="number" min="14" max="28" step="1" value="16"></label>
+      <label class="field">{{ $t.line_height }}<input name="line_height" type="number" min="1.2" max="2.4" step="0.1" value="1.8"></label>
+      <label class="field">{{ $t.letter_spacing }}<input name="letter_spacing" type="number" min="-0.5" max="3" step="0.1" value="0"></label>
+    </div><p class="form-help">{{ $t.style_help }}</p></fieldset>
     <label class="field body-field">{{ $t.body }}<textarea name="body_md" rows="18" maxlength="100000" aria-describedby="body-help"></textarea><span class="form-help" id="body-help">{{ $t.body_help }}</span></label>
     <input type="file" id="post-image" accept="image/jpeg,image/png,image/webp" hidden><p class="form-help">{{ $t.image_help }}</p>
-    <div class="form-actions"><button type="button" class="site-button" data-preview>{{ $t.preview }}</button><button type="submit" class="site-button" data-save>{{ $t.save }}</button><button type="button" class="site-button primary" data-publish>{{ $t.publish }}</button><button type="button" class="text-button" data-unpublish hidden>{{ $t.unpublish }}</button><button type="button" class="text-button danger" data-delete hidden>{{ $t.remove }}</button></div>
+    <div class="form-actions"><button type="button" class="site-button" data-preview aria-controls="post-preview" aria-expanded="true">{{ $t.live_preview }}</button><button type="submit" class="site-button" data-save>{{ $t.save }}</button><button type="button" class="site-button primary" data-publish>{{ $t.publish }}</button><button type="button" class="text-button" data-unpublish hidden>{{ $t.unpublish }}</button><button type="button" class="text-button danger" data-delete hidden>{{ $t.remove }}</button></div>
     <p id="editor-message" role="status" aria-live="polite"></p>
-  </form><section id="post-preview" class="article-content blog-body" aria-label="{{ $t.preview }}" hidden></section></div>
+  </form><section id="post-preview" class="editor-preview" aria-label="{{ $t.live_preview }}"><p class="form-help">{{ $t.live_preview }}</p><h2 data-preview-title></h2><div class="article-content blog-body" data-preview-body></div></section></div>
 </section></div>{{ end }}

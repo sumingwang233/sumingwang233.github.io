@@ -1,0 +1,13 @@
+{{- $posts := slice -}}
+{{- range hugo.Sites -}}
+{{- range where .RegularPages "Section" "in" (slice "notes" "journal") -}}
+  {{- $body := replaceRE "\\{\\{<[^>]+>\\}\\}" "" .RawContent -}}
+  {{- with .Site.GetPage .Params.related -}}
+    {{- $body = printf "%s\n\n[%s](%s)\n" $body .Title .RelPermalink -}}
+  {{- end -}}
+  {{- $category := .Params.category | default "essay" -}}
+  {{- $excerpt := .Params.summary | default .Summary | plainify | truncate 240 "" -}}
+  {{- $posts = $posts | append (dict "source_path" .RelPermalink "title" .Title "excerpt" $excerpt "body_md" $body "category" $category "language" .Language.Lang "status" "published" "tags" slice "body_style" (dict) "published_at" (.Date.Format "2006-01-02T15:04:05Z07:00") "updated_at" (.Date.Format "2006-01-02T15:04:05Z07:00")) -}}
+{{- end -}}
+{{- end -}}
+{{- return $posts -}}

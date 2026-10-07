@@ -5,6 +5,7 @@ translationKey: gamelibrary-architecture
 content_language: zh
 summary: GameLibrary 的桌面客户端使用 Tauri、React 和 TypeScript，Rust 负责桥接；CLI 与 MCP 提供命令行和 Agent 接口。客户端经 HostClient 和 Named pipe IPC 连接 Host，由 Host 管理请求分派、权限、会话与作业。
 related: projects/gamelibrary
+category: development
 featured: true
 ---
 

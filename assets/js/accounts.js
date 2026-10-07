@@ -24,7 +24,7 @@ function start(config) {
     if (/email.*(send|address)|smtp/.test(error?.code) || /sending.*(email|mail)|smtp/i.test(error?.message)) return t.email_delivery;
     if (/otp_expired|otp_disabled/.test(error?.code)) return t.invalid_code;
     if (/weak_password/.test(error?.code)) return t.password_help;
-    if (/PGRST205|PGRST202|42P01/.test(error?.code)) return t.setup;
+    if (/PGRST205|PGRST204|PGRST202|42P01|42703/.test(error?.code)) return t.setup;
     if (/42501/.test(error?.code) || error?.status === 403) return t.denied;
     return t.network;
   };
@@ -45,9 +45,13 @@ function start(config) {
   const accountSession = $('#account-session');
   const adminDesk = $('#writing-desk');
   let user = null, isAdmin = false, authMode = 'login', refreshing = 0;
-  let post = null, dirty = false, saving = false, editorReady = false;
+  let post = null, dirty = false, saving = false, opening = false, editorReady = false;
+  let editRevision = 0, previewRevision = 0, previewTimer, autosaveBlocked = false;
   const editor = $('#post-form');
   const field = name => editor.elements.namedItem(name);
+  const staticPosts = config.static_posts || [];
+  const fontFamilies = { default: 'var(--font-body)', serif: 'var(--font-display)', sans: 'var(--font-body)', mono: 'monospace' };
+  const signedImages = new Map();
 
   async function visit() {
     storageChoice('visitor'); gate?.close();
@@ -214,25 +218,43 @@ function start(config) {
     const article = element('article', undefined, 'entry note-preview');
     const meta = element('p', `${dateText(item.published_at)} · ${t[item.category]} · ${item.language === 'zh' ? '中文' : 'English'}`, 'entry-meta');
     const heading = element('h3'), link = element('a', item.title);
-    link.href = config.home + 'blog/post/?id=' + encodeURIComponent(item.id);
+    link.href = item.source_path || config.home + 'blog/post/?id=' + encodeURIComponent(item.id);
     heading.append(link); article.append(meta, heading, element('p', item.excerpt, 'summary'));
     return article;
   }
   async function loadBlog() {
     const feed = $('[data-blog-feed]');
-    if (!feed) return;
+    const originalCards = $$('[data-static-source]');
+    if (!feed && !originalCards.length) return;
     const requested = new URLSearchParams(location.search).get('category');
-    const category = !feed.hasAttribute('data-featured') && ['essay', 'research', 'development', 'photography'].includes(requested) ? requested : null;
+    const category = feed && !feed.hasAttribute('data-featured') && ['essay', 'research', 'development', 'photography'].includes(requested) ? requested : null;
     if (category) {
       message($('[data-blog-title]'), t[category]);
-      const notes = $('[data-existing-notes]');
-      if (notes) notes.hidden = true;
       document.title = `${t[category]} · ${document.title.split(' · ').at(-1)}`;
       // Keep the selected column when switching languages.
       $$('.language-link').forEach(link => { const url = new URL(link.href); url.searchParams.set('category', category); link.href = url.href; });
     }
+    const overridden = new Set();
+    function updateOriginals() {
+      originalCards.forEach(card => { card.hidden = Boolean(feed && overridden.has(card.dataset.staticSource)) || Boolean(category && card.dataset.category !== category); });
+      const notes = $('[data-existing-notes]');
+      if (notes) notes.hidden = !originalCards.some(card => !card.hidden);
+    }
+    updateOriginals();
     const status = $('[data-blog-message]');
-    if (!client) { message(status, t.setup); return; }
+    if (!client) { if (feed) message(status, t.setup); return; }
+    try {
+      const paths = [...new Set(originalCards.map(card => card.dataset.staticSource))];
+      for (let offset = 0; offset < paths.length; offset += 100) {
+        const items = check(await client.from('blog_posts').select('id,title,excerpt,category,language,published_at,source_path').eq('status', 'published').in('source_path', paths.slice(offset, offset + 100)));
+        items.forEach(item => {
+          overridden.add(item.source_path);
+          originalCards.filter(card => card.dataset.staticSource === item.source_path).forEach(card => { card.dataset.category = item.category; if (!feed) card.replaceChildren(...postCard(item).childNodes); });
+        });
+      }
+      updateOriginals();
+    } catch { /* Source notes remain readable when the online service is unavailable. */ }
+    if (!feed) return;
     let offset = 0;
     const featured = feed.hasAttribute('data-featured');
     const size = featured ? 2 : 12;
@@ -241,10 +263,11 @@ function start(config) {
       message(status, t.loading); if (more) more.disabled = true;
       try {
         // Both language archives identify the original language instead of inventing translations.
-        let query = client.from('blog_posts').select('id,title,excerpt,category,language,published_at').eq('status', 'published');
+        let query = client.from('blog_posts').select('id,title,excerpt,category,language,published_at,source_path').eq('status', 'published');
         if (category) query = query.eq('category', category);
         const items = check(await query.order('published_at', { ascending: false }).order('id').range(offset, offset + size - 1));
         feed.append(...items.map(postCard)); offset += items.length;
+        items.forEach(item => { if (item.source_path) overridden.add(item.source_path); }); updateOriginals();
         message(status, offset === 0 && !featured ? t.empty_blog : '');
         if (more) more.hidden = items.length < size;
       } catch (error) { message(status, errorText(error)); }
@@ -254,7 +277,7 @@ function start(config) {
     await load();
   }
 
-  async function renderMarkdown(markdown, target, postId) {
+  async function renderMarkdown(markdown, target, postId, isCurrent = () => true) {
     const tokens = marked.lexer(markdown);
     const paths = new Set();
     marked.walkTokens(tokens, token => {
@@ -264,16 +287,18 @@ function start(config) {
       }
     });
     const signed = new Map();
-    if (paths.size) {
-      const urls = check(await client.storage.from('blog-media').createSignedUrls([...paths], 3600));
-      urls.forEach(item => { if (!item.error && item.signedUrl) signed.set(item.path, item.signedUrl); });
+    const missing = [...paths].filter(path => !signedImages.has(path) || signedImages.get(path).expires < Date.now());
+    if (missing.length) {
+      const urls = check(await client.storage.from('blog-media').createSignedUrls(missing, 3600));
+      urls.forEach(item => { if (!item.error && item.signedUrl) signedImages.set(item.path, { url: item.signedUrl, expires: Date.now() + 3300000 }); });
     }
+    paths.forEach(path => { if (signedImages.has(path)) signed.set(path, signedImages.get(path).url); });
     marked.walkTokens(tokens, token => {
       if (token.type === 'image' && token.href.startsWith('media:')) token.href = signed.get(token.href.slice(6)) || '';
     });
     const fragment = DOMPurify.sanitize(marked.parser(tokens), {
       RETURN_DOM_FRAGMENT: true,
-      ALLOWED_TAGS: ['p','br','h2','h3','h4','h5','h6','strong','em','del','ul','ol','li','blockquote','pre','code','a','img','hr','table','thead','tbody','tr','th','td'],
+      ALLOWED_TAGS: ['p','br','h1','h2','h3','h4','h5','h6','strong','em','del','ul','ol','li','blockquote','pre','code','a','img','hr','table','thead','tbody','tr','th','td'],
       ALLOWED_ATTR: ['href','src','alt','title','start']
     });
     const signedValues = new Set(signed.values());
@@ -294,61 +319,120 @@ function start(config) {
         link.rel = 'noopener noreferrer'; link.referrerPolicy = 'no-referrer';
       } catch { link.removeAttribute('href'); }
     });
-    target.replaceChildren(fragment);
+    if (isCurrent()) target.replaceChildren(fragment);
+  }
+  function applyBodyStyle(target, style = {}) {
+    target.style.fontFamily = Object.hasOwn(fontFamilies, style.font_family) ? fontFamilies[style.font_family] : fontFamilies.default;
+    target.dataset.bodyFont = style.font_family || 'default';
+    for (const [key, css, min, max, unit] of [['font_size','font-size',14,28,'px'], ['line_height','line-height',1.2,2.4,''], ['letter_spacing','letter-spacing',-0.5,3,'px']]) {
+      const value = style[key];
+      if (typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max) target.style.setProperty(css, value + unit);
+      else target.style.removeProperty(css);
+    }
   }
   async function loadPost() {
-    const page = $('#online-post'); if (!page) return;
+    const page = $('#online-post') || $('[data-static-post]'); if (!page) return;
+    const source = page.dataset.staticPost;
     const status = $('[data-blog-message]', page), id = new URLSearchParams(location.search).get('id');
-    if (!client) { message(status, t.setup); return; }
-    if (!idPattern.test(id || '')) { message(status, t.not_found); return; }
+    if (!client) { if (!source) message(status, t.setup); return; }
+    if (!source && !idPattern.test(id || '')) { message(status, t.not_found); return; }
     try {
-      const item = check(await client.from('blog_posts').select('*').eq('id', id).eq('status', 'published').maybeSingle());
-      if (!item) { message(status, t.not_found); return; }
-      await renderMarkdown(item.body_md, $('[data-post-body]', page), item.id);
+      const item = check(await client.from('blog_posts').select('*').eq(source ? 'source_path' : 'id', source || id).eq('status', 'published').maybeSingle());
+      if (!item) { if (!source) message(status, t.not_found); return; }
+      const body = $('[data-post-body]', page); body.classList.add('blog-body');
+      const figures = source ? $$('.project-figure,.architecture-figure,.figure-pending', body).map(figure => figure.cloneNode(true)) : [];
+      await renderMarkdown(item.body_md, body, item.id); body.append(...figures); applyBodyStyle(body, item.body_style);
       message($('[data-post-title]', page), item.title); message($('[data-post-excerpt]', page), item.excerpt);
       message($('[data-post-meta]', page), `${dateText(item.published_at)} · ${t[item.category]} · ${item.language === 'zh' ? '中文' : 'English'}`);
       document.title = item.title + ' · Xin Wang';
-      $('article', page).lang = item.language === 'zh' ? 'zh-Hans' : 'en';
-      $$('.language-link').forEach(link => { const target = new URL(link.href); target.searchParams.set('id', item.id); link.href = target.href; });
-      $('article', page).hidden = false; message(status, '');
-    } catch (error) { message(status, errorText(error)); }
+      const article = source ? page : $('article', page); article.lang = item.language === 'zh' ? 'zh-Hans' : 'en';
+      if (!source) $$('.language-link').forEach(link => { const target = new URL(link.href); target.searchParams.set('id', item.id); link.href = target.href; });
+      article.hidden = false; message(status, '');
+    } catch (error) { if (!source) message(status, errorText(error)); }
   }
 
   function setDirty(value) { dirty = value; message($('#save-state'), value ? t.dirty : post?.updated_at ? `${t.saved} · ${new Date(post.updated_at).toLocaleTimeString()}` : ''); }
   function confirmDiscard() { return !dirty || window.confirm(t.unsaved); }
+  function bodyStyle() {
+    const style = { font_family: field('font_family').value };
+    if (!Object.hasOwn(fontFamilies, style.font_family)) throw new Error(t.invalid_style);
+    for (const [name, min, max] of [['font_size',14,28], ['line_height',1.2,2.4], ['letter_spacing',-0.5,3]]) {
+      const value = Number(field(name).value);
+      if (!field(name).value || !Number.isFinite(value) || value < min || value > max) throw new Error(t.invalid_style);
+      style[name] = value;
+    }
+    return style;
+  }
+  function updatePreview() {
+    clearTimeout(previewTimer);
+    const serial = ++previewRevision;
+    message($('[data-preview-title]'), field('title').value);
+    try { applyBodyStyle($('[data-preview-body]'), bodyStyle()); } catch { /* Keep the last valid typography while a number is being typed. */ }
+    previewTimer = setTimeout(async () => {
+      if ($('#post-preview').hidden) return;
+      try { await renderMarkdown(field('body_md').value, $('[data-preview-body]'), post?.id, () => serial === previewRevision && !$('#post-preview').hidden); }
+      catch (error) { if (serial === previewRevision) message($('#editor-message'), errorText(error)); }
+    }, 200);
+  }
+  function changed() { editRevision++; setDirty(true); updatePreview(); }
+  function editorState() {
+    message($('[data-post-state]'), t[post?.status || 'draft']);
+    // Static source files remain an offline fallback; removing them requires editing the source.
+    $('[data-delete]').hidden = !post?.id || Boolean(post.source_path);
+    $('[data-unpublish]').hidden = post?.status !== 'published' || Boolean(post.source_path);
+    $('[data-save]').hidden = false;
+  }
   function newPost() {
     post = null; editor.reset(); field('language').value = config.lang;
-    message($('[data-post-state]'), t.draft); message($('#editor-message'), '');
-    $('[data-delete]').hidden = true; $('[data-unpublish]').hidden = true;
-    $('[data-publish]').hidden = false; $('[data-save]').hidden = false;
-    $('#post-preview').hidden = true; setDirty(false);
+    autosaveBlocked = false; editRevision++; editorState(); message($('#editor-message'), ''); setDirty(false); updatePreview();
     $$('#admin-posts button').forEach(button => button.removeAttribute('aria-current'));
   }
-  function fillPost(item) {
+  function fillPost(item, draft) {
     post = item;
-    for (const name of ['title','excerpt','body_md','category','language']) field(name).value = item[name];
-    field('tags').value = item.tags.join(', ');
-    message($('[data-post-state]'), t[item.status]); message($('#editor-message'), '');
-    $('[data-delete]').hidden = false; $('[data-unpublish]').hidden = item.status !== 'published';
-    $('[data-save]').hidden = item.status === 'published';
-    $('#post-preview').hidden = true; setDirty(false);
-    $$('#admin-posts button').forEach(button => button.setAttribute('aria-current', String(button.dataset.id === item.id)));
+    editor.reset();
+    const content = draft && draft.post_version === item.version ? draft.content : item;
+    for (const name of ['title','excerpt','body_md','category','language']) field(name).value = content[name];
+    field('tags').value = (content.tags || []).join(', ');
+    for (const [name, value] of Object.entries(content.body_style || {})) if (field(name)) field(name).value = value;
+    autosaveBlocked = false; editRevision++; editorState(); setDirty(false); updatePreview();
+    message($('#editor-message'), content === item ? '' : t.pending_draft);
+    $$('#admin-posts button').forEach(button => button.setAttribute('aria-current', String(button.dataset.id === (item.id || item.source_path))));
+  }
+  async function allPosts(columns = '*') {
+    const posts = [];
+    for (let offset = 0; ; offset += 500) {
+      const batch = check(await client.from('blog_posts').select(columns).order('id').range(offset, offset + 499));
+      posts.push(...batch); if (batch.length < 500) break;
+    }
+    return posts;
   }
   async function loadAdminPosts() {
     try {
-      const items = check(await client.from('blog_posts').select('id,title,status,updated_at').order('updated_at', { ascending: false }).limit(100));
-      // ponytail: first 100 recent posts in the desk; add pagination when the archive grows beyond this.
+      const items = await allPosts('id,title,status,updated_at,source_path');
+      const sources = new Set(items.map(item => item.source_path));
+      items.push(...staticPosts.filter(item => !sources.has(item.source_path)));
+      items.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
       const index = $('#admin-posts'); index.replaceChildren();
       if (!items.length) index.append(element('li', t.empty_desk, 'form-help'));
       items.forEach(item => {
         const li = element('li'), button = element('button', item.title || t.new_post);
-        button.type = 'button'; button.dataset.id = item.id;
-        button.setAttribute('aria-current', String(post?.id === item.id));
-        button.append(element('span', `${t[item.status]} · ${dateText(item.updated_at)}`));
+        button.type = 'button'; button.dataset.id = item.id || item.source_path;
+        button.setAttribute('aria-current', String(Boolean(post && (post.id || post.source_path) === button.dataset.id)));
+        button.append(element('span', `${item.source_path ? t.static_post + ' · ' : ''}${t[item.status]} · ${dateText(item.updated_at)}`));
         button.addEventListener('click', async () => {
-          if (saving || !confirmDiscard()) return;
-          try { fillPost(check(await client.from('blog_posts').select('*').eq('id', item.id).single())); }
+          if (saving || opening || !confirmDiscard()) return;
+          opening = true;
+          const controls = $$('button,input,textarea,select', editor); controls.forEach(control => control.disabled = true);
+          try {
+            if (!item.id) fillPost(item);
+            else {
+              const full = check(await client.from('blog_posts').select('*').eq('id', item.id).single());
+              const draft = check(await client.from('blog_post_drafts').select('*').eq('post_id', item.id).maybeSingle());
+              fillPost(full, draft);
+            }
+          }
           catch (error) { message($('#editor-message'), errorText(error)); }
+          finally { opening = false; controls.forEach(control => control.disabled = false); }
         });
         li.append(button); index.append(li);
       });
@@ -357,38 +441,51 @@ function start(config) {
   function editorValue(status) {
     const tags = [...new Set(field('tags').value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean))];
     if (tags.length > 5 || tags.some(tag => [...tag].length > 20)) throw new Error(t.invalid_tags);
-    const value = { title: field('title').value.trim(), excerpt: field('excerpt').value.trim(), body_md: field('body_md').value, category: field('category').value, language: field('language').value, tags, status };
+    const value = { title: field('title').value.trim(), excerpt: field('excerpt').value.trim(), body_md: field('body_md').value, category: field('category').value, language: field('language').value, tags, body_style: bodyStyle(), status };
     if (status === 'published' && ([...value.title].length < 3 || [...value.body_md.trim()].length < 10)) throw new Error(t.invalid_post);
     return value;
   }
-  async function savePost(status) {
-    if (!isAdmin || saving) return false;
+  async function savePost(status, { automatic = false, unpublish = false } = {}) {
+    if (!isAdmin || saving || opening || autosaveBlocked) return false;
     let value;
     try { value = editorValue(status); } catch (error) { message($('#editor-message'), error.message); return false; }
     saving = true;
-    const controls = $$('button,input,textarea,select', editor); controls.forEach(control => control.disabled = true);
+    const revision = editRevision;
+    const controls = $$(automatic ? 'button' : 'button,input,textarea,select', editor); controls.forEach(control => control.disabled = true);
     message($('#save-state'), t.saving);
     try {
-      let query = client.from('blog_posts');
-      query = post ? query.update(value).eq('id', post.id).eq('version', post.version) : query.insert(value);
-      const items = check(await query.select('*'));
-      if (!items.length) { message($('#editor-message'), t.conflict); return false; }
-      post = items[0]; setDirty(false);
-      message($('[data-post-state]'), t[post.status]); message($('#editor-message'), t.saved);
-      $('[data-delete]').hidden = false; $('[data-unpublish]').hidden = post.status !== 'published';
-      $('[data-save]').hidden = post.status === 'published';
+      if (post?.source_path && !post.id) {
+        // Import the already-public original, then save edits privately until Publish is clicked.
+        const original = staticPosts.find(item => item.source_path === post.source_path);
+        const { title, excerpt, body_md, category, language, tags, body_style, source_path, published_at } = original;
+        post = check(await client.from('blog_posts').insert({ title, excerpt, body_md, category, language, tags, body_style, source_path, published_at, status: 'published' }).select('*').single());
+      }
+      const privateDraft = post?.status === 'published' && status === 'draft' && !unpublish;
+      let items;
+      if (privateDraft) {
+        const { status: ignored, ...content } = value;
+        items = check(await client.rpc('save_blog_draft', { post_id: post.id, expected_version: post.version, content }));
+      } else {
+        const query = post?.id ? client.from('blog_posts').update(value).eq('id', post.id).eq('version', post.version) : client.from('blog_posts').insert(value);
+        items = check(await query.select('*'));
+      }
+      if (!items.length) { autosaveBlocked = true; message($('#editor-message'), t.conflict); return false; }
+      post = items[0]; setDirty(editRevision !== revision); editorState(); updatePreview();
+      message($('#editor-message'), privateDraft ? t.pending_draft : t.saved);
       await loadAdminPosts(); return true;
-    } catch (error) { message($('#editor-message'), errorText(error)); return false; }
+    } catch (error) { if (error.code === '23505') autosaveBlocked = true; message($('#editor-message'), error.code === '23505' ? t.conflict : errorText(error)); return false; }
     finally { saving = false; controls.forEach(control => control.disabled = false); if (dirty) message($('#save-state'), t.dirty); }
   }
   if (editor) {
-    editor.addEventListener('input', () => setDirty(true));
+    editor.addEventListener('input', changed);
+    editor.addEventListener('change', event => { if (event.target.tagName === 'SELECT') changed(); });
     editor.addEventListener('submit', event => { event.preventDefault(); savePost('draft'); });
-    $('[data-new-post]').addEventListener('click', () => { if (!saving && confirmDiscard()) { newPost(); $('[data-save]').hidden = false; field('title').focus(); } });
+    $('[data-new-post]').addEventListener('click', () => { if (!saving && !opening && confirmDiscard()) { newPost(); field('title').focus(); } });
     $('[data-publish]').addEventListener('click', () => { if (window.confirm(t.confirm_publish)) savePost('published'); });
-    $('[data-unpublish]').addEventListener('click', () => savePost('draft'));
+    $('[data-unpublish]').addEventListener('click', () => savePost('draft', { unpublish: true }));
+    setInterval(() => { if (isAdmin && dirty && !autosaveBlocked) savePost('draft', { automatic: true }); }, 30000);
     $('[data-delete]').addEventListener('click', async () => {
-      if (!post || saving || !window.confirm(t.confirm_delete)) return;
+      if (!post?.id || post.source_path || saving || opening || !window.confirm(t.confirm_delete)) return;
       saving = true;
       const controls = $$('button,input,textarea,select', editor); controls.forEach(control => control.disabled = true);
       try {
@@ -399,15 +496,13 @@ function start(config) {
       finally { saving = false; controls.forEach(control => control.disabled = false); }
     });
     window.addEventListener('beforeunload', event => { if (dirty || saving) { event.preventDefault(); event.returnValue = ''; } });
-    $('[data-preview]').addEventListener('click', async () => {
+    $('[data-preview]').addEventListener('click', event => {
       const preview = $('#post-preview');
-      if (!preview.hidden) { preview.hidden = true; return; }
-      try { await renderMarkdown(field('body_md').value, preview, post?.id); preview.prepend(element('h2', field('title').value)); preview.hidden = false; message($('#editor-message'), ''); }
-      catch (error) { message($('#editor-message'), errorText(error)); }
+      preview.hidden = !preview.hidden; event.currentTarget.setAttribute('aria-expanded', String(!preview.hidden)); updatePreview();
     });
     function insert(before, after = '') {
       const body = field('body_md'), selection = body.value.slice(body.selectionStart, body.selectionEnd);
-      body.setRangeText(before + selection + after, body.selectionStart, body.selectionEnd, 'end'); body.focus(); setDirty(true);
+      body.setRangeText(before + selection + after, body.selectionStart, body.selectionEnd, 'end'); body.focus(); changed();
     }
     $$('[data-format]').forEach(button => button.addEventListener('click', () => {
       const format = button.dataset.format;
@@ -415,7 +510,7 @@ function start(config) {
         const url = window.prompt(t.link_prompt, 'https://');
         try { if (url && new URL(url).protocol === 'https:') insert('[', `](${encodeURI(url).replace(/[()]/g, char => char === '(' ? '%28' : '%29')})`); } catch { /* Cancel/invalid URL leaves the text untouched. */ }
       } else {
-        const pairs = { heading: ['\n\n## ', '\n'], bold: ['**','**'], list: ['\n- ',''], quote: ['\n> ',''], code_block: ['\n\n```\n','\n```\n'] };
+        const pairs = { heading: ['\n\n## ', '\n'], bold: ['**','**'], italic: ['*','*'], strike: ['~~','~~'], list: ['\n- ',''], quote: ['\n> ',''], code_block: ['\n\n```\n','\n```\n'] };
         insert(...pairs[format]);
       }
     }));
@@ -426,7 +521,7 @@ function start(config) {
       const alt = window.prompt(t.image_alt); if (alt === null) return;
       if (saving) return;
       // Create the associated row first, so storage policies can authorize this upload.
-      if (!post && !await savePost('draft')) return;
+      if (!post?.id && !await savePost('draft')) return;
       const postId = post.id;
       saving = true;
       const controls = $$('button,input,textarea,select', editor); controls.forEach(control => control.disabled = true);
@@ -450,12 +545,15 @@ function start(config) {
     $('[data-export]').addEventListener('click', async event => {
       const button = event.currentTarget; button.disabled = true;
       try {
-        const posts = [];
+        const posts = await allPosts();
+        const sources = new Set(posts.map(item => item.source_path));
+        posts.push(...staticPosts.filter(item => !sources.has(item.source_path)));
+        const drafts = [];
         for (let offset = 0; ; offset += 500) {
-          const batch = check(await client.from('blog_posts').select('*').order('id').range(offset, offset + 499));
-          posts.push(...batch); if (batch.length < 500) break;
+          const batch = check(await client.from('blog_post_drafts').select('*').order('post_id').range(offset, offset + 499));
+          drafts.push(...batch); if (batch.length < 500) break;
         }
-        const url = URL.createObjectURL(new Blob([JSON.stringify({ exported_at: new Date().toISOString(), posts }, null, 2)], { type: 'application/json' }));
+        const url = URL.createObjectURL(new Blob([JSON.stringify({ exported_at: new Date().toISOString(), posts, drafts }, null, 2)], { type: 'application/json' }));
         const link = element('a'); link.href = url; link.download = 'blog-writing-backup.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
       } catch (error) { message($('#editor-message'), errorText(error)); }
       finally { button.disabled = false; }
