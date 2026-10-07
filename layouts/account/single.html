@@ -1,4 +1,6 @@
 {{ define "main" }}{{ $t := index site.Data.account site.Language.Lang }}{{ $home := site.Home.RelPermalink }}
+<div class="login-scene" id="login-scene" aria-hidden="true"></div>
+<script type="module" src="{{ "login-scene/background.js" | relURL }}"></script>
 <div class="document account-page"><header class="detail-header"><h1>{{ $t.account }}</h1></header>
 <noscript><p class="empty-state">{{ $t.no_script }}</p></noscript>
 <section class="account-panel" aria-label="{{ $t.account }}">
