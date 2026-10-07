@@ -31,8 +31,8 @@ other_experience:
 - Psychiatry placement, Renmin Hospital of Wuhan University (Summer 2025)
 contributions:
 - id: unsloth-contribution
-  title: Unsloth · PR contributor
-  text: 'Submitted PR #12889 (awaiting merge).'
+  title: Unsloth · Open-source contributor
+  text: 'PR #12889 merged into main on 7 Oct 2026. Fixed context-meter overcounting after tool calls in Unsloth Studio across the Python backend and TypeScript frontend, while preserving whole-turn token usage statistics.'
   url: https://github.com/unslothai/unsloth/pull/12889
 - id: psychology-podcast
   title: Psychology knowledge podcast
