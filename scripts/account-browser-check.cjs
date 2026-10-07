@@ -160,6 +160,16 @@ async function fixture(route) {
     await page.reload(); assert.equal(await page.locator('#access-choice[open]').count(),0);
     await page.goto(base + '/account/');
     await page.locator('#auth-form').waitFor({state:'visible'});
+    const supportsWebGL = await page.evaluate(() => {
+      const canvas = document.createElement('canvas'), gl = canvas.getContext('webgl2');
+      const supported = Boolean(gl);
+      gl?.getExtension('WEBGL_lose_context')?.loseContext();
+      return supported;
+    });
+    if (supportsWebGL) {
+      await page.locator('#login-scene[data-ready] canvas').waitFor({state:'visible'});
+      await page.screenshot({path:path.join(root,'.local/previews/login-scene.png')});
+    }
     await page.locator('[data-auth-mode=signup]').click();
     assert.equal(await page.locator('.account-page .eyebrow').count(), 0);
     assert.equal(await page.locator('[data-auth-mode=verify]').count(), 0);
@@ -328,6 +338,28 @@ async function fixture(route) {
     assert.equal(await offPage.locator('#access-choice[open]').count(),0); await offline.close();
     const noScript=await browser.newContext({javaScriptEnabled:false}); const fallback=await noScript.newPage(); await fallback.goto(base+'/blog/');
     assert.equal(await fallback.locator('.note-preview').count(),2); assert(await fallback.locator('noscript').isVisible()); await noScript.close();
+    // A decorative 3D background must never prevent authentication without WebGL.
+    const withoutWebGL = await browser.newContext();
+    await withoutWebGL.route(api+'/**',fixture);
+    await withoutWebGL.addInitScript(() => {
+      const original = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function(type, ...options) {
+        if (/^(webgl|experimental-webgl)/.test(type)) { window.loginSceneAttempted = true; return null; }
+        return original.call(this, type, ...options);
+      };
+    });
+    const scenePage = await withoutWebGL.newPage(), sceneErrors = [];
+    scenePage.on('pageerror',error=>sceneErrors.push(error.message));
+    await scenePage.goto(base+'/account/');
+    await scenePage.waitForFunction(()=>window.loginSceneAttempted === true);
+    await scenePage.locator('#auth-form').waitFor({state:'visible'});
+    assert.equal(await scenePage.locator('#login-scene').getAttribute('aria-hidden'),'true');
+    assert.equal(await scenePage.locator('#login-scene canvas').count(),0);
+    await scenePage.locator('[name=email]').fill('member@example.test');
+    await scenePage.locator('[name=password]').fill('a-valid-test-password');
+    await scenePage.locator('#auth-submit').click({trial:true});
+    assert.deepEqual(sceneErrors,[]);
+    await withoutWebGL.close();
     assert.deepEqual(errors,[]);
     console.log('PASS: SDK signup/verification/login/reset/logout, durable fixture reloads, admin desk, save failure/conflicts, metadata-free upload, draft/published views, XSS, image viewer, visitor/offline/no-JS and bilingual responsive routes');
   } catch (error) {

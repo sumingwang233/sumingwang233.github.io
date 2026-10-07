@@ -12,9 +12,10 @@
 <link rel="preload" href="/assets/fonts/noto-serif-sc.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/assets/fonts/noto-sans-sc.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/assets/css/academic.css"><link rel="stylesheet" href="/assets/css/book.css">
 {{ if not $cv }}{{ $css := resources.Get "css/accounts.css" | minify | fingerprint }}<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">{{ end }}
+{{ if eq .Type "account" }}<script type="importmap">{"imports":{"three":"{{ "login-scene/lib/three.module.min.js" | relURL }}"}}</script>{{ end }}
 {{ if not $cv }}<script src="/assets/js/hobbies.js" defer></script><script src="/assets/js/reveal.js" defer></script><script src="/assets/js/images.js" defer></script>{{ end }}
 {{ $schema := dict "@context" "https://schema.org" "@type" "Person" "name" "Xin Wang" "alternateName" "王鑫" "url" site.Home.Permalink "sameAs" (slice $p.contact.github) "email" (printf "mailto:%s" $p.contact.email) }}<script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
-</head><body{{ if $cv }} class="cv-view"{{ end }}>
+</head><body{{ if $cv }} class="cv-view"{{ else if eq .Type "account" }} class="account-scene"{{ end }}>
 <a class="skip-link" href="#content">{{ i18n "skip" }}</a>
 {{ if $cv }}<nav class="cv-tools" aria-label="{{ i18n "cv" }}"><a href="{{ site.Home.RelPermalink }}">← {{ i18n "back" }}</a><a href="{{ i18n "cv_file" }}" download>{{ i18n "cv_download" }}</a><button type="button" onclick="window.print()">{{ i18n "cv_print" }}</button>{{ partial "book/language.html" . }}</nav>{{ else }}{{ partial "book/header.html" . }}{{ end }}
 <main id="content" tabindex="-1">{{ block "main" . }}{{ end }}</main>
