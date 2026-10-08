@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createRenderer } from './src/core/renderer.js';
-import { createCamera } from './src/core/camera.js';
+import { createCamera, fitCamera } from './src/core/camera.js';
 import { createLights } from './src/core/lights.js';
 import { SceneManager } from './src/core/sceneManager.js';
 import { INSTANCES } from './src/config/sceneLayout.js';
@@ -19,8 +19,10 @@ async function start() {
     scene.background = new THREE.Color('#e8e4dc');
     const camera = createCamera();
     const lights = createLights(scene);
-    lights.sun.shadow.mapSize.set(1024, 1024);
-    // The models and sun are static; only the camera and non-shadowing petals move.
+    lights.sky.intensity = 0.8;
+    lights.sun.shadow.normalBias = 0.025;
+    renderer.toneMappingExposure = 1.05;
+    // The models and sun are static; only the non-shadowing petals move.
     renderer.shadowMap.autoUpdate = false;
     renderer.shadowMap.needsUpdate = true;
     const manager = new SceneManager(scene);
@@ -29,29 +31,27 @@ async function start() {
       .map(id => import(`./src/assets/${id}.js`)));
     await manager.build();
     if (manager.missing.length) throw new Error('Incomplete login scene');
+    const bounds = new THREE.Box3().setFromObject(manager.getAssetLayer());
     const petals = createPetals({ group: manager.getEffectLayer(), sceneManager: manager });
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
-    const target = new THREE.Vector3(...camera.userData.lookAt);
-    target.y += lights.groundY;
-    const initial = camera.position.clone().sub(target);
-    const initialAngle = Math.atan2(initial.x, initial.z);
-    let scale = 1, elapsed = 0, previous = 0, disposed = false, lost = false;
-
-    function positionCamera() {
-      const angle = initialAngle + (motion.matches ? 0 : Math.sin(elapsed * 0.08) * 0.04);
-      const radius = Math.hypot(initial.x, initial.z) * scale;
-      camera.position.set(target.x + Math.sin(angle) * radius, target.y + initial.y * scale, target.z + Math.cos(angle) * radius);
-      camera.lookAt(target);
-    }
+    const panel = document.querySelector('.account-page');
+    const header = document.querySelector('.masthead-academic');
+    const footer = document.querySelector('.footer-academic');
+    let elapsed = 0, previous = 0, disposed = false, lost = false;
     function resize() {
       const width = host.clientWidth, height = host.clientHeight;
       if (!width || !height || disposed) return;
-      camera.aspect = width / height;
-      scale = Math.max(1.35, 1.1 / camera.aspect);
-      camera.setViewOffset(width, height, width > 768 ? width * 0.16 : 0, 0, width, height);
+      const top = (header?.getBoundingClientRect().bottom || 0) + 24;
+      const panelRect = panel.getBoundingClientRect();
+      const desktop = width > 768;
+      const bottom = desktop ? height - (footer?.offsetHeight || 0) - 24 : Math.min(height - 24, panelRect.top + scrollY - 24);
+      fitCamera(camera, bounds, { width, height }, {
+        left: 24, top,
+        width: Math.max(1, (desktop ? panelRect.left : width) - 48),
+        height: Math.max(1, bottom - top),
+      });
       renderer.setPixelRatio(Math.min(devicePixelRatio || 1, width < 768 ? 1 : 1.5));
       renderer.setSize(width, height, false);
-      positionCamera();
       if (!lost) renderer.render(scene, camera);
     }
     function frame(time) {
@@ -60,18 +60,17 @@ async function start() {
       previous = time;
       elapsed += dt;
       petals.update(dt, elapsed);
-      positionCamera();
       renderer.render(scene, camera);
     }
     function updateMotion() {
       renderer.setAnimationLoop(null);
       previous = 0;
       if (disposed || lost || document.hidden) return;
-      if (motion.matches) { positionCamera(); renderer.render(scene, camera); }
+      if (motion.matches) renderer.render(scene, camera);
       else renderer.setAnimationLoop(frame);
     }
     const observer = new ResizeObserver(resize);
-    observer.observe(host);
+    for (const element of [host, panel, header, footer].filter(Boolean)) observer.observe(element);
     motion.addEventListener('change', updateMotion);
     document.addEventListener('visibilitychange', updateMotion);
     canvas.addEventListener('webglcontextlost', event => {
@@ -79,7 +78,8 @@ async function start() {
       host.removeAttribute('data-ready'); updateMotion();
     });
     canvas.addEventListener('webglcontextrestored', () => {
-      lost = false; resize(); host.setAttribute('data-ready', ''); updateMotion();
+      lost = false; renderer.shadowMap.needsUpdate = true;
+      host.setAttribute('data-ready', ''); resize(); updateMotion();
     });
     window.addEventListener('pageshow', updateMotion);
     window.addEventListener('pagehide', event => {
@@ -97,11 +97,12 @@ async function start() {
       renderer.dispose();
       renderer.forceContextLoss();
     });
-    resize();
     host.setAttribute('data-ready', '');
+    resize();
     updateMotion();
   } catch {
     // WebGL or asset failures leave the paper panel and authentication usable.
+    host.removeAttribute('data-ready');
     renderer?.setAnimationLoop(null);
     renderer?.dispose();
     renderer?.forceContextLoss();

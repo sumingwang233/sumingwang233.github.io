@@ -81,6 +81,8 @@
   .language-link { font-size: var(--text-sm); }
 }
 @media print {
+  .cv-document #projects { break-before: page; }
+  .cv-source { margin-top: 3pt; font-size: inherit; }
   .cv-view { background: white; }
   .cv-section .interests-copy { margin-top: 0; max-width: none; }
   .cv-section .interests-copy li + li { margin-top: 2pt; }

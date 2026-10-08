@@ -133,7 +133,7 @@ export function getMaterial(name) {
     base.emissiveIntensity = def.emissiveIntensity ?? 1;
   }
   const mat = def.physical
-    ? new THREE.MeshPhysicalMaterial({ ...base, transparent: !!def.transparent, opacity: def.opacity ?? 1 })
+    ? new THREE.MeshPhysicalMaterial({ ...base, transparent: !!def.transparent, opacity: def.opacity ?? 1, depthWrite: !def.transparent })
     : new THREE.MeshStandardMaterial(base);
   mat.name = name;
   cache.set(name, mat);

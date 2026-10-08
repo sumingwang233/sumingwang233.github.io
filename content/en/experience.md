@@ -32,9 +32,10 @@ other_experience:
 contributions:
 - id: unsloth-contribution
   title: Unsloth · Open-source contributor
-  text: 'PR #12889 merged into main on 7 Oct 2026. Fixed context-meter overcounting after tool calls in Unsloth Studio across the Python backend and TypeScript frontend, while preserving whole-turn token usage statistics.'
+  text: 'PR #12889 fixed context-meter overcounting after tool calls in Unsloth Studio; merged into main on 7 Oct 2026.'
   url: https://github.com/unslothai/unsloth/pull/12889
 - id: psychology-podcast
+  cv: false
   title: Psychology knowledge podcast
   text: Producing a Chinese-language psychology podcast on NetEase Cloud Music.
   url: https://music.163.com/djradio?id=1496521002

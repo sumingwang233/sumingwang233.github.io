@@ -141,15 +141,21 @@ def check_site(site, profile):
         for hobby in profile['hobbies']:
             present(text, [hobby['title'][lang], hobby['text'][lang]], prefix)
         cv_parser, cv = parsed(site, prefix + 'cv')
-        for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'campus_experience', 'academic_interests']:
+        for group in ['education', 'research', 'projects', 'evaluation', 'skills', 'academic_interests']:
             for item in profile[group]:
-                present(cv, entry_facts(item, lang), prefix + 'cv')
-        for group in ['honors', 'training', 'other_experience']:
+                if item.get('cv') is not False:
+                    present(cv, entry_facts(item, lang), prefix + 'cv')
+        for group in ['honors', 'training']:
             present(cv, profile[group][lang], prefix + 'cv')
+        present(cv, profile['other_experience'][lang][1:], prefix + 'cv')
+        assert 'id="campus-photography"' not in (site / prefix / 'cv/index.html').read_text('utf8'), 'Campus entries belong on the experience page'
         _, experience = parsed(site, prefix + 'experience')
         projects_parser, projects_text = parsed(site, prefix + 'projects')
         for item in profile['contributions']:
             for parser, rendered, route in [(home, text, prefix), (cv_parser, cv, prefix + 'cv'), (projects_parser, projects_text, prefix + 'projects')]:
+                if route == prefix + 'cv' and item.get('cv') is False:
+                    assert item['url'] not in parser.urls, f'{route}: excluded contribution still present'
+                    continue
                 present(rendered, entry_facts(item, lang), route)
                 assert item['url'] in parser.urls, f'{route}: missing contribution link'
         for item in profile['campus_experience']:
@@ -191,8 +197,11 @@ def check_site(site, profile):
                 assert fact in pdf_text, f'{lang} PDF: missing {fact}'
             pdf_urls = {link.get('uri') for page in pdf for link in page.get_links()}
             for item in profile['contributions']:
-                present(pdf_text, entry_facts(item, lang), f'{lang} PDF')
-                assert item['url'] in pdf_urls, f'{lang} PDF: missing contribution link'
+                if item.get('cv') is False:
+                    assert item['url'] not in pdf_urls, f'{lang} PDF: excluded contribution still present'
+                else:
+                    present(pdf_text, entry_facts(item, lang), f'{lang} PDF')
+                    assert item['url'] in pdf_urls, f'{lang} PDF: missing contribution link'
     for path in site.rglob('*.html'):
         public_text(path.read_text('utf8'))
         parser = Links(); parser.feed(path.read_text('utf8'))

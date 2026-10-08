@@ -32,9 +32,10 @@ other_experience:
 contributions:
 - id: unsloth-contribution
   title: Unsloth · 开源贡献者
-  text: 'PR #12889 于 2026.10.07 合并至 main。修复 Unsloth Studio 工具调用后上下文用量重复计数的问题，贯通 Python 后端与 TypeScript 前端，同时保留整轮用量统计。'
+  text: 'PR #12889 修复 Unsloth Studio 工具调用后上下文用量重复计数的问题；于 2026.10.07 合并至 main。'
   url: https://github.com/unslothai/unsloth/pull/12889
 - id: psychology-podcast
+  cv: false
   title: 心理学知识播客
   text: 正在制作，通过网易云音乐分享心理学知识。
   url: https://music.163.com/djradio?id=1496521002

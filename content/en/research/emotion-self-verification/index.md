@@ -1,7 +1,7 @@
 ---
 id: emotion-self-verification
-title: Emotion Regulation & Self-Verification
-organization: Wuhan University · Research Assistant
+title: Emotion Regulation and Self-Verification Research Series
+organization: Assistant, Mental Health and Education Center, Wuhan University
 supervisor: Xin Ma
 period: Apr 2023–Present
 methods:
@@ -20,7 +20,6 @@ summary: Participate throughout the research series, initially focusing on data 
 featured: false
 highlights:
 - Participate throughout the research series, initially focusing on data analysis (E-Prime) and conducting experiments; now lead the experimental design and PsychoPy implementation of Study 3, distinguishing negative self-schema from negative emotion, and recruit research-team members and experiment participants
-- Completed stimulus-selection pilot analyses and a report. The experimental system supports randomized feedback, manipulation checks, audio recording, event logs and data export
 ---
 
 {{< highlights >}}

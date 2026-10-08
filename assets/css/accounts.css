@@ -78,7 +78,11 @@ button:disabled { cursor: wait; opacity: 0.6; }
 @media (min-width: 60rem) { .writing-desk { grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; } }
 @media (min-width: 72rem) { .writing-sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; align-items: start; } .editor-preview { position: sticky; top: 6rem; max-height: calc(100dvh - 7rem); overflow: auto; } .writing-sheet:has(.editor-preview[hidden]) { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .site-button { transition: none; } }
-@media (max-width: 48rem) { .account-scene .account-page { margin-inline: auto; } }
+@media (max-width: 48rem) {
+  .account-scene #content { align-items: flex-start; }
+  .account-scene .account-page { margin-inline: auto; }
+  .account-scene:has(.login-scene[data-ready]) .account-page { margin-top: clamp(12rem, 55vw, 20rem); }
+}
 @media (prefers-reduced-motion: reduce) { .login-scene canvas { transition: none; } }
 @media print { .login-scene { display: none; } }
 @media print { .access-choice, .account-panel, .writing-desk { display: none; } }

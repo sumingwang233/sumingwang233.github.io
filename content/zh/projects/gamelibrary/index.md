@@ -1,7 +1,7 @@
 ---
 id: gamelibrary
 title: GameLibrary
-organization: 本地游戏库
+organization: 本地游戏库管理软件
 period: 2026—至今
 methods:
 - C# / .NET 10
@@ -57,7 +57,6 @@ summary: 主导需求与交互设计，使用 AI 辅助开发、调试及验证�
 featured: true
 highlights:
 - 主导需求与交互设计，使用 AI 辅助开发、调试及验证；实现游戏目录扫描、候选审核、分类管理与快捷启动，迭代本地数据存储及桌面界面
-- 已有 Windows 可下载版本与公开源码；桌面端、CLI 和 MCP 连接统一后端
 source_url: https://github.com/sumingwang233/GameLibrary
 icon: /assets/images/gamelibrary-icon.png
 ---

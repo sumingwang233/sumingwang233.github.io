@@ -168,6 +168,43 @@ async function fixture(route) {
     });
     if (supportsWebGL) {
       await page.locator('#login-scene[data-ready] canvas').waitFor({state:'visible'});
+      // A translated scene must fit the actual free rectangle, not a fixed zoom/offset.
+      const sceneChecks = await page.evaluate(async () => {
+        const THREE = await import('/login-scene/lib/three.module.min.js');
+        const {createCamera, fitCamera} = await import('/login-scene/src/core/camera.js');
+        const {assetRoot, part} = await import('/login-scene/src/core/assetKit.js');
+        const {INSTANCES} = await import('/login-scene/src/config/sceneLayout.js');
+        const {create: createPetals} = await import('/login-scene/src/effects/petalFall.js');
+        const bounds = new THREE.Box3(new THREE.Vector3(-10,0,-10), new THREE.Vector3(10,8,10));
+        const results = [];
+        for (const [viewport, frame] of [
+          [{width:1304,height:880}, {left:24,top:92,width:682,height:630}],
+          [{width:375,height:880}, {left:24,top:92,width:327,height:190}],
+          [{width:900,height:550}, {left:24,top:92,width:340,height:340}],
+        ]) {
+          const camera = createCamera();
+          fitCamera(camera,bounds,viewport,frame);
+          for (const x of [bounds.min.x,bounds.max.x]) for (const y of [bounds.min.y,bounds.max.y]) for (const z of [bounds.min.z,bounds.max.z]) {
+            const point = new THREE.Vector3(x,y,z).project(camera);
+            const px=(point.x+1)*viewport.width/2, py=(1-point.y)*viewport.height/2;
+            results.push(px>=frame.left && px<=frame.left+frame.width && py>=frame.top && py<=frame.top+frame.height && point.z>=-1 && point.z<=1);
+          }
+        }
+        const root=assetRoot('regression','test');
+        const solid=part(root,new THREE.BoxGeometry(2,4,2),'mat_wall_exterior','solid');
+        const glass=part(root,new THREE.BoxGeometry(1,1,0.1),'mat_tram_window','glass');
+        results.push(solid.castShadow && solid.receiveShadow && !glass.castShadow && !glass.material.depthWrite);
+        const assets=new Map(INSTANCES.filter(i=>i.assetId.startsWith('nature_sakura_somei_yoshino') && i.visible).map(i=> {
+          const tree=new THREE.Group(); tree.add(solid.clone()); tree.position.fromArray(i.position);
+          return [i.instanceId,tree];
+        }));
+        const group=new THREE.Group(), petals=createPetals({group,sceneManager:{assets}});
+        results.push(petals.sources.length>0 && petals.sources.every(source=>Math.abs(source.radius-1)<0.001));
+        solid.geometry.dispose(); glass.geometry.dispose();
+        group.traverse(object=>{object.geometry?.dispose(); object.material?.dispose();});
+        return results;
+      });
+      assert(sceneChecks.every(Boolean),'Scene framing, glass depth or shadow/petal placement regressed');
       await page.screenshot({path:path.join(root,'.local/previews/login-scene.png')});
     }
     await page.locator('[data-auth-mode=signup]').click();

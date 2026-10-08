@@ -1,7 +1,7 @@
 ---
 id: dormitory-cooking
 title: 大学寝室做饭模拟器
-organization: 独立游戏开发
+organization: Godot 独立游戏
 period: 2026—至今
 methods:
 - Godot 4.7

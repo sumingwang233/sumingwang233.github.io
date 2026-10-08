@@ -29,6 +29,8 @@ export function part(root, geometry, materialName, partName) {
   const material = getMaterial(materialName);
   const mesh = new THREE.Mesh(geometry, material);
   mesh.name = `${assetId}_${partName}`;
+  mesh.castShadow = !material.transparent;
+  mesh.receiveShadow = !material.transparent;
   root.add(mesh);
   return mesh;
 }

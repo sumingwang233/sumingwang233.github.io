@@ -26,6 +26,7 @@ academic_interests:
   title: 游戏心理学
   text: 关注玩家动机、情绪体验与自我调节，长期希望在中国大陆发展游戏心理学这一学科方向。尝试结合行为实验、心理测量与软件原型，研究游戏中的互动反馈和奖励机制如何影响行为选择
 - id: bci-cognitive-neuroscience
+  cv: false
   title: 脑机接口与认知神经科学
   text: 对脑机接口和认知神经科学保持兴趣，已有初步接触，希望进一步理解认知过程及其神经机制
 links:
@@ -47,10 +48,10 @@ education:
 skills:
 - id: experiments-analysis
   title: 心理学实验 ＆ 分析
-  text: Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）
+  text: Python / PsychoPy 行为实验设计与实现；E-Prime、MATLAB；SPSS、Mplus；NVivo、认知访谈与条目修订
 - id: prototyping
-  title: 软件开发
-  text: AI产品开发；独立游戏设计；C#
+  title: 软件原型
+  text: AI 产品设计、开发与调试；软件开发；独立游戏开发
 - id: languages
   title: 语言
   text: IELTS 7.0（听力 7.5、阅读 8.5、写作 6.5、口语 6.0）；CET-6 600；CET-4 655
@@ -106,4 +107,4 @@ hobbies:
   - image: /assets/images/hobbies/fitness-03.webp
     image_alt: 我拍摄的桂园操场夜景，运动场与场边的人们
     text: 操场一角
-updated: '2026-10-07'
+updated: '2026-10-08'

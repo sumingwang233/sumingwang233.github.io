@@ -26,6 +26,7 @@ academic_interests:
   title: Game psychology
   text: I am interested in player motivation, emotional experience and self-regulation, with a long-term aspiration to develop game psychology as a field in mainland China. I aim to combine behavioral experiments, psychological measurement and software prototypes to study how interactive feedback and reward mechanisms in games influence behavioral choices
 - id: bci-cognitive-neuroscience
+  cv: false
   title: Brain–computer interfaces & cognitive neuroscience
   text: I have an interest in, and some initial exposure to, brain–computer interfaces and cognitive neuroscience, and hope to better understand cognitive processes and their neural mechanisms
 links:
@@ -47,10 +48,10 @@ education:
 skills:
 - id: experiments-analysis
   title: Psychology experiments & analysis
-  text: Python / PsychoPy behavioral experiment design; E-Prime, MatLab; SPSS, Mplus; NVivo (qualitative analysis)
+  text: Python / PsychoPy behavioral experiment design and implementation; E-Prime, MATLAB; SPSS, Mplus; NVivo, cognitive interviewing and item revision
 - id: prototyping
-  title: Software development
-  text: AI product development; independent game design; C#
+  title: Software prototyping
+  text: AI product design, development and debugging; software development; independent game development
 - id: languages
   title: Languages
   text: IELTS 7.0 (L 7.5, R 8.5, W 6.5, S 6.0); CET-6 600; CET-4 655
@@ -106,4 +107,4 @@ hobbies:
   - image: /assets/images/hobbies/fitness-03.webp
     image_alt: My photograph of the Guiyuan sports field and people beside it at night
     text: A corner of the sports field
-updated: '2026-10-07'
+updated: '2026-10-08'

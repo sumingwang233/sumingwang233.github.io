@@ -1,6 +1,6 @@
 ---
 id: fnos-video-dedupe
-title: Video Dedupe Assistant
+title: fnOS Video Dedupe Assistant
 organization: fnOS native application
 period: 2026–Present
 methods:
@@ -14,11 +14,10 @@ weight: 3
 translationKey: fnos-video-dedupe
 authors:
 - me
-summary: Lead requirements and review-flow design with AI-assisted implementation of SHA-256 duplicate detection, frame-based perceptual-hash similarity detection and incremental scan caching
+summary: Core features include SHA-256 exact-duplicate detection, frame-based perceptual-hash visual similarity detection and incremental scan caching
 featured: false
 highlights:
-- Lead requirements and review-flow design with AI-assisted implementation of SHA-256 duplicate detection, frame-based perceptual-hash similarity detection and incremental scan caching
-- Implement scanning, human review, dry runs and confirmed cleanup, with file revalidation, retained-copy safeguards and audit records; iterate the interface and application packaging
+- Core features include SHA-256 exact-duplicate detection, frame-based perceptual-hash visual similarity detection and incremental scan caching
 ---
 
 {{< highlights >}}
