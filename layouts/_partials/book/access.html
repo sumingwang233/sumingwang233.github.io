@@ -3,7 +3,7 @@
   <h2 id="access-title">{{ $t.welcome }}</h2>
   <div class="access-options"><button type="button" class="site-button primary" data-visitor autofocus>{{ $t.visitor }} <span aria-hidden="true">→</span></button><a class="site-button" href="{{ $home }}account/">{{ $t.member }} <span aria-hidden="true">→</span></a></div>
 </dialog>
-{{ $config := dict "enabled" site.Params.account.enabled "url" site.Params.account.url "key" site.Params.account.publishable_key "home" $home "lang" site.Language.Lang "text" $t "static_posts" (partial "book/static-blog.html" .) }}
+{{ $config := dict "enabled" site.Params.account.enabled "url" site.Params.account.url "key" site.Params.account.publishable_key "home" $home "lang" site.Language.Lang "text" $t "blog_topics" site.Data.blog_topics "static_posts" (partial "book/static-blog.html" .) }}
 <script id="site-account-config" type="application/json">{{ $config | jsonify | safeJS }}</script>
 {{ $js := resources.Get "js/accounts.js" | js.Build (dict "targetPath" "assets/js/accounts.js" "target" "es2022" "minify" true) | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

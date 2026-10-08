@@ -481,7 +481,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.overview-entry').count(), 0);
       await page.goto(`${base}${prefix}/`);
       await page.locator('.records-menu summary').click();
-      assert.deepEqual(await page.locator('.records-menu > div a').allTextContents(), prefix ? ['All', 'Game psychology', 'Development diary', 'Photography', 'Essays'] : ['全部', '游戏心理学', '开发日记', '摄影', '随笔']);
+      assert.deepEqual(await page.locator('.records-menu > div a').allTextContents(), prefix ? ['All', 'Psychology', 'Development diary', 'Photography', 'Essays'] : ['全部', '心理学', '开发日记', '摄影', '随笔']);
       assert(await page.locator('.records-menu a[href$="/photos/"]').isVisible());
       await page.locator('.records-menu a[href$="/photos/"]').click();
       assert.equal(new URL(page.url()).pathname, `${prefix}/photos/`);

@@ -7,7 +7,7 @@
   {{- end -}}
   {{- $category := .Params.category | default "essay" -}}
   {{- $excerpt := .Params.summary | default .Summary | plainify | truncate 240 "" -}}
-  {{- $posts = $posts | append (dict "source_path" .RelPermalink "title" .Title "excerpt" $excerpt "body_md" $body "category" $category "language" .Language.Lang "status" "published" "tags" slice "body_style" (dict) "published_at" (.Date.Format "2006-01-02T15:04:05Z07:00") "updated_at" (.Date.Format "2006-01-02T15:04:05Z07:00")) -}}
+  {{- $posts = $posts | append (dict "source_path" .RelPermalink "title" .Title "excerpt" $excerpt "body_md" $body "category" $category "language" .Language.Lang "status" "published" "tags" (.Params.tags | default slice) "body_style" (dict) "published_at" (.Date.Format "2006-01-02T15:04:05Z07:00") "updated_at" (.Date.Format "2006-01-02T15:04:05Z07:00")) -}}
 {{- end -}}
 {{- end -}}
 {{- return $posts -}}

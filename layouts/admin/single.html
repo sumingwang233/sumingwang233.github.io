@@ -9,6 +9,7 @@
     <p class="form-help">{{ $t.autosave_help }}</p>
     <label class="field title-field">{{ $t.title }}<input name="title" maxlength="160" placeholder="{{ $t.title }}" autocomplete="off"></label>
     <div class="editor-options"><label class="field">{{ $t.category }}<select name="category">{{ range slice "essay" "research" "development" "photography" }}<option value="{{ . }}">{{ index $t . }}</option>{{ end }}</select></label><label class="field">{{ $t.language }}<select name="language"><option value="zh">中文</option><option value="en">English</option></select></label></div>
+    <label class="field" data-editor-topic hidden>{{ $t.psychology_topic }}<select name="psychology_topic"><option value="">{{ $t.topic_none }}</option>{{ range site.Data.blog_topics }}<option value="{{ .id }}">{{ index . site.Language.Lang }}</option>{{ end }}</select></label>
     <label class="field">{{ $t.excerpt }}<textarea name="excerpt" rows="2" maxlength="240" aria-describedby="excerpt-help"></textarea><span class="form-help" id="excerpt-help">{{ $t.excerpt_help }}</span></label>
     <label class="field">{{ $t.tags }}<input name="tags" maxlength="104" aria-describedby="tags-help"><span class="form-help" id="tags-help">{{ $t.tags_help }}</span></label>
     <div class="editor-toolbar" role="group" aria-label="{{ $t.toolbar }}">{{ range slice "heading" "bold" "italic" "strike" "list" "quote" "code_block" "link" }}<button type="button" data-format="{{ . }}">{{ index $t . }}</button>{{ end }}<button type="button" data-insert-image>{{ $t.image }}</button></div>
