@@ -26,7 +26,7 @@ export function create(ctx) {
       x: inst.position[0],
       z: inst.position[2],
       top: box ? box.max.y : 4.0,
-      radius: box ? Math.max(box.max.x, box.max.z) : 1.5,
+      radius: box ? Math.max(box.max.x - box.min.x, box.max.z - box.min.z) / 2 : 1.5,
     };
   });
 

@@ -1,7 +1,7 @@
 ---
 id: gamelibrary
 title: GameLibrary
-organization: Local game library
+organization: Local game library software
 period: 2026–Present
 methods:
 - C# / .NET 10
@@ -57,7 +57,6 @@ summary: Lead requirements and interaction design with AI-assisted implementatio
 featured: true
 highlights:
 - Lead requirements and interaction design with AI-assisted implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
-- Produced downloadable Windows builds and a public source repository; desktop, CLI and MCP clients connect to a shared backend
 source_url: https://github.com/sumingwang233/GameLibrary
 icon: /assets/images/gamelibrary-icon.png
 ---

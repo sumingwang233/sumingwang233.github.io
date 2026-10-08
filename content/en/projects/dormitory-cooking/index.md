@@ -1,7 +1,7 @@
 ---
 id: dormitory-cooking
 title: Dormitory Cooking Simulator
-organization: Independent game development
+organization: Godot independent game
 period: 2026–Present
 methods:
 - Godot 4.7

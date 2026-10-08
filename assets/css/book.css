@@ -65,7 +65,8 @@
 }
 @media (min-width: 60rem) {
   .intro-copy, .intro .personal-statement { max-width: none; }
-  .research-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xl); }
+  .research-overview { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-xl); row-gap: 0; }
+  .research-overview .entry, .research-overview .entry-body { display: grid; grid-template-rows: subgrid; grid-row: span 5; row-gap: 0; }
   .research-overview .entry + .entry { padding-top: 0; border: 0; }
   .project-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); }
   .project-overview .entry + .entry { padding-top: 0; border: 0; }
@@ -81,6 +82,8 @@
   .language-link { font-size: var(--text-sm); }
 }
 @media print {
+  .cv-document #projects { break-before: page; }
+  .cv-source { margin-top: 3pt; font-size: inherit; }
   .cv-view { background: white; }
   .cv-section .interests-copy { margin-top: 0; max-width: none; }
   .cv-section .interests-copy li + li { margin-top: 2pt; }

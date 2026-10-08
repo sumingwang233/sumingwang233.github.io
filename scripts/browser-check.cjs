@@ -48,7 +48,9 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.cv-heading a').last().getAttribute('href'), profile.contact.github);
       assert.equal(await page.locator('.cv-heading a').last().innerText(), profile.contact.github.replace(/^https:\/\//, ''));
       for (const item of profile.contributions) {
-        assert.equal(await page.locator('#projects').getByRole('link', { name: item.title[lang] }).getAttribute('href'), item.url);
+        const link = page.locator('#projects').getByRole('link', { name: item.title[lang] });
+        if (item.cv === false) assert.equal(await link.count(), 0);
+        else assert.equal(await link.getAttribute('href'), item.url);
       }
       await page.pdf({ path: path.join(site, 'files', `cv-${lang}.pdf`), format: 'A4', printBackground: false, preferCSSPageSize: true, displayHeaderFooter: false });
     }
@@ -129,7 +131,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.intro-copy').count(), 3);
     assert.deepEqual(await page.locator('#academic-interests li').allTextContents(), profile.academic_interests.map(item => item.title.zh + '：' + item.text.zh));
     assert.equal(await page.locator('#skills-title').innerText(), '技能 ＆ 语言');
-    assert.equal(await page.locator('#skills dd').first().innerText(), 'Python / PsychoPy 行为实验设计；E-Prime、MatLab；SPSS、Mplus；NVivo（质性分析）');
+    assert.deepEqual(await page.locator('#skills dd').allTextContents(), profile.skills.map(item => item.text.zh));
     assert.equal(await page.locator('.intro a[href^="mailto:"]').count(), 0);
     assert.equal(await page.locator('.closing-contact p').count(), 0);
     assert.equal(await page.locator('.closing-contact > span').textContent(), '联系我：');

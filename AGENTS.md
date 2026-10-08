@@ -15,7 +15,9 @@ This is Xin Wang / 王鑫's public bilingual HugoBlox Academic-CV website. Follo
 
 The hero's primary heading is 王鑫 / Xin Wang, with the localized assistant role below it. Preserve Be Water, my friend, the left circular original lifestyle photo and two resume downloads. No intro email button. The page retains the current Noto fonts, warm rough book-paper texture and green accent.
 
-Homepage order: introduction; education; skills & languages; academic interests; research overview; publication; GameLibrary and Digital Employee Benchmark; selected notes; hobby carousel; contact. Full diagrams and implementation explanations belong in detail pages. Campus experience, honors and other experiences belong in the experience page and academic CVs.
+Homepage order: introduction; education; skills & languages; academic interests; research overview; publication; GameLibrary and Digital Employee Benchmark; selected notes; hobby carousel; contact. Full diagrams and implementation explanations belong in detail pages. Campus experience belongs in the experience page; honors and other experiences also appear in academic CVs.
+
+The owner's reviewed Chinese academic CV dated 2026-10-08 controls the native English CV layout and compact website CV scope. Keep research and publication on page one; projects, practical experience, skills, honors and other experience on page two. Campus entries, the BCI interest and podcast remain on their website pages but are omitted from compact CVs. Preserve the reviewed Chinese originals and private contact boundary.
 
 Preserve the official WHU emblem only beside the homepage education title, GameLibrary's approved application icon beside web titles, a right-aligned bold supervisor directly after the date, and the ordinary inherited-color contact label outside the email link. Keep the hobby counter visually hidden and available to screen readers. Preserve old homepage anchors and all four original page routes plus three PDF addresses.
 
