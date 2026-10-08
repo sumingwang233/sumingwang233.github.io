@@ -344,6 +344,12 @@ async function fixture(route) {
     await filter('sort').selectOption('newest');
     assert.equal(await reader.locator('[data-blog-feed] h3').first().innerText(),'Archive 13');
     await filter('language').selectOption('zh');
+    assert.equal(await reader.locator('[data-blog-feed] article').count(),1);
+    assert(await reader.locator(`[data-post-id="${firstId}"]`).isVisible(), 'The matching Chinese game-psychology post disappeared');
+    await reader.locator('[data-topic="experiment-design"]').click();
+    assert.equal(await reader.locator('[data-blog-feed] article').count(),1, 'Topic selection did not retain the Chinese experimental-design note');
+    assert.equal(await reader.locator(`[data-post-id="${firstId}"]`).count(),0);
+    await filter('language').selectOption('en');
     assert(await reader.locator('[data-blog-empty]').isVisible());
     await reader.locator('[data-blog-controls] [type=reset]').click();
     assert.equal(new URL(reader.url()).search,'');
