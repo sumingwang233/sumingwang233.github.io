@@ -6,6 +6,7 @@ content_language: zh
 summary: 负性自我概念激活与负性情绪诱发是两个需要区分的操作。系列研究的研究 3 关注二者如何影响情绪调节目标，设计时分别考虑自我图式激活和情绪诱发。
 related: research/emotion-self-verification
 category: research
+tags: [experiment-design]
 featured: true
 ---
 

@@ -53,12 +53,28 @@ zh:
   body_help: 支持 Markdown，输入时实时显示效果
   category: 栏目
   essay: 随笔
-  research: 游戏心理学
+  research: 心理学
   development: 开发日记
   photography: 摄影
   language: 正文语言
+  all_categories: 全部栏目
+  all_languages: 全部语言
+  psychology_topic: 心理学子主题
+  all_psychology: 全部心理学
+  topic_none: 未分类
+  search_posts: 搜索文章
+  search_help: 搜索标题、摘要、正文或标签
+  sort_posts: 排序
+  newest_first: 最新发布
+  oldest_first: 最早发布
+  title_ascending: 标题升序
+  title_descending: 标题降序
+  reset_filters: 清除筛选
+  results_count: 共 {count} 篇文章
+  no_results: 没有符合条件的文章
+  blog_unavailable: 在线文章暂时无法加载，仍可浏览和搜索已有文章。请稍后重试。
   tags: 标签
-  tags_help: 用逗号分隔，最多 5 个，每个不超过 20 字
+  tags_help: 用逗号分隔，最多 5 个（含子主题），每个不超过 20 字
   new_post: 新建文章
   draft: 草稿
   published: 已发布
@@ -178,12 +194,28 @@ en:
   body_help: Markdown supported, with a live preview as you type
   category: Category
   essay: Essays
-  research: Game psychology
+  research: Psychology
   development: Development diary
   photography: Photography
   language: Content language
+  all_categories: All categories
+  all_languages: All languages
+  psychology_topic: Psychology topic
+  all_psychology: All psychology
+  topic_none: Uncategorized
+  search_posts: Search posts
+  search_help: Search titles, summaries, body text or tags
+  sort_posts: Sort by
+  newest_first: Newest first
+  oldest_first: Oldest first
+  title_ascending: Title, A–Z
+  title_descending: Title, Z–A
+  reset_filters: Clear filters
+  results_count: '{count} posts'
+  no_results: No posts match your filters
+  blog_unavailable: Online posts could not be loaded. You can still browse and search existing articles. Please try again later.
   tags: Tags
-  tags_help: Comma-separated, up to 5 tags of 20 characters each
+  tags_help: Comma-separated, up to 5 tags including the selected topic, each up to 20 characters
   new_post: New post
   draft: Draft
   published: Published

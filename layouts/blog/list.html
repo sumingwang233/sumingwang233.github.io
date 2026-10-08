@@ -1,4 +1,18 @@
 {{ define "main" }}{{ $t := index site.Data.account site.Language.Lang }}
 <div class="document archive-page"><header class="detail-header"><p class="eyebrow">王鑫 / Xin Wang</p><h1 data-blog-title>{{ .Title }}</h1></header>
-<section class="blog-feed-section" aria-labelledby="online-posts-title"><h2 id="online-posts-title">{{ $t.latest }}</h2><p data-blog-message role="status"></p><noscript><p>{{ $t.no_script }}</p></noscript><div class="notes-overview" data-blog-feed></div><button class="site-button" type="button" data-more-posts hidden>{{ $t.load_more }}</button></section>
-<section class="blog-feed-section" data-existing-notes aria-labelledby="existing-notes-title"><h2 id="existing-notes-title">{{ $t.older_notes }}</h2>{{ partial "book/notes.html" . }}</section></div>{{ end }}
+<form class="blog-controls" data-blog-controls role="search" hidden>
+  <label class="field blog-search">{{ $t.search_posts }}<input name="q" type="search" maxlength="200" placeholder="{{ $t.search_help }}" autocomplete="off" aria-controls="blog-articles"></label>
+  <label class="field">{{ $t.category }}<select name="category" aria-controls="blog-articles"><option value="">{{ $t.all_categories }}</option>{{ range slice "research" "development" "photography" "essay" }}<option value="{{ . }}">{{ index $t . }}</option>{{ end }}</select></label>
+  <label class="field">{{ $t.language }}<select name="language" aria-controls="blog-articles"><option value="">{{ $t.all_languages }}</option><option value="zh">中文</option><option value="en">English</option></select></label>
+  <label class="field">{{ $t.sort_posts }}<select name="sort" aria-controls="blog-articles"><option value="newest">{{ $t.newest_first }}</option><option value="oldest">{{ $t.oldest_first }}</option><option value="title-asc">{{ $t.title_ascending }}</option><option value="title-desc">{{ $t.title_descending }}</option></select></label>
+  <button class="text-button" type="reset">{{ $t.reset_filters }}</button>
+</form>
+<nav class="blog-topics" data-blog-topics aria-label="{{ $t.psychology_topic }}" hidden>
+  <a href="{{ site.Home.RelPermalink }}blog/?category=research" data-topic="">{{ $t.all_psychology }}</a>
+  {{ range site.Data.blog_topics }}<a href="{{ site.Home.RelPermalink }}blog/?category=research&amp;topic={{ .id }}" data-topic="{{ .id }}">{{ index . site.Language.Lang }}</a>{{ end }}
+</nav>
+<section class="blog-feed-section" id="blog-articles" aria-label="{{ $t.all_categories }}">
+  <output class="blog-results" data-blog-count aria-live="polite"></output><p data-blog-message role="status"></p><p data-blog-empty hidden>{{ $t.no_results }}</p>
+  <noscript><p>{{ $t.no_script }}</p></noscript>{{ partial "book/notes.html" . }}
+  <button class="site-button" type="button" data-more-posts hidden>{{ $t.load_more }}</button>
+</section></div>{{ end }}

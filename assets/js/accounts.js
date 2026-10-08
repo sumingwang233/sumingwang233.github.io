@@ -50,6 +50,8 @@ function start(config) {
   const editor = $('#post-form');
   const field = name => editor.elements.namedItem(name);
   const staticPosts = config.static_posts || [];
+  const topics = config.blog_topics || [];
+  const topicFor = item => item.category === 'research' ? (item.tags || []).map(tag => topics.find(topic => [topic.id, topic.zh, topic.en].includes(tag))).find(Boolean) : undefined;
   const fontFamilies = { default: 'var(--font-body)', serif: 'var(--font-display)', sans: 'var(--font-body)', mono: 'monospace' };
   const signedImages = new Map();
 
@@ -216,14 +218,112 @@ function start(config) {
   const dateText = date => new Intl.DateTimeFormat(config.lang === 'zh' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(date));
   function postCard(item) {
     const article = element('article', undefined, 'entry note-preview');
-    const meta = element('p', `${dateText(item.published_at)} · ${t[item.category]} · ${item.language === 'zh' ? '中文' : 'English'}`, 'entry-meta');
+    article.dataset.postId = item.id || item.source_path;
+    const topic = topicFor(item);
+    const meta = element('p', `${dateText(item.published_at)} · ${t[item.category]}${topic ? ' · ' + topic[config.lang] : ''} · ${item.language === 'zh' ? '中文' : 'English'}`, 'entry-meta');
     const heading = element('h3'), link = element('a', item.title);
     link.href = item.source_path || config.home + 'blog/post/?id=' + encodeURIComponent(item.id);
     heading.append(link); article.append(meta, heading, element('p', item.excerpt, 'summary'));
     return article;
   }
+  async function loadBlogArchive(feed) {
+    const controls = $('[data-blog-controls]'), topicNav = $('[data-blog-topics]');
+    const originals = new Map($$('[data-static-source]', feed).map(card => [card.dataset.staticSource, card]));
+    const baseline = staticPosts.filter(item => originals.has(item.source_path));
+    const heading = $('[data-blog-title]'), defaultTitle = heading.textContent;
+    const status = $('[data-blog-message]'), more = $('[data-more-posts]');
+    const collator = new Intl.Collator(config.lang, { numeric: true, sensitivity: 'base' });
+    const normalize = value => String(value || '').normalize('NFKC').toLocaleLowerCase(config.lang);
+    let online = [], selectedTopic = '', visible = 12, loading = Boolean(client);
+    const control = name => controls.elements.namedItem(name);
+    const keys = ['category', 'q', 'language', 'sort', 'topic'];
+    function readURL() {
+      const params = new URLSearchParams(location.search);
+      for (const name of ['category', 'language', 'sort']) {
+        const value = params.get(name) || '';
+        control(name).value = [...control(name).options].some(option => option.value === value) ? value : name === 'sort' ? 'newest' : '';
+      }
+      control('q').value = (params.get('q') || '').slice(0, 200);
+      selectedTopic = topics.some(topic => topic.id === params.get('topic')) ? params.get('topic') : '';
+      if (selectedTopic && !control('category').value) control('category').value = 'research';
+    }
+    function paramsFor(topic = selectedTopic) {
+      const params = new URLSearchParams();
+      for (const name of ['category', 'q', 'language', 'sort']) {
+        const value = control(name).value.trim();
+        if (value && !(name === 'sort' && value === 'newest')) params.set(name, value);
+      }
+      if (topic && control('category').value === 'research') params.set('topic', topic);
+      return params;
+    }
+    function render(updateURL = true, resetPage = true) {
+      if (resetPage) visible = 12;
+      const category = control('category').value, language = control('language').value;
+      if (category !== 'research') selectedTopic = '';
+      topicNav.hidden = category !== 'research';
+      const params = paramsFor();
+      const url = new URL(location.href);
+      keys.forEach(key => url.searchParams.delete(key));
+      params.forEach((value, key) => url.searchParams.set(key, value));
+      if (updateURL) history.replaceState(null, '', url);
+      $$('.language-link').forEach(link => {
+        const target = new URL(link.href); keys.forEach(key => target.searchParams.delete(key));
+        params.forEach((value, key) => target.searchParams.set(key, value)); link.href = target.href;
+      });
+      $$('[data-topic]', topicNav).forEach(link => {
+        link.setAttribute('aria-current', String(link.dataset.topic === selectedTopic));
+        const target = new URL(config.home + 'blog/', location.origin), topicParams = paramsFor(link.dataset.topic);
+        topicParams.set('category', 'research'); target.search = topicParams.toString(); link.href = target.href;
+      });
+      message(heading, category ? t[category] : defaultTitle);
+      document.title = `${heading.textContent} · Xin Wang`;
+      const merged = new Map(baseline.map(item => [item.source_path, item]));
+      online.forEach(item => merged.set(item.source_path || item.id, item));
+      const words = normalize(control('q').value).trim().split(/\s+/).filter(Boolean);
+      const matches = [...merged.values()].filter(item => {
+        if ((category && item.category !== category) || (language && item.language !== language)) return false;
+        const topic = topicFor(item);
+        if (selectedTopic && topic?.id !== selectedTopic) return false;
+        const text = normalize([item.title, item.excerpt, item.body_md, ...(item.tags || []), topic?.zh, topic?.en].join(' '));
+        return words.every(word => text.includes(word));
+      });
+      const sort = control('sort').value;
+      matches.sort((a, b) => {
+        const byTitle = collator.compare(a.title, b.title);
+        if (sort === 'title-asc' || sort === 'title-desc') return (sort === 'title-desc' ? -byTitle : byTitle) || String(a.id || a.source_path).localeCompare(String(b.id || b.source_path));
+        return (sort === 'oldest' ? 1 : -1) * (new Date(a.published_at) - new Date(b.published_at)) || byTitle;
+      });
+      feed.replaceChildren(...matches.slice(0, visible).map(item => item.id ? postCard(item) : originals.get(item.source_path)));
+      message($('[data-blog-count]'), t.results_count.replace('{count}', matches.length));
+      $('[data-blog-empty]').hidden = loading || matches.length !== 0;
+      more.hidden = visible >= matches.length;
+    }
+    controls.hidden = false; readURL(); render();
+    controls.addEventListener('submit', event => event.preventDefault());
+    controls.addEventListener('input', () => render());
+    controls.addEventListener('reset', event => {
+      event.preventDefault();
+      for (const name of ['category', 'q', 'language', 'sort']) control(name).value = name === 'sort' ? 'newest' : '';
+      selectedTopic = ''; render();
+    });
+    topicNav.addEventListener('click', event => {
+      const link = event.target.closest('[data-topic]');
+      if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button) return;
+      event.preventDefault(); selectedTopic = link.dataset.topic; render();
+    });
+    more.addEventListener('click', () => { visible += 12; render(false, false); });
+    window.addEventListener('popstate', () => { readURL(); render(false); });
+    if (!client) { message(status, t.blog_unavailable); return; }
+    message(status, t.loading);
+    try {
+      // ponytail: search the complete small archive locally; move search and paging to the server if it outgrows memory.
+      online = await allPosts('id,title,excerpt,body_md,category,tags,language,published_at,source_path', true);
+      loading = false; render(); message(status, '');
+    } catch { loading = false; render(); message(status, t.blog_unavailable); }
+  }
   async function loadBlog() {
     const feed = $('[data-blog-feed]');
+    if (feed?.hasAttribute('data-blog-archive')) return loadBlogArchive(feed);
     const originalCards = $$('[data-static-source]');
     if (!feed && !originalCards.length) return;
     const requested = new URLSearchParams(location.search).get('category');
@@ -382,9 +482,12 @@ function start(config) {
     $('[data-unpublish]').hidden = post?.status !== 'published' || Boolean(post.source_path);
     $('[data-save]').hidden = false;
   }
+  function syncTopicField() {
+    $('[data-editor-topic]').hidden = field('category').value !== 'research';
+  }
   function newPost() {
     post = null; editor.reset(); field('language').value = config.lang;
-    autosaveBlocked = false; editRevision++; editorState(); message($('#editor-message'), ''); setDirty(false); updatePreview();
+    syncTopicField(); autosaveBlocked = false; editRevision++; editorState(); message($('#editor-message'), ''); setDirty(false); updatePreview();
     $$('#admin-posts button').forEach(button => button.removeAttribute('aria-current'));
   }
   function fillPost(item, draft) {
@@ -392,16 +495,21 @@ function start(config) {
     editor.reset();
     const content = draft && draft.post_version === item.version ? draft.content : item;
     for (const name of ['title','excerpt','body_md','category','language']) field(name).value = content[name];
-    field('tags').value = (content.tags || []).join(', ');
+    const topic = topicFor(content);
+    field('psychology_topic').value = topic?.id || '';
+    field('tags').value = (content.tags || []).filter(tag => ![topic?.id, topic?.zh, topic?.en].includes(tag)).join(', ');
+    syncTopicField();
     for (const [name, value] of Object.entries(content.body_style || {})) if (field(name)) field(name).value = value;
     autosaveBlocked = false; editRevision++; editorState(); setDirty(false); updatePreview();
     message($('#editor-message'), content === item ? '' : t.pending_draft);
     $$('#admin-posts button').forEach(button => button.setAttribute('aria-current', String(button.dataset.id === (item.id || item.source_path))));
   }
-  async function allPosts(columns = '*') {
+  async function allPosts(columns = '*', publishedOnly = false) {
     const posts = [];
     for (let offset = 0; ; offset += 500) {
-      const batch = check(await client.from('blog_posts').select(columns).order('id').range(offset, offset + 499));
+      let query = client.from('blog_posts').select(columns);
+      if (publishedOnly) query = query.eq('status', 'published');
+      const batch = check(await query.order('id').range(offset, offset + 499));
       posts.push(...batch); if (batch.length < 500) break;
     }
     return posts;
@@ -440,6 +548,14 @@ function start(config) {
   }
   function editorValue(status) {
     const tags = [...new Set(field('tags').value.split(/[,，]/).map(tag => tag.trim()).filter(Boolean))];
+    if (field('category').value === 'research' && field('psychology_topic').value) {
+      const selected = topics.find(topic => topic.id === field('psychology_topic').value);
+      if (selected) {
+        // The selected topic shares the existing validated tag storage and draft/export path.
+        for (let i = tags.length - 1; i >= 0; i--) if ([selected.id, selected.zh, selected.en].includes(tags[i])) tags.splice(i, 1);
+        tags.unshift(selected.id);
+      }
+    }
     if (tags.length > 5 || tags.some(tag => [...tag].length > 20)) throw new Error(t.invalid_tags);
     const value = { title: field('title').value.trim(), excerpt: field('excerpt').value.trim(), body_md: field('body_md').value, category: field('category').value, language: field('language').value, tags, body_style: bodyStyle(), status };
     if (status === 'published' && ([...value.title].length < 3 || [...value.body_md.trim()].length < 10)) throw new Error(t.invalid_post);
@@ -477,6 +593,7 @@ function start(config) {
     finally { saving = false; controls.forEach(control => control.disabled = false); if (dirty) message($('#save-state'), t.dirty); }
   }
   if (editor) {
+    field('category').addEventListener('change', syncTopicField);
     editor.addEventListener('input', changed);
     editor.addEventListener('change', event => { if (event.target.tagName === 'SELECT') changed(); });
     editor.addEventListener('submit', event => { event.preventDefault(); savePost('draft'); });
