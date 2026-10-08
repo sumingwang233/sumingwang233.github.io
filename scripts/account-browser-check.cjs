@@ -359,6 +359,13 @@ async function fixture(route) {
     await filter('q').fill('音频采集');
     assert.equal(await reader.locator('[data-blog-feed] article').count(),1, 'Offline search lost the original note body');
     await reader.unroute(api+'/**');
+    await reader.goto(base+'/blog/?category=research&topic=experiment-design');
+    await reader.locator('[data-topic="experiment-design"][aria-current="true"]').waitFor();
+    await reader.waitForFunction(() => document.querySelector('[data-blog-message]').textContent === '');
+    for (const width of [375,1304]) {
+      await reader.setViewportSize({width,height:880});
+      await reader.screenshot({path:path.join(root,`.local/previews/blog-archive-${width}.png`),fullPage:true});
+    }
     await reader.goto(base+'/blog/'); await reader.locator(`[data-post-id="${firstId}"]`).waitFor();
     await reader.locator(`[data-post-id="${firstId}"] h3 a`).click(); await reader.locator('#online-post article').waitFor({state:'visible'});
     assert.equal(await reader.locator('[data-post-title]').innerText(), posts.get(firstId).title);
