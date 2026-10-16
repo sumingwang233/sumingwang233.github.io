@@ -53,14 +53,18 @@ weight: 1
 translationKey: gamelibrary
 authors:
 - me
-summary: 主导需求与交互设计，使用 AI 辅助开发、调试及验证；实现游戏目录扫描、候选审核、分类管理与快捷启动，迭代本地数据存储及桌面界面
+summary: 主导需求和交互设计，使用 AI 辅助开发、调试与验证；实现游戏目录扫描、候选审核、分类管理和快捷启动，迭代本地存储与桌面界面
 featured: true
+open_source: true
 highlights:
-- 主导需求与交互设计，使用 AI 辅助开发、调试及验证；实现游戏目录扫描、候选审核、分类管理与快捷启动，迭代本地数据存储及桌面界面
+- 主导需求和交互设计，使用 AI 辅助开发、调试与验证；实现游戏目录扫描、候选审核、分类管理和快捷启动，迭代本地存储与桌面界面
+- Unity 加载器适配与按需确认修复收到 XERJ Corpus Hub 的收录邀请，目前拟收录
 source_url: https://github.com/sumingwang233/GameLibrary
 icon: /assets/images/gamelibrary-icon.png
 ---
 
 {{< highlights >}}
+
+[对应修复提交（v1.7.12）](https://github.com/sumingwang233/GameLibrary/commit/a1a8a5f1b9e2b0975b118292d3972046fdbb9be3)
 
 {{< illustration >}}

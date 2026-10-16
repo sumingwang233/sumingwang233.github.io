@@ -1,0 +1,9 @@
+{{ $cv := .cv | default false }}
+<section class="{{ if $cv }}cv-section{{ else }}open-source-section{{ end }}" id="open-source" aria-labelledby="open-source-title">
+<h2 id="open-source-title">{{ i18n "open_source_heading" }}</h2>
+{{ range where (where site.RegularPages "Section" "projects") "Params.open_source" true }}
+  {{ if $cv }}{{ partial "book/entry.html" (dict "item" (merge .Params (dict "title" .Title))) }}{{ with .Params.source_url }}<p class="cv-source"><a href="{{ . }}">{{ strings.TrimPrefix "https://" . }}</a></p>{{ end }}
+  {{ else }}{{ partial "book/card.html" . }}{{ with after 1 .Params.highlights }}<ul class="entry-points">{{ range . }}<li>{{ . | markdownify }}</li>{{ end }}</ul>{{ end }}{{ end }}
+{{ end }}
+{{ partial "book/contributions.html" (where (site.GetPage "experience").Params.contributions "open_source" true) }}
+</section>

@@ -232,7 +232,7 @@ def check_site(site, profile):
         with Image.open(path) as im:
             assert not im.getexif() and not any(k in im.info for k in ['exif', 'xmp', 'comment', 'icc_profile']), f'Photo metadata: {path.name}'
             assert max(im.size) == 1600
-    check_resume_pdf(site / 'files/job-resume-public.pdf', profile['contact']['email'], [item['url'] for item in profile['contributions']])
+    check_resume_pdf(site / 'files/job-resume-public.pdf', profile['contact']['email'], [item['url'] for item in profile['contributions']] + [item['url'] for item in profile['projects'] if item.get('open_source')])
 
 def self_check(profile):
     revised = copy.deepcopy(profile)
@@ -293,7 +293,7 @@ if __name__ == '__main__':
     for folder in ['content', 'data', 'i18n']:
         for path in (ROOT / folder).rglob('*'):
             if path.suffix in {'.md', '.yaml'}: public_text(path.read_text('utf8'))
-    check_resume_pdf(ROOT / 'files/job-resume-public.pdf', data['contact']['email'], [item['url'] for item in data['contributions']])
+    check_resume_pdf(ROOT / 'files/job-resume-public.pdf', data['contact']['email'], [item['url'] for item in data['contributions']] + [item['url'] for item in data['projects'] if item.get('open_source')])
     (ROOT / '.local').mkdir(exist_ok=True)
     (ROOT / '.local/public-profile.json').write_text(json.dumps(data, ensure_ascii=False), 'utf8')
     if args.site: check_site(args.site, data)
