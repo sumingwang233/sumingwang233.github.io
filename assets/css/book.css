@@ -82,7 +82,6 @@
   .language-link { font-size: var(--text-sm); }
 }
 @media print {
-  .cv-document #open-source { break-before: page; }
   .cv-source { margin-top: 3pt; font-size: inherit; }
   .cv-section .summary { margin-top: 3pt; max-width: none; }
   .cv-view { background: white; }
