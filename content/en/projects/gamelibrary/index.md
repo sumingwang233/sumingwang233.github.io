@@ -53,14 +53,18 @@ weight: 1
 translationKey: gamelibrary
 authors:
 - me
-summary: Lead requirements and interaction design with AI-assisted implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
+summary: Lead requirements and interaction design, using AI to assist implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
 featured: true
+open_source: true
 highlights:
-- Lead requirements and interaction design with AI-assisted implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
+- Lead requirements and interaction design, using AI to assist implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
+- The Unity loader adaptation and on-demand confirmation fix received an invitation for inclusion in XERJ Corpus Hub; inclusion is pending
 source_url: https://github.com/sumingwang233/GameLibrary
 icon: /assets/images/gamelibrary-icon.png
 ---
 
 {{< highlights >}}
+
+[Fix commit in v1.7.12](https://github.com/sumingwang233/GameLibrary/commit/a1a8a5f1b9e2b0975b118292d3972046fdbb9be3)
 
 {{< illustration >}}

@@ -48,10 +48,12 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.cv-heading a').last().getAttribute('href'), profile.contact.github);
       assert.equal(await page.locator('.cv-heading a').last().innerText(), profile.contact.github.replace(/^https:\/\//, ''));
       for (const item of profile.contributions) {
-        const link = page.locator('#projects').getByRole('link', { name: item.title[lang] });
+        const link = page.locator(item.open_source ? '#open-source' : '#projects').getByRole('link', { name: item.title[lang], exact: true });
         if (item.cv === false) assert.equal(await link.count(), 0);
         else assert.equal(await link.getAttribute('href'), item.url);
       }
+      assert.equal(await page.locator('#open-source #gamelibrary').count(), 1);
+      assert.equal(await page.locator('#projects #gamelibrary').count(), 0);
       await page.pdf({ path: path.join(site, 'files', `cv-${lang}.pdf`), format: 'A4', printBackground: false, preferCSSPageSize: true, displayHeaderFooter: false });
     }
     for (const route of ['/', '/en/', '/cv/', '/en/cv/']) {

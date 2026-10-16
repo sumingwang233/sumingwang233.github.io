@@ -31,10 +31,27 @@ other_experience:
 - Psychiatry placement, Renmin Hospital of Wuhan University (Summer 2025)
 contributions:
 - id: unsloth-contribution
-  title: Unsloth · Open-source contributor
+  open_source: true
+  title: Unsloth
   text: 'PR #12889 fixed context-meter overcounting after tool calls in Unsloth Studio; merged into main on 7 Oct 2026.'
   url: https://github.com/unslothai/unsloth/pull/12889
+- id: designcraft-contribution
+  open_source: true
+  title: ARTCRAFT · DesignCraft
+  text: 'Submitted PR #1109 to fix missing Simplified Chinese fonts in desktop releases by updating the font asset reference and adding glyph-coverage regression tests. Awaiting merge.'
+  url: https://github.com/storytold/designcraft/pull/1109
+- id: dsh-code-review-graph
+  open_source: true
+  title: dsh-code-review-graph
+  text: 'Ported Code Review Graph to a native DeepSeek Harness plugin with code graphs, impact analysis, interactive views and permission-controlled refactoring. Upstream PR #1101 and AWHP listing PR #6822 have been submitted and await merge.'
+  url: https://github.com/sumingwang233/dsh-code-review-graph
+- id: research-desk
+  open_source: true
+  title: Research Desk · Research Agent
+  text: Independently built a Windows research workspace informed by the public product design of ClawsGO. Supports Crossref metadata search, streaming answers, source review and approval before saving notes. Source code is public.
+  url: https://github.com/sumingwang233/research-desk
 - id: psychology-podcast
+  open_source: false
   cv: false
   title: Psychology knowledge podcast
   text: Producing a Chinese-language psychology podcast on NetEase Cloud Music.

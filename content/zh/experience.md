@@ -9,15 +9,15 @@ campus:
   organization: ''
   period: 2024.09—2025.09
   bullets:
-  - 统筹校级典礼与会议拍摄的人力安排和任务分发，建立从前期拍摄到后期交付的标准化工作流
-  - 推动视觉作品在校级官媒矩阵发布；参与的专题内容获评“2023—2024 年度中国青年报社卓越影响力校园新闻专题作品”
+  - 统筹校级典礼与会议拍摄的人力安排和任务分工，建立从拍摄到后期交付的标准化流程
+  - 推动视觉作品在学校官方媒体发布；参与的专题内容获评“2023—2024 年度中国青年报社卓越影响力校园新闻专题作品”
 - id: campus-club-design
   title: 自强劳动社／长跑协会 · 宣传部部长
   organization: ''
   period: 2023.09—2024.09
   bullets:
-  - 独立完成社团 Logo 迭代、宣传海报与物料设计，统一对外视觉与宣传调性
-  - 为社团招新与活动宣传提供视觉支持，保持不同宣传材料的风格一致，降低后续内容制作门槛
+  - 独立迭代社团 Logo，设计宣传海报与物料，统一对外视觉与宣传风格
+  - 为社团招新和活动宣传提供视觉设计，保持不同材料风格一致，方便后续制作
 - id: campus-cycling-maintenance
   title: 自行车协会 · 维修部部长
 - id: campus-philosophy-media
@@ -31,10 +31,27 @@ other_experience:
 - 武汉大学人民医院精神病科：毕业实习（2025 年夏）
 contributions:
 - id: unsloth-contribution
-  title: Unsloth · 开源贡献者
+  open_source: true
+  title: Unsloth
   text: 'PR #12889 修复 Unsloth Studio 工具调用后上下文用量重复计数的问题；于 2026.10.07 合并至 main。'
   url: https://github.com/unslothai/unsloth/pull/12889
+- id: designcraft-contribution
+  open_source: true
+  title: ARTCRAFT · DesignCraft
+  text: '提交 PR #1109，修复桌面发布版缺少简体中文字体的问题：更新字体资源引用并补充字形覆盖回归测试。目前待合并。'
+  url: https://github.com/storytold/designcraft/pull/1109
+- id: dsh-code-review-graph
+  open_source: true
+  title: dsh-code-review-graph
+  text: '将 Code Review Graph 移植为 DeepSeek Harness 原生插件，支持代码图谱、影响分析、交互视图与受权限约束的重构。上游 PR #1101 与 AWHP 收录 PR #6822 均已提交，待合并。'
+  url: https://github.com/sumingwang233/dsh-code-review-graph
+- id: research-desk
+  open_source: true
+  title: 研序 Research Desk · 科研 Agent
+  text: 参考 ClawsGO 的公开产品设计，独立实现 Windows 科研工作台；支持 Crossref 文献元数据检索、流式回答、来源核对和笔记写入审批。已公开源码。
+  url: https://github.com/sumingwang233/research-desk
 - id: psychology-podcast
+  open_source: false
   cv: false
   title: 心理学知识播客
   text: 正在制作，通过网易云音乐分享心理学知识。
