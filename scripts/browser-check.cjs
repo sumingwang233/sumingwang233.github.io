@@ -87,7 +87,7 @@ const server = http.createServer((req, res) => {
           assert.equal(await page.locator('#notes-title').innerText(), lang === 'zh' ? '我的博客' : 'My blog');
           assert.equal(await page.locator('.hobbies-intro').count(), 0);
           assert(!(await page.locator('.footer-academic').innerText()).includes(profile.updated));
-          assert(await page.locator('.masthead-academic').evaluate(e => getComputedStyle(e, '::before').backgroundImage === getComputedStyle(document.body, '::before').backgroundImage));
+          assert(await page.locator('.masthead-inner').evaluate(e => { const cs = getComputedStyle(e); const box = e.getBoundingClientRect(), head = e.parentElement.getBoundingClientRect(); return cs.borderRadius === '999px' && cs.backdropFilter.includes('blur') && cs.boxShadow !== 'none' && Math.abs((box.left + box.width / 2) - (head.left + head.width / 2)) < 2; }));
           assert(await page.locator('.portrait').evaluate(e => {
             const portrait = e.getBoundingClientRect(), banner = e.closest('.home-banner').getBoundingClientRect();
             return Math.abs(portrait.width - portrait.height) < 1 && portrait.height / banner.height > 0.9 && portrait.height < banner.height && portrait.top >= banner.top && portrait.bottom <= banner.bottom;
@@ -235,7 +235,7 @@ const server = http.createServer((req, res) => {
         assert(middle > 0 && middle < end - 2, `${route} @ ${width}: missing smooth anchor travel`);
         await page.waitForFunction(top => Math.abs(scrollY - top) < 2, end);
         assert(await page.locator('#research').evaluate(e => e.getBoundingClientRect().top >= document.querySelector('.masthead-academic').getBoundingClientRect().bottom));
-        assert(await page.locator('.main-nav > a').evaluateAll(links => links.every(e => getComputedStyle(e).borderTopStyle === 'solid' && e.getBoundingClientRect().height >= 44)));
+        assert(await page.locator('.main-nav > a').evaluateAll(links => links.every(e => getComputedStyle(e).borderRadius === '999px' && e.getBoundingClientRect().height >= 44)));
         await page.emulateMedia({ reducedMotion: 'reduce' });
         assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), 'auto');
       }

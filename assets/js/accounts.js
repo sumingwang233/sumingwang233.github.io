@@ -99,6 +99,9 @@ function start(config) {
     code.required = hasCode;
     authForm.elements.email.required = mode !== 'recover';
     $('[data-resend]', authForm).hidden = mode !== 'verify';
+    authForm.elements.password.type = 'password';
+    const reveal = $('[data-reveal]', authForm);
+    if (reveal) { reveal.setAttribute('aria-pressed', 'false'); message(reveal, t.show_password); }
     $('#auth-submit').textContent = ({ login: t.login, signup: t.signup, forgot: t.send_reset, verify: t.verify, 'recovery-code': t.verify, recover: t.reset })[mode];
     $$('[data-auth-mode]', authForm).forEach(button => button.setAttribute('aria-pressed', String(button.dataset.authMode === mode)));
     authForm.hidden = !client;
@@ -123,6 +126,15 @@ function start(config) {
     if (output.textContent !== label) message(output, label);
   }
   authForm?.elements.password.addEventListener('input', updatePasswordFeedback);
+  const revealButton = authForm ? $('[data-reveal]', authForm) : null;
+  revealButton?.addEventListener('click', event => {
+    const input = authForm.elements.password, button = event.currentTarget;
+    const shown = input.type === 'text';
+    input.type = shown ? 'password' : 'text';
+    button.setAttribute('aria-pressed', String(!shown));
+    message(button, shown ? t.show_password : t.hide_password);
+    input.focus({ preventScroll: true });
+  });
   authForm?.elements.password_confirm.addEventListener('input', updatePasswordFeedback);
   $$('[data-auth-mode]').forEach(button => button.addEventListener('click', () => { message(authMessage, ''); setAuthMode(button.dataset.authMode); }));
   const redirect = new URL(config.home + 'account/', location.origin).href;

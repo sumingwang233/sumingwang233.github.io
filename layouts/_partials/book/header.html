@@ -12,5 +12,5 @@
     {{ with site.GetPage "photos" }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
     <a href="{{ $home }}blog/?category=essay">{{ (index site.Data.account site.Language.Lang).essay }}</a>
   </div></details>
-  <a href="{{ $home }}cv/">{{ i18n "book_cv" }}</a><a href="{{ $home }}account/" data-account-nav>{{ (index site.Data.account site.Language.Lang).account }}</a>
+  <a href="{{ $home }}cv/"{{ if eq .Type "cv" }} aria-current="page"{{ end }}>{{ i18n "book_cv" }}</a><a href="{{ $home }}account/" data-account-nav{{ if eq .Type "account" }} aria-current="page"{{ end }}>{{ (index site.Data.account site.Language.Lang).account }}</a>
 </nav>{{ partial "book/language.html" . }}</div></header>

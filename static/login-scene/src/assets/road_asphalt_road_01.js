@@ -13,7 +13,7 @@ export function create() {
   // worn white edge line at the sidewalk boundary
   partAt(root, box(w, 0.006, 0.12), "mat_asphalt_paint_white", "edge_line", 0, 0.034, d / 2 - 0.08);
   // patch of darker repair asphalt (weathering)
-  partAt(root, box(2.2, 0.006, 1.4), "mat_metal_painted_black", "repair_patch", -4.5, 0.034, -0.6);
+  partAt(root, box(2.2, 0.006, 1.4), "mat_asphalt_patch", "repair_patch", -4.5, 0.034, -0.6);
 
   return finalizeAsset(root);
 }
