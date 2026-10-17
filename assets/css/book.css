@@ -4,17 +4,40 @@
 .intro .role { font: 400 clamp(1rem, 1.7vw, 1.25rem)/1.65 var(--font-body); margin-top: var(--space-xs); }
 .intro-subtitle { margin-top: var(--space-sm); color: var(--color-accent); }
 .intro-copy + .intro-copy { margin-top: var(--space-xs); }
-.masthead-academic { isolation: isolate; }
-.masthead-academic::before, .nav-menu > div::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--paper-texture) repeat; background-size: 768px auto; opacity: var(--paper-grain-opacity); mix-blend-mode: multiply; border-radius: inherit; }
-.main-nav > a, .nav-menu summary { min-height: 44px; padding: var(--space-2xs) 0.85rem; border: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent); border-radius: 6px; background: #ffffff24; transition: background-color var(--dur-short) ease, border-color var(--dur-short) ease, color var(--dur-short) ease; }
-.main-nav > a:hover, .main-nav > a:focus-visible, .nav-menu summary:hover, .nav-menu[open] summary { background: color-mix(in srgb, var(--color-accent) 7%, transparent); color: var(--color-accent); border-color: color-mix(in srgb, var(--color-accent) 45%, transparent); }
+.masthead-academic { isolation: isolate; position: sticky; top: 0; z-index: 20; padding-block: 0.75rem; background: transparent; border: 0; }
+.masthead-academic::before { content: none; }
+.masthead-inner { display: flex; align-items: center; justify-content: flex-start; gap: 2px; width: max-content; max-width: min(calc(100% - 1.5rem), 68rem); margin-inline: auto; padding: 5px 6px; border-radius: 999px; background: #ffffffe0; backdrop-filter: blur(16px) saturate(1.1); box-shadow: 0 1px 0 #0000000f, 0 10px 30px #2a241610; }
+.masthead-meta { display: block; min-width: 0; }
+.wordmark { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 3px 0.85rem 3px 3px; border-radius: 999px; font-size: var(--text-sm); font-weight: 600; }
+.wordmark img { width: 30px; height: 30px; border-radius: 9px; }
+.wordmark:hover { background: #f1efe8; }
+.nav-menu > div::before { content: none; }
+.main-nav { margin-left: 0; }
+.main-nav > a, .nav-menu summary { min-height: 44px; padding: 0 0.9rem; border: 0; border-radius: 999px; background: none; font-weight: 500; color: #3c3c40; }
+.main-nav > a:hover, .main-nav > a:focus-visible, .nav-menu summary:hover, .nav-menu[open] summary { background: #f1efe8; color: var(--color-ink); border-color: transparent; }
+.main-nav > a[aria-current="page"] { background: var(--color-ink); color: var(--color-paper); }
+.main-nav > a[aria-current="page"]:hover { background: var(--color-ink); color: var(--color-paper); }
+.nav-menu > div { top: calc(100% + 0.75rem); border-radius: 14px; background: #fffffff5; backdrop-filter: blur(16px); box-shadow: 0 1px 0 #0000000a, 0 18px 40px #2a241614; }
+.nav-menu > div a { border-radius: 9px; }
+.language-link { min-height: 44px; padding: 0 0.9rem; margin-left: 2px; border: 1px solid color-mix(in srgb, var(--color-rule) 80%, transparent); border-radius: 999px; font-size: var(--text-sm); letter-spacing: 0.04em; text-decoration: none; }
+.language-link:hover { background: #f1efe8; }
+@media (max-width: 48rem) { .language-link { padding-inline: 0.65rem; font-size: var(--text-xs); } }
+@media (max-width: 48rem) {
+  .masthead-academic { padding-block: 0.5rem; }
+  .masthead-inner { max-width: calc(100% - 1rem); overflow-x: auto; scrollbar-width: none; }
+  .masthead-inner::-webkit-scrollbar { display: none; }
+  .wordmark span { display: none; }
+  .main-nav { flex-wrap: nowrap; gap: 0; margin-left: 0; }
+  .main-nav > a, .nav-menu summary { padding-inline: 0.7rem; }
+}
+.main-nav > a, .nav-menu summary { transition: background-color var(--dur-short) ease, color var(--dur-short) ease; }
 .nav-menu { position: relative; }
 .nav-menu summary { list-style: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; font-size: var(--text-sm); cursor: pointer; }
 .nav-menu summary::after { content: ''; width: 0.4rem; height: 0.4rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-0.12rem) rotate(45deg); transition: transform var(--dur-short) ease; }
 .nav-menu[open] summary::after { transform: translateY(0.12rem) rotate(225deg); }
 .nav-menu summary::-webkit-details-marker { display: none; }
 .nav-menu summary:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 5px; }
-.nav-menu > div { isolation: isolate; position: absolute; top: calc(100% + 0.5rem); left: 0; min-width: 9rem; padding: 0.375rem; z-index: 30; background: var(--color-paper); border: 1px solid color-mix(in srgb, var(--color-rule) 70%, transparent); border-radius: 8px; box-shadow: 0 10px 28px #182d2018; }
+.nav-menu > div { isolation: isolate; position: absolute; top: calc(100% + 0.75rem); left: 0; min-width: 9rem; padding: 0.375rem; z-index: 30; background: #fffffff5; backdrop-filter: blur(16px); border: 1px solid color-mix(in srgb, var(--color-rule) 65%, transparent); border-radius: 14px; box-shadow: 0 1px 0 #0000000a, 0 18px 40px #2a241614; }
 .nav-menu > div a { display: flex; border: 0; border-radius: 4px; justify-content: space-between; gap: var(--space-lg); padding-inline: var(--space-sm); }
 .nav-menu > div a::after { content: ''; flex: 0 0 0.35rem; height: 0.35rem; border-right: 1.5px solid currentColor; border-top: 1.5px solid currentColor; transform: rotate(45deg); opacity: 0.6; }
 .nav-menu > div a:last-child { margin-top: 0.25rem; border-top: 1px solid color-mix(in srgb, var(--color-rule) 65%, transparent); border-top-left-radius: 0; border-top-right-radius: 0; }
@@ -73,13 +96,13 @@
   .project-overview .entry-heading { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
   #education, #skills, #academic-interests, #publications { grid-template-columns: 11.5rem minmax(0, 1fr); }
 }
-@media (max-width: 59.999rem) { .masthead-inner { gap: var(--space-md); flex-wrap: wrap; } }
+@media (max-width: 59.999rem) { .masthead-inner { gap: 2px; flex-wrap: nowrap; } }
 @media (max-width: 39.999rem) {
-  :root { --anchor-offset: 12rem; }
-  .main-nav { flex-wrap: wrap; justify-content: flex-start; }
-  .main-nav a, .nav-menu summary { padding-inline: 0.65rem; font-size: var(--text-xs); }
+  :root { --anchor-offset: 9rem; }
+  .main-nav { flex-wrap: nowrap; justify-content: flex-start; }
+  .main-nav a, .nav-menu summary { padding-inline: 0.6rem; font-size: var(--text-xs); }
   .intro h1 span { font-size: 0.6em; }
-  .language-link { font-size: var(--text-sm); }
+  .language-link { font-size: var(--text-xs); }
 }
 @media print {
   .cv-source { margin-top: 3pt; font-size: inherit; }

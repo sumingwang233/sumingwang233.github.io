@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
 import { createRenderer } from './src/core/renderer.js';
 import { createCamera, fitCamera } from './src/core/camera.js';
 import { createLights } from './src/core/lights.js';
@@ -18,6 +18,11 @@ async function start() {
     const scene = new THREE.Scene();
     scene.background = new THREE.Color('#e8e4dc');
     const camera = createCamera();
+    // A lower, nearer viewpoint so the shop front and the counter belong to the same room.
+    camera.position.set(12, 4.2, -14);
+    camera.userData.lookAt = [0, 2.2, -2];
+    camera.userData.viewDirection = camera.position.clone().sub(new THREE.Vector3(0, 2.2, -2)).normalize();
+    camera.lookAt(0, 2.2, -2);
     const lights = createLights(scene);
     lights.sky.intensity = 0.8;
     lights.sun.shadow.normalBias = 0.025;
@@ -32,23 +37,57 @@ async function start() {
     await manager.build();
     if (manager.missing.length) throw new Error('Incomplete login scene');
     const bounds = new THREE.Box3().setFromObject(manager.getAssetLayer());
+    // Soft contact shadow under the diorama so the miniature sits on the page instead of floating.
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = shadowCanvas.height = 256;
+    const shadowContext = shadowCanvas.getContext('2d');
+    const shadowGradient = shadowContext.createRadialGradient(128, 128, 26, 128, 128, 126);
+    shadowGradient.addColorStop(0, 'rgba(74, 64, 46, 0.32)');
+    shadowGradient.addColorStop(0.58, 'rgba(74, 64, 46, 0.18)');
+    shadowGradient.addColorStop(1, 'rgba(74, 64, 46, 0)');
+    shadowContext.fillStyle = shadowGradient;
+    shadowContext.fillRect(0, 0, 256, 256);
+    const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+    shadowTexture.colorSpace = THREE.SRGBColorSpace;
+    const contactShadow = new THREE.Mesh(
+      new THREE.PlaneGeometry(42, 42),
+      new THREE.MeshBasicMaterial({ map: shadowTexture, transparent: true, depthWrite: false, toneMapped: false })
+    );
+    contactShadow.rotation.x = -Math.PI / 2;
+    contactShadow.position.y = -0.02;
+    contactShadow.renderOrder = -1;
+    scene.add(contactShadow);
     const petals = createPetals({ group: manager.getEffectLayer(), sceneManager: manager });
     const motion = matchMedia('(prefers-reduced-motion: reduce)');
-    const panel = document.querySelector('.account-page');
+    const counter = document.querySelector('.account-counter');
     const header = document.querySelector('.masthead-academic');
-    const footer = document.querySelector('.footer-academic');
     let elapsed = 0, previous = 0, disposed = false, lost = false;
+    // The diorama is fitted to the room above the counter; the box is cropped around
+    // its centre so the street fills that space instead of shrinking into a model on a table.
+    function cropped(source, factor) {
+      const box = source.clone();
+      if (factor > 0 && factor < 1) {
+        const center = box.getCenter(new THREE.Vector3());
+        const half = box.getSize(new THREE.Vector3()).multiplyScalar(factor / 2);
+        box.min.set(center.x - half.x, box.min.y, center.z - half.z);
+        box.max.set(center.x + half.x, box.max.y, center.z + half.z);
+      }
+      return box;
+    }
     function resize() {
       const width = host.clientWidth, height = host.clientHeight;
       if (!width || !height || disposed) return;
-      const top = (header?.getBoundingClientRect().bottom || 0) + 24;
-      const panelRect = panel.getBoundingClientRect();
-      const desktop = width > 768;
-      const bottom = desktop ? height - (footer?.offsetHeight || 0) - 24 : Math.min(height - 24, panelRect.top + scrollY - 24);
-      fitCamera(camera, bounds, { width, height }, {
-        left: 24, top,
-        width: Math.max(1, (desktop ? panelRect.left : width) - 48),
-        height: Math.max(1, bottom - top),
+      const narrow = width < 900;
+      const counterTop = counter ? Math.min(height, counter.getBoundingClientRect().top) : height;
+      const frameHeight = Math.max(1, counterTop + (narrow ? 12 : 28));
+      // A frame wider than the viewport lets the street bleed past both edges instead of
+      // sitting on the page like a model on a table.
+      const bleed = narrow ? 0.12 : 0.16;
+      fitCamera(camera, cropped(bounds, narrow ? 0.56 : 0.66), { width, height }, {
+        left: -width * bleed / 2,
+        top: 0,
+        width: width * (1 + bleed),
+        height: frameHeight,
       });
       renderer.setPixelRatio(Math.min(devicePixelRatio || 1, width < 768 ? 1 : 1.5));
       renderer.setSize(width, height, false);
@@ -70,7 +109,7 @@ async function start() {
       else renderer.setAnimationLoop(frame);
     }
     const observer = new ResizeObserver(resize);
-    for (const element of [host, panel, header, footer].filter(Boolean)) observer.observe(element);
+    for (const element of [host, counter].filter(Boolean)) observer.observe(element);
     motion.addEventListener('change', updateMotion);
     document.addEventListener('visibilitychange', updateMotion);
     canvas.addEventListener('webglcontextlost', event => {

@@ -18,7 +18,7 @@ export const SIDEWALK_TOP = 0.184; // sidewalk slab top (base plate top + 0.064 
 export const BASE_PLATE = {
   assetId: "base_base_plate_01",
   size: 20,
-  thickness: 0.12,
+  thickness: 0.02,
   color: "#f2eee6",
   center: [0, 0, 0],
 };

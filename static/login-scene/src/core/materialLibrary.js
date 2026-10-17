@@ -8,6 +8,7 @@ const DEFS = {
   // ground / road
   mat_base_plate: { color: "#f2eee6", roughness: 0.9 },
   mat_asphalt: { color: "#4b4a47", roughness: 0.95 },
+  mat_asphalt_patch: { color: "#565450", roughness: 0.97 },
   mat_asphalt_paint_white: { color: "#efe9df", roughness: 0.7, worn: true },
   mat_asphalt_paint_yellow: { color: "#d9c27a", roughness: 0.7, worn: true },
   mat_concrete: { color: "#b9b4a8", roughness: 0.9 },
