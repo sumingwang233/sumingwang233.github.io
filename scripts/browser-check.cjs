@@ -153,7 +153,8 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('.section-intro, #evaluation').count(), 0);
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
-    assert.equal(await page.locator('#projects .overview-entry').count(), 2);
+    assert.equal(await page.locator('#projects > .project-overview > .overview-entry').count(), 2);
+    assert.equal(await page.locator('#open-source > .overview-entry').count(), 2);
     assert.equal(await page.locator('#research .overview-entry').count(), 3);
     assert.equal(await page.locator('#projects .architecture-figure').count(), 0);
     assert.equal(await page.locator('#whu-psychology .entry-meta').count(), 0);
