@@ -105,6 +105,7 @@
   .language-link { font-size: var(--text-xs); }
 }
 @media print {
+  .cv-section .application-icon { display: none; }
   .cv-source { margin-top: 3pt; font-size: inherit; }
   .cv-section .summary { margin-top: 3pt; max-width: none; }
   .cv-view { background: white; }

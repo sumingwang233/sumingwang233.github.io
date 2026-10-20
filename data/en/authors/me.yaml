@@ -16,8 +16,8 @@ bio: |-
 tagline: Personal homepage
 motto: Be Water, my friend
 personal_statement:
-  quote: Psychology first lost its soul, then its mind, then its consciousness; it still retains some kind of behavior.
-  resolve: I want to recover what has been lost.
+  quote: Everyone designs who devises courses of action aimed at changing existing situations into preferred ones.
+  author: Herbert A. Simon
 academic_interests:
 - id: emotion-self-concept
   title: Emotion regulation, self-concept & psychological measurement
@@ -107,4 +107,4 @@ hobbies:
   - image: /assets/images/hobbies/fitness-03.webp
     image_alt: My photograph of the Guiyuan sports field and people beside it at night
     text: A corner of the sports field
-updated: '2026-10-16'
+updated: '2026-10-20'

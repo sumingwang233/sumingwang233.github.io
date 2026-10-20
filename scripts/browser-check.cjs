@@ -86,6 +86,12 @@ const server = http.createServer((req, res) => {
           assert.deepEqual(await page.locator('#academic-interests strong').allTextContents(), profile.academic_interests.map(item => item.title[lang] + (lang === 'zh' ? '：' : ': ')));
           assert.equal(await page.locator('#notes-title').innerText(), lang === 'zh' ? '我的博客' : 'My blog');
           assert.equal(await page.locator('.hobbies-intro').count(), 0);
+          assert.equal(await page.locator('#open-source #fnos-video-dedupe').count(), 1);
+          assert.equal(await page.locator('#projects > .archive-links #fnos-video-dedupe').count(), 0);
+          assert.equal(await page.locator('#projects .project-overview #dormitory-cooking.overview-entry').count(), 1);
+          assert.equal(await page.locator('#gamelibrary .period').count(), 0);
+          assert.equal(await page.locator('#psychology-podcast .summary').count(), 0);
+          assert.equal(await page.locator('#research-desk .entry-meta').innerText(), lang === 'zh' ? '科研 Agent' : 'Research Agent');
           assert(!(await page.locator('.footer-academic').innerText()).includes(profile.updated));
           assert(await page.locator('.masthead-inner').evaluate(e => { const cs = getComputedStyle(e); const box = e.getBoundingClientRect(), head = e.parentElement.getBoundingClientRect(); return cs.borderRadius === '999px' && cs.backdropFilter.includes('blur') && cs.boxShadow !== 'none' && Math.abs((box.left + box.width / 2) - (head.left + head.width / 2)) < 2; }));
           assert(await page.locator('.portrait').evaluate(e => {
@@ -147,7 +153,8 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('.section-intro, #evaluation').count(), 0);
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
-    assert.equal(await page.locator('#projects .overview-entry').count(), 2);
+    assert.equal(await page.locator('#projects > .project-overview > .overview-entry').count(), 2);
+    assert.equal(await page.locator('#open-source > .overview-entry').count(), 2);
     assert.equal(await page.locator('#research .overview-entry').count(), 3);
     assert.equal(await page.locator('#projects .architecture-figure').count(), 0);
     assert.equal(await page.locator('#whu-psychology .entry-meta').count(), 0);
@@ -156,7 +163,8 @@ const server = http.createServer((req, res) => {
     assert(await page.locator('#whu-psychology .university-emblem').evaluate(e => Math.abs(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e.parentElement).fontSize) - 1.3) < 0.02));
     assert.equal(await page.locator('#whu-psychology .entry-points li').first().innerText(), 'GPA：3.81 / 4.00');
     assert.equal(await page.locator('#whu-psychology .entry-points strong').innerText(), '3.81');
-    assert.equal(await page.locator('.personal-statement strong').innerText(), '而我想找回这些失去的东西。');
+    assert.equal(await page.locator('.personal-statement .quote-author').innerText(), profile.personal_statement.zh.author);
+    assert((await page.locator('.personal-statement').innerText()).includes(profile.personal_statement.zh.quote));
     assert.equal(await page.locator('.wordmark span').innerText(), '主页');
     assert(await page.locator('#whu-psychology .entry-points').evaluate(e => e.clientWidth > 800));
     assert.equal(await page.locator('.project-figure img, .architecture-figure, .figure-pending').count(), 0);
