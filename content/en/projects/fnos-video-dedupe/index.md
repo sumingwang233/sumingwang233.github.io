@@ -16,6 +16,8 @@ authors:
 - me
 summary: Core features include SHA-256 exact-duplicate detection, frame-based perceptual-hash visual similarity detection and incremental scan caching
 featured: false
+open_source: true
+icon: /assets/images/contributions/fnos-video-dedupe.png
 highlights:
 - Core features include SHA-256 exact-duplicate detection, frame-based perceptual-hash visual similarity detection and incremental scan caching
 ---

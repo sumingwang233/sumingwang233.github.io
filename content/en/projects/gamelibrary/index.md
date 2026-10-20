@@ -56,6 +56,7 @@ authors:
 summary: Lead requirements and interaction design, using AI to assist implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
 featured: true
 open_source: true
+hide_overview_period: true
 highlights:
 - Lead requirements and interaction design, using AI to assist implementation, debugging and validation. Implement folder scanning, candidate review, classification and launching, and iterate local storage and the desktop interface
 - The Unity loader adaptation and on-demand confirmation fix received an invitation for inclusion in XERJ Corpus Hub; inclusion is pending

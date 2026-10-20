@@ -33,28 +33,32 @@ contributions:
 - id: unsloth-contribution
   open_source: true
   title: Unsloth
-  text: 'PR #12889 修复 Unsloth Studio 工具调用后上下文用量重复计数的问题；于 2026.10.07 合并至 main。'
+  organization: 开源大模型训练与微调工具
+  icon: /assets/images/contributions/unsloth.png
+  text: 'PR #12889 修复 Unsloth Studio 工具调用后上下文用量重复计数的问题'
   url: https://github.com/unslothai/unsloth/pull/12889
 - id: designcraft-contribution
   open_source: true
   title: ARTCRAFT · DesignCraft
-  text: '提交 PR #1109，修复桌面发布版缺少简体中文字体的问题：更新字体资源引用并补充字形覆盖回归测试。目前待合并。'
+  icon: /assets/images/contributions/designcraft.png
+  text: 'PR #1109，修复桌面发布版缺少简体中文字体的问题'
   url: https://github.com/storytold/designcraft/pull/1109
 - id: dsh-code-review-graph
   open_source: true
   title: dsh-code-review-graph
-  text: '将 Code Review Graph 移植为 DeepSeek Harness 原生插件，支持代码图谱、影响分析、交互视图与受权限约束的重构。上游 PR #1101 与 AWHP 收录 PR #6822 均已提交，待合并。'
+  icon: /assets/images/contributions/deepseek-harness.png
+  text: '将 Code Review Graph 移植为 DeepSeek Harness 原生插件，支持代码图谱、影响分析、交互视图与受权限约束的重构。已被 AWHP 收录（PR #6822 已合并），上游 PR #1101 仍待合并。'
   url: https://github.com/sumingwang233/dsh-code-review-graph
 - id: research-desk
   open_source: true
-  title: 研序 Research Desk · 科研 Agent
-  text: 参考 ClawsGO 的公开产品设计，独立实现 Windows 科研工作台；支持 Crossref 文献元数据检索、流式回答、来源核对和笔记写入审批。已公开源码。
+  title: 研序 Research Desk
+  organization: 科研 Agent
+  text: 开发 Windows 科研工作台：支持 Crossref 文献元数据检索、流式回答、来源核对和笔记写入审批
   url: https://github.com/sumingwang233/research-desk
 - id: psychology-podcast
   open_source: false
   cv: false
-  title: 心理学知识播客
-  text: 正在制作，通过网易云音乐分享心理学知识。
+  title: 考研知识播客
   url: https://music.163.com/djradio?id=1496521002
 training:
 - 第四届世界科学智能大赛：RNA–蛋白复合物结构预测赛道，获复赛资格

@@ -33,28 +33,32 @@ contributions:
 - id: unsloth-contribution
   open_source: true
   title: Unsloth
-  text: 'PR #12889 fixed context-meter overcounting after tool calls in Unsloth Studio; merged into main on 7 Oct 2026.'
+  organization: Open-source tools for training and fine-tuning large language models
+  icon: /assets/images/contributions/unsloth.png
+  text: 'PR #12889 fixed context-meter overcounting after tool calls in Unsloth Studio'
   url: https://github.com/unslothai/unsloth/pull/12889
 - id: designcraft-contribution
   open_source: true
   title: ARTCRAFT · DesignCraft
-  text: 'Submitted PR #1109 to fix missing Simplified Chinese fonts in desktop releases by updating the font asset reference and adding glyph-coverage regression tests. Awaiting merge.'
+  icon: /assets/images/contributions/designcraft.png
+  text: 'PR #1109: fix missing Simplified Chinese fonts in desktop releases'
   url: https://github.com/storytold/designcraft/pull/1109
 - id: dsh-code-review-graph
   open_source: true
   title: dsh-code-review-graph
-  text: 'Ported Code Review Graph to a native DeepSeek Harness plugin with code graphs, impact analysis, interactive views and permission-controlled refactoring. Upstream PR #1101 and AWHP listing PR #6822 have been submitted and await merge.'
+  icon: /assets/images/contributions/deepseek-harness.png
+  text: 'Ported Code Review Graph to a native DeepSeek Harness plugin with code graphs, impact analysis, interactive views and permission-controlled refactoring. Listed in AWHP (PR #6822 merged); upstream PR #1101 is still awaiting merge.'
   url: https://github.com/sumingwang233/dsh-code-review-graph
 - id: research-desk
   open_source: true
-  title: Research Desk · Research Agent
-  text: Independently built a Windows research workspace informed by the public product design of ClawsGO. Supports Crossref metadata search, streaming answers, source review and approval before saving notes. Source code is public.
+  title: Research Desk
+  organization: Research Agent
+  text: 'Developed a Windows research workspace with Crossref metadata search, streaming answers, source review and approval before saving notes'
   url: https://github.com/sumingwang233/research-desk
 - id: psychology-podcast
   open_source: false
   cv: false
-  title: Psychology knowledge podcast
-  text: Producing a Chinese-language psychology podcast on NetEase Cloud Music.
+  title: Postgraduate entrance exam podcast
   url: https://music.163.com/djradio?id=1496521002
 training:
 - '4th World AI for Science Competition, RNA–protein structure prediction: second-round qualification'

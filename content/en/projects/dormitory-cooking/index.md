@@ -51,8 +51,8 @@ weight: 2
 translationKey: dormitory-cooking
 authors:
 - me
-summary: Lead gameplay, interaction design and feature selection with AI-assisted development; build a runnable prototype around shopping, cooking, resource management and roommate interactions
-featured: false
+summary: A 3D simulation prototype set in a university dormitory. Players buy ingredients and equipment, then cook within limits on time, money, freshness and equipment durability. Heat and seasoning affect dish ratings; roommate interactions, accumulating risk and inspections shape progress. Lead gameplay and interaction design with AI-assisted development and iteration
+featured: true
 highlights:
 - Lead gameplay, interaction design and feature selection with AI-assisted development; build a runnable prototype around shopping, cooking, resource management and roommate interactions
 - Design dish ratings, risk and relationship feedback; iterate saves, tutorials and interactions with logic tests and runtime validation

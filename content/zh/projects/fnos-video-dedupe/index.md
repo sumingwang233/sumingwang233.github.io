@@ -16,6 +16,8 @@ authors:
 - me
 summary: 主要功能：SHA-256 完全重复检测、抽帧感知哈希视觉相似检测及增量扫描缓存
 featured: false
+open_source: true
+icon: /assets/images/contributions/fnos-video-dedupe.png
 highlights:
 - 主要功能：SHA-256 完全重复检测、抽帧感知哈希视觉相似检测及增量扫描缓存
 ---
