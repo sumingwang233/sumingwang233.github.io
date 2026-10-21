@@ -44,7 +44,7 @@
 .section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-md); }
 .section-heading > a, .archive-links, .eyebrow { color: var(--color-accent); font-size: var(--text-sm); }
 .contribution h3 a { color: inherit; }
-.summary { margin-top: var(--space-md); max-width: 75ch; }
+.summary { margin-top: var(--space-md); }
 .overview-entry h3 a, .note-preview h3 a { text-decoration: none; }
 .overview-entry h3 a:hover, .note-preview h3 a:hover { text-decoration: underline; }
 .research-overview .entry-heading { grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
@@ -63,6 +63,7 @@
 .photo-controls button { min-width: 44px; min-height: 44px; padding: var(--space-2xs) var(--space-sm); background: transparent; color: var(--color-accent); border: 1px solid var(--color-rule); border-radius: 6px; font: inherit; font-size: var(--text-xs); cursor: pointer; }
 .photo-controls button:disabled { opacity: 0.5; cursor: default; }
 .intro .personal-statement { margin-top: var(--space-md); max-width: 75ch; }
+.github-mark { display: inline-block; width: 1em; height: 1em; margin-inline-start: var(--space-xs); vertical-align: -0.1em; }
 .article-content { margin-top: var(--space-xl); }
 .article-content > p, .article-content > ul { max-width: 80ch; }
 .article-content p + p { margin-top: var(--space-md); }

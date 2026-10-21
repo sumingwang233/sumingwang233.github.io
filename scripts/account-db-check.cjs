@@ -96,7 +96,7 @@ const assert = require('node:assert/strict');
     await denied('update blog_posts set body_style=$1 where id=$2', [{font_family:'url(private)'},post.id]);
     await db.query('update blog_posts set title=$1, body_md=$2, body_style=$3 where id=$4 and version=$5', [content.title,content.body_md,style,post.id,savedDraft.version]);
     assert.equal((await db.query('select * from blog_post_drafts')).rows.length, 0);
-    const original = (await db.query("insert into blog_posts (title,body_md,status,source_path,published_at) values ('Original note','Original public body','published','/notes/gamelibrary-architecture/','2026-10-05') returning *")).rows[0];
+    const original = (await db.query("insert into blog_posts (title,body_md,status,source_path,published_at) values ('Original note','Original public body','published','/notes/gamelibrary-architecture/','2026-10-05T00:00:00Z') returning *")).rows[0];
     assert.equal(new Date(original.published_at).toISOString().slice(0,10), '2026-10-05');
     await denied("insert into blog_posts (source_path) values ('/notes/gamelibrary-architecture/')");
     await denied("insert into blog_posts (source_path) values ('https://untrusted.test/')");
