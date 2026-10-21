@@ -153,7 +153,7 @@ def check_site(site, profile):
         projects_parser, projects_text = parsed(site, prefix + 'projects')
         for item in profile['contributions']:
             for parser, rendered, route in [(home, text, prefix), (cv_parser, cv, prefix + 'cv'), (projects_parser, projects_text, prefix + 'projects')]:
-                if route == prefix + 'cv' and item.get('cv') is False:
+                if (route == prefix + 'cv' and item.get('cv') is False) or (route == prefix and item.get('home') is False):
                     assert item['url'] not in parser.urls, f'{route}: excluded contribution still present'
                     continue
                 present(rendered, entry_facts(item, lang), route)

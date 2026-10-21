@@ -90,7 +90,10 @@ const server = http.createServer((req, res) => {
           assert.equal(await page.locator('#projects > .archive-links #fnos-video-dedupe').count(), 0);
           assert.equal(await page.locator('#projects .project-overview #dormitory-cooking.overview-entry').count(), 1);
           assert.equal(await page.locator('#gamelibrary .period').count(), 0);
-          assert.equal(await page.locator('#psychology-podcast .summary').count(), 0);
+          assert.equal(await page.locator('#psychology-podcast').count(), 0);
+          assert((await page.locator('.personal-statement strong').innerText()).includes(profile.personal_statement[lang].quote));
+          assert.equal(await page.locator('#open-source-title .github-mark[aria-hidden="true"]').count(), 1);
+          assert(await page.locator('#open-source .summary').evaluateAll(nodes => nodes.length > 0 && nodes.every(e => Math.abs(e.getBoundingClientRect().width - e.parentElement.getBoundingClientRect().width) < 1)));
           assert.equal(await page.locator('#research-desk .entry-meta').innerText(), lang === 'zh' ? '科研 Agent' : 'Research Agent');
           assert(!(await page.locator('.footer-academic').innerText()).includes(profile.updated));
           assert(await page.locator('.masthead-inner').evaluate(e => { const cs = getComputedStyle(e); const box = e.getBoundingClientRect(), head = e.parentElement.getBoundingClientRect(); return cs.borderRadius === '999px' && cs.backdropFilter.includes('blur') && cs.boxShadow !== 'none' && Math.abs((box.left + box.width / 2) - (head.left + head.width / 2)) < 2; }));

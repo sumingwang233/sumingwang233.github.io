@@ -57,6 +57,7 @@ contributions:
   url: https://github.com/sumingwang233/research-desk
 - id: psychology-podcast
   open_source: false
+  home: false
   cv: false
   title: 考研知识播客
   url: https://music.163.com/djradio?id=1496521002
