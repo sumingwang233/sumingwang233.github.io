@@ -1,0 +1,54 @@
+{{ $p := partial "book/profile.html" . }}
+{{ $copy := index site.Data.desk site.Language.Lang }}
+{{ $home := site.Home.RelPermalink }}
+{{ $names := slice "research" "software" "game" "photos" "blog" "cv" }}
+{{ $links := slice (printf "%sresearch/" $home) "#open-source" (printf "%sprojects/dormitory-cooking/" $home) (printf "%sphotos/" $home) (printf "%sblog/" $home) (printf "%scv/" $home) }}
+{{ $game := site.GetPage "projects/dormitory-cooking" }}
+{{ $software := site.GetPage "projects/gamelibrary" }}
+{{ $experience := site.GetPage "experience" }}
+<section class="desk" aria-labelledby="intro-title"><div class="desk-stage">
+<p class="desk-hint">{{ $copy.hint }}</p>
+<section class="desk-intro" aria-labelledby="intro-title">
+  <div class="desk-paper-rule" aria-hidden="true"></div>
+  <a class="desk-portrait-link figure-link" href="/assets/images/portrait-lifestyle.jpg" aria-label="{{ i18n "full_image" }} · {{ $p.name.display }}"><img class="desk-portrait" src="/assets/images/portrait-lifestyle.jpg" width="1200" height="800" alt="{{ $p.name.display }}" fetchpriority="high"></a>
+  <h1 id="intro-title">{{ $p.name.display }} <span class="desk-name">{{ $p.name.alternate }}</span></h1>
+  <p class="desk-role">{{ $p.role }}</p><p class="desk-motto">{{ $p.motto }}</p>
+  <p class="desk-bio">{{ $copy.intro }}</p>
+  <div class="desk-downloads contact-links"><a href="{{ i18n "cv_file" }}" download>{{ i18n "cv_download" }}</a><a href="{{ i18n "job_resume_file" }}" download>{{ i18n "job_resume_download" }}</a></div>
+</section>
+{{ range $i, $name := $names }}
+  <a class="desk-object desk-{{ $name }}" href="{{ index $links $i }}" data-desk-dialog="desk-dialog-{{ $name }}">
+    <span class="desk-object-art" aria-hidden="true"></span>
+    {{ if eq $name "photos" }}<img class="desk-real-photo" src="{{ (index $p.hobbies 0).image }}" width="1600" height="1067" alt="{{ (index $p.hobbies 0).image_alt }}">{{ end }}
+    {{ if eq $name "software" }}<img class="desk-real-screen" src="/assets/images/gamelibrary.webp" width="1320" height="880" alt="GameLibrary">{{ end }}
+    <span class="desk-object-label">{{ index $copy.items $i }}</span>
+  </a>
+{{ end }}
+<a class="desk-scroll" href="#desk-below">{{ $copy.scroll }}<span aria-hidden="true">↓</span></a>
+</div></section>
+{{ range $i, $name := $names }}
+<dialog id="desk-dialog-{{ $name }}" class="desk-dialog" aria-labelledby="desk-dialog-title-{{ $name }}"><article class="desk-dialog-paper">
+<button class="desk-dialog-close" type="button" aria-label="{{ $copy.close }}" autofocus>×</button>
+<h2 id="desk-dialog-title-{{ $name }}">{{ index $copy.items $i }}</h2>
+<div class="desk-dialog-copy">
+  {{ if eq $name "research" }}
+    {{ range first 2 (split $p.bio "\n\n") }}<p class="intro-copy">{{ . }}</p>{{ end }}
+  {{ else if eq $name "software" }}
+    <h3>{{ $software.Title }}</h3><p>{{ $software.Params.summary }}</p>
+    {{ range where $experience.Params.contributions "id" "research-desk" }}<h3>{{ .title }}</h3><p>{{ .text }}</p>{{ end }}
+    <p class="intro-copy">{{ index (split $p.bio "\n\n") 2 }}</p>
+  {{ else if eq $name "game" }}
+    <h3>{{ $game.Title }}</h3><p>{{ $game.Params.summary }}</p>
+  {{ else if eq $name "photos" }}
+    {{ $photo := index $p.hobbies 0 }}<p>{{ $photo.text }}</p>
+    <a class="figure-link desk-photo-link" href="{{ $photo.image }}" aria-label="{{ i18n "full_image" }} · {{ $photo.image_alt }}"><img class="desk-dialog-photo" src="{{ $photo.image }}" width="{{ $photo.image_width }}" height="{{ $photo.image_height }}" loading="lazy" alt="{{ $photo.image_alt }}"></a>
+  {{ else if eq $name "blog" }}<p>{{ $copy.blog_intro }}</p>
+  {{ else if eq $name "cv" }}
+    <p>{{ (index $p.education 0).title }}</p><p>{{ $p.role }}</p>
+    {{ range $experience.Params.other_experience }}<p>{{ . }}</p>{{ end }}
+  {{ end }}
+</div>
+<div class="desk-dialog-actions"><a class="desk-detail-button" href="{{ index $links $i }}">{{ index $copy (printf "%s_details" $name) | default $copy.details }}<span aria-hidden="true">↗</span></a>
+{{ if eq $name "cv" }}<a href="{{ i18n "cv_file" }}" download>{{ i18n "cv_download" }}</a><a href="{{ i18n "job_resume_file" }}" download>{{ i18n "job_resume_download" }}</a>{{ end }}
+</div></article></dialog>
+{{ end }}

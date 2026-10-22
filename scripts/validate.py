@@ -131,7 +131,9 @@ def entry_facts(item, lang, figure=False):
 def check_site(site, profile):
     for lang, prefix in [('zh', ''), ('en', 'en/')]:
         home, text = parsed(site, prefix)
-        present(text, [profile['person'][k][lang] for k in ['name', 'role', 'intro', 'lead']], prefix)
+        present(text, [profile['person'][k][lang] for k in ['name', 'role', 'lead']], prefix)
+        # The full biography is preserved across the research and software desk cards.
+        present(text, profile['person']['intro'][lang].split('\n\n'), prefix)
         present(text, profile['personal_statement'][lang].values(), prefix)
         for group in ['education', 'skills', 'academic_interests']:
             for item in profile[group]:

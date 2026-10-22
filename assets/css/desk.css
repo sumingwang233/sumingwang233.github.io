@@ -1,0 +1,170 @@
+@font-face { font-family: DeskSans; src: url('/assets/fonts/noto-sans-sc.woff2'); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: DeskSerif; src: url('/assets/fonts/noto-serif-sc.woff2'); font-weight: 400 700; font-display: swap; }
+.desk, .desk *, .desk-dialog, .desk-dialog *, .desk-preview * { box-sizing: border-box; }
+body.desk-preview { margin: 0; color: #243b35; background: #f3f0e8; font-family: DeskSans, sans-serif; }
+.desk, .desk-dialog { color: #243b35; font-family: DeskSans, sans-serif; line-height: normal; }
+.desk a, .desk-dialog a, .desk-nav a { color: inherit; }
+.desk a:focus-visible, .desk-dialog a:focus-visible, .desk-nav a:focus-visible { outline: 3px solid #285a4c; outline-offset: 6px; }
+
+.desk-nav {
+  position: absolute; top: 25px; left: 50%; transform: translateX(-50%); z-index: 3;
+  display: flex; align-items: center; gap: 29px; padding: 12px 25px;
+  border: 1px solid #b6ac8d; border-radius: 40px; background: #f5f3e9f2;
+  box-shadow: 0 2px 0 #ffffff87 inset, 0 6px 20px #20352b1c;
+  white-space: nowrap; font-size: 13px;
+}
+.desk-nav a { text-decoration: none; min-height: 32px; display: flex; align-items: center; }
+.desk-brand { font-family: DeskSerif, serif; font-weight: 600; font-size: 18px; }
+.desk-lang { border-left: 1px solid #bab69e; padding-left: 23px; }
+
+.desk { position: relative; isolation: isolate; background: #bbb8a3 url('/assets/images/desk/oak-v2-1600.webp') center / cover; }
+.desk-stage { position: relative; width: min(1600px, 100%); margin: auto; height: max(940px, 100svh); max-height: 1100px; }
+.desk-intro {
+  position: absolute; z-index: 2; left: 33%; top: 22%; width: 34%; min-height: 420px;
+  padding: 42px 34px 26px; background: #fcfaf1; border: 1px solid #d9d5c8;
+  box-shadow: 5px 6px 0 #ece6d6, 6px 7px 1px #96897242, 7px 16px 23px #122c2447;
+  transform: rotate(-1.5deg);
+}
+.desk-intro::before {
+  content: ''; position: absolute; width: 23px; height: 49px; top: -16px; left: 45%;
+  border: 3px solid #ab9160; border-radius: 12px 12px 8px 8px;
+  box-shadow: 1px 1px 0 #eee0b6 inset, 1px 2px 2px #39321b36;
+  transform: rotate(8deg); background: transparent;
+}
+.desk-paper-rule { height: 1px; background: #b4a179; margin-bottom: 24px; position: relative; }
+.desk-paper-rule::before { content: ''; position: absolute; width: 5px; height: 5px; border: 1px solid #a7936b; background: #fcfaf1; left: 50%; top: -2px; transform: rotate(45deg); }
+.desk-portrait { float: right; width: 80px; height: 105px; object-fit: cover; object-position: 50% 25%; border: 5px solid #fffef5; box-shadow: 2px 3px 5px #30251935; transform: rotate(6deg); margin: 0 0 19px 12px; filter: saturate(.8); }
+.desk-intro h1 { font-family: DeskSerif, serif; font-size: clamp(32px, 3.3vw, 47px); font-weight: 500; margin: 3px 0 12px; line-height: 1.35; }
+.desk-name { display: block; font-size: 17px; font-weight: 400; margin-top: 9px; letter-spacing: .04em; }
+.desk-role { clear: both; font-size: 12px; line-height: 1.9; color: #656c5f; margin: 17px 0 20px; }
+.desk-motto { font-family: DeskSerif, serif; font-size: 22px; color: #3f5e4e; margin: 18px 0; }
+.desk-bio { font-size: 14px; line-height: 2.05; margin: 0 0 18px; }
+.desk-downloads { display: flex; flex-wrap: wrap; gap: 22px; font-size: 12px; border-top: 1px solid #ddd7c8; padding-top: 8px; }
+.desk-downloads a { text-underline-offset: 5px; text-decoration-color: #aa9671; min-height: 44px; display: inline-flex; align-items: center; }
+
+.desk-object { position: absolute; width: 25%; height: 27%; display: block; text-decoration: none; transform: rotate(var(--tilt)); transition: transform .25s ease; z-index: 1; }
+.desk-object:hover, .desk-object:focus-visible { transform: translateY(-6px) rotate(0deg); z-index: 3; }
+.desk-object-art { position: absolute; inset: 0; background-image: url('/assets/images/desk/objects-1280.webp'); background-size: 300% 200%; background-position: var(--sprite); background-repeat: no-repeat; filter: saturate(.75) drop-shadow(3px 10px 5px #142c2a45); }
+.desk-software .desk-object-art { clip-path: inset(0 0 0 4%); }
+.desk-research .desk-object-art,
+.desk-game .desk-object-art,
+.desk-blog .desk-object-art {
+  inset: -12% -8% -6%;
+  background-size: contain;
+  background-position: center;
+  filter: saturate(.92) drop-shadow(2px 6px 4px #142c2a30);
+}
+.desk-research .desk-object-art { background-image: url('/assets/images/desk/research-v3-640.webp'); }
+.desk-game .desk-object-art { background-image: url('/assets/images/desk/game-v3-640.webp'); }
+.desk-blog .desk-object-art { background-image: url('/assets/images/desk/blog-v3-640.webp'); }
+.desk-object-label { position: absolute; left: 50%; bottom: -1%; transform: translateX(-50%); background: #f6f1e3; padding: 7px 19px; min-height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 1px 3px 4px #17332b38; border: 1px solid #e4dbc5; font-family: DeskSerif, serif; font-size: 15px; width: max-content; max-width: 100%; text-align: center; }
+.desk-object-label::after { content: ''; position: absolute; bottom: 4px; left: 10px; right: 10px; border-bottom: 1px solid #c7b68b; }
+.desk-object-art, .desk-real-photo, .desk-real-screen { pointer-events: none; }
+.desk-object-label { z-index: 1; }
+.desk-research { left: 5%; top: 16%; --tilt: -9deg; --sprite: 0% 0%; }
+.desk-software { right: 4%; top: 15%; --tilt: 6deg; --sprite: 50% 0%; }
+.desk-game { left: 5%; top: 49%; --tilt: 6deg; --sprite: 100% 0%; }
+.desk-photos { right: 3.5%; top: 48%; --tilt: -9deg; --sprite: 0% 100%; }
+.desk-blog { left: 28%; top: 68%; --tilt: -8deg; --sprite: 50% 100%; }
+.desk-cv { right: 20%; top: 68%; --tilt: 5deg; --sprite: 100% 100%; }
+.desk-real-photo { position: absolute; left: 24%; top: 18%; width: 49%; height: 45%; object-fit: cover; transform: rotate(-5deg); box-shadow: 0 2px 4px #25382c33; border: 5px solid #fffaf1; filter: saturate(.85); }
+.desk-real-screen { position: absolute; left: 11%; top: 5%; width: 80%; height: 39%; object-fit: cover; border: 3px solid #242927; border-radius: 3px; }
+.desk-hint { position: absolute; left: 50%; top: 14.5%; transform: translateX(-50%); font-size: 12px; color: #31483e; text-align: center; width: 40%; }
+.desk-scroll { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 12px; text-decoration: none; min-height: 44px; display: flex; align-items: center; gap: 12px; color: #2c4036; }
+.desk-following { padding: 58px 24px 60px; text-align: center; max-width: 1000px; margin: auto; }
+.desk-following blockquote { font-family: DeskSerif, serif; line-height: 2.1; margin: 0 auto 26px; font-size: 17px; }
+.desk-following cite { display: block; font-size: 13px; font-style: normal; color: #687065; margin-top: 12px; }
+.desk-following p { color: #687065; font-size: 13px; }
+
+@media (min-width: 1600px) {
+  .desk-intro { padding: 43px 40px 28px; }
+  .desk-bio { font-size: 16px; }
+  .desk-role { font-size: 13px; }
+}
+@media (max-width: 1100px) and (min-width: 901px) {
+  .desk-intro { left: 30%; width: 40%; padding: 30px 25px 22px; }
+  .desk-object { width: 27%; height: 25%; }
+  .desk-research, .desk-game { left: 1%; }
+  .desk-software, .desk-photos { right: 1%; }
+  .desk-object-label { font-size: 13px; }
+}
+@media (max-width: 900px) {
+  .desk { background-image: url('/assets/images/desk/oak-v2-960.webp'); background-size: auto 1100px; background-repeat: repeat-y; }
+  .desk-nav { gap: 18px; font-size: 12px; padding: 10px 17px; top: 16px; }
+  .desk-nav .desk-extra { display: none; }
+  .desk-brand { font-size: 16px; }
+  .desk-lang { padding-left: 15px; }
+  .desk-stage { height: auto; max-height: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 8px; padding: 123px 23px 90px; }
+  .desk-intro { position: relative; inset: auto; width: min(520px, 100%); grid-column: 1/-1; justify-self: center; min-height: 0; padding: 27px 25px 18px; margin-bottom: 12px; }
+  .desk-intro h1 { font-size: 36px; }
+  .desk-portrait { width: 72px; height: 94px; }
+  .desk-paper-rule { margin-bottom: 22px; }
+  .desk-hint { position: static; grid-column: 1/-1; transform: none; margin: -20px 0 0; font-size: 11px; width: auto; }
+  .desk-object { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 1; }
+  .desk-object-label { font-size: 13px; padding: 7px 11px; bottom: -7%; min-width: 80px; }
+  .desk-bio { font-size: 14px; }
+  .desk-motto { font-size: 21px; }
+  .desk-scroll { bottom: 18px; }
+  .desk-following { padding: 38px 24px; }
+  .desk-following blockquote { font-size: 15px; }
+}
+@media (max-width: 359px) {
+  .desk-stage { grid-template-columns: 1fr; padding-inline: 23px; }
+  .desk-object { max-width: 260px; justify-self: center; }
+  .desk-intro { padding: 25px 22px 18px; }
+  .desk-nav { gap: 12px; }
+  .desk-nav .desk-brand { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .desk-object { transition: none; }
+  .desk-object:hover, .desk-object:focus-visible { transform: rotate(var(--tilt)); }
+}
+
+.desk-dialog-open { overflow: hidden; }
+.desk-dialog {
+  width: min(880px, calc(100% - 36px)); max-height: calc(100dvh - 36px);
+  padding: 12px; border: 0; background: transparent; color: #273b33;
+  overflow: auto; overscroll-behavior: contain;
+}
+.desk-dialog::backdrop { background: #15140ee0; backdrop-filter: blur(7px); }
+.desk-dialog-paper {
+  position: relative; padding: clamp(28px, 5vw, 65px); background: #f2ead4;
+  border: 1px solid #c6b998; box-shadow: 4px 5px 0 #d4c8ab;
+}
+.desk-dialog-paper::before {
+  content: ''; position: absolute; inset: 9px; border: 1px solid #cabea3;
+  outline: 4px solid #e4dac1; pointer-events: none;
+}
+.desk-dialog h2 { font: 500 clamp(25px, 3vw, 36px)/1.5 DeskSerif, serif; margin: 0 36px 26px 0; }
+.desk-dialog h3 { font: 500 19px/1.6 DeskSerif, serif; margin: 28px 0 10px; }
+.desk-dialog-copy { font-size: 15px; line-height: 2; }
+.desk-dialog-copy p { margin: 0 0 19px; }
+.desk-dialog-photo { display: block; width: 100%; height: auto; max-height: 350px; object-fit: cover; margin: 24px 0; }
+.desk-dialog-close {
+  position: absolute; z-index: 1; top: 13px; right: 13px; width: 44px; height: 44px;
+  border: 1px solid #536253; border-radius: 50%; color: #faf5e8; background: #293e32;
+  font: 27px/1 DeskSans, sans-serif; cursor: pointer;
+}
+.desk-dialog-close:focus-visible { outline: 3px solid #997a3d; outline-offset: 3px; }
+.desk-dialog-actions { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; margin-top: 30px; padding-top: 24px; border-top: 1px solid #c8bfa6; }
+.desk-dialog-actions a { min-height: 44px; display: inline-flex; align-items: center; font-size: 14px; text-underline-offset: 5px; }
+.desk-dialog .desk-detail-button { background: #2d4738; color: #fff9e8; padding: 13px 23px; text-decoration: none; gap: 20px; border: 1px solid #21382a; }
+.desk-detail-button:hover { background: #3d5a47; }
+@media (max-width: 600px) {
+  .desk-dialog { width: calc(100% - 14px); max-height: calc(100dvh - 18px); padding: 6px; }
+  .desk-dialog-paper { padding: 66px 26px 34px; }
+  .desk-dialog-copy { font-size: 14px; }
+  .desk-dialog-actions { gap: 12px 20px; }
+}
+
+/* Keep the existing navigation, document sections and image viewer outside this surface. */
+.desk-home .masthead-academic { height: 78px; margin-bottom: -78px; }
+.desk-portrait-link { float: right; width: 80px; margin: 0 0 19px 12px; }
+.desk-portrait-link .desk-portrait { float: none; width: 100%; margin: 0; }
+.desk-intro .contact-links { margin-top: 0; }
+.desk-quotation { padding-block: 50px 10px; text-align: center; }
+.desk-quotation .quote-author { display: block; margin-top: 12px; color: var(--color-muted); font-size: var(--text-sm); }
+.desk-dialog-copy .intro-copy { margin: 0 0 19px; max-width: none; line-height: 2; }
+.desk-photo-link { height: auto; }
+.desk-intro h1 { letter-spacing: 0; }
+@media (max-width: 900px) { .desk-portrait-link { width: 72px; } }
