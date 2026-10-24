@@ -1,0 +1,26 @@
+zh:
+  intro: 我参与心理学研究，也设计软件和独立游戏。这里记录我的研究、作品和生活。
+  hint: 点开桌上的物件，看看我在做什么
+  scroll: 向下浏览
+  close: 返回书桌
+  details: 查看详情
+  research_details: 查看研究
+  software_details: 查看开源贡献
+  photos_details: 浏览摄影作品
+  blog_details: 进入博客
+  cv_details: 查看学术简历
+  blog_intro: 我在博客里记录心理学学习、开发过程和生活中的想法，可以按栏目浏览，也可以搜索文章。
+  items: [心理学研究, 软件与开源, 独立游戏, 摄影, 博客与随笔, 简历与经历]
+en:
+  intro: I take part in psychology research and design software and independent games. Here I share my research, projects and everyday life.
+  hint: Open an object to see what I’m working on
+  scroll: Explore below
+  close: Back to the desk
+  details: View details
+  research_details: Explore research
+  software_details: View open-source contributions
+  photos_details: Browse photographs
+  blog_details: Read the blog
+  cv_details: View academic CV
+  blog_intro: My blog covers psychology, development notes and thoughts from everyday life. Browse by category or search for an article.
+  items: [Psychology research, Software & open source, Independent games, Photography, Blog & notes, CV & experience]

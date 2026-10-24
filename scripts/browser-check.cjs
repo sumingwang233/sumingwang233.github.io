@@ -68,7 +68,7 @@ const server = http.createServer((req, res) => {
             const range = document.createRange(); range.selectNodeContents(a);
             return new Set([...range.getClientRects()].map(r => Math.round(r.y))).size > 1;
           }).map(a => a.textContent);
-          const clipped = [...document.querySelectorAll('h1,h2,h3,p,li,img')].filter(e => { if (e.closest('.hobbies-track') || e.matches('.portrait img, .banner-link img')) return false; const r = e.getBoundingClientRect(); return r.x < -1 || r.right > innerWidth + 1; }).map(e => e.textContent.slice(0,50));
+          const clipped = [...document.querySelectorAll('h1,h2,h3,p,li,img')].filter(e => { if (e.closest('.hobbies-track') || e.matches('.desk-portrait-link img')) return false; const r = e.getBoundingClientRect(); return r.x < -1 || r.right > innerWidth + 1; }).map(e => e.textContent.slice(0,50));
           return { overflow: document.documentElement.scrollWidth > innerWidth, wrapped, clipped, images: [...document.images].every(i => i.complete && i.naturalWidth > 0), serif: document.fonts.check('600 16px "Noto Serif SC"'), sans: document.fonts.check('400 16px "Noto Sans SC"') };
         });
         assert(!result.overflow && !result.wrapped.length && !result.clipped.length && result.images && result.serif && result.sans, `${route} @ ${width}: ${JSON.stringify(result)}`);
@@ -79,8 +79,20 @@ const server = http.createServer((req, res) => {
             assert.equal(await page.locator('#' + anchor).count(), 1, `Missing legacy homepage anchor ${anchor}`);
           }
           assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
-          assert.equal(await page.locator('#intro-title').innerText(), `${profile.person.name[lang]} ${profile.person.name[lang === 'zh' ? 'en' : 'zh']}`);
-          assert.equal(await page.locator('.intro .role').innerText(), profile.person.role[lang]);
+          assert.equal(await page.locator('#intro-title').evaluate(e => e.textContent.replace(/\s+/g, ' ').trim()), `${profile.person.name[lang]} ${profile.person.name[lang === 'zh' ? 'en' : 'zh']}`);
+          assert.equal(await page.locator('.desk-role').innerText(), profile.person.role[lang]);
+          for (const name of ['research', 'software', 'game', 'photos', 'blog', 'cv']) {
+            const trigger = page.locator(`.desk-${name}[data-desk-dialog]`);
+            await trigger.locator('.desk-object-label').click();
+            assert.equal(await page.locator('.desk-dialog[open]').count(), 1);
+            const card = page.locator(`#desk-dialog-${name}`);
+            assert(await card.isVisible());
+            assert.equal(await card.locator('.desk-detail-button').getAttribute('href'), await trigger.getAttribute('href'));
+            assert(await card.evaluate(e => { const r = e.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.height <= innerHeight; }));
+            await page.keyboard.press('Escape');
+            assert.equal(await page.locator('.desk-dialog[open]').count(), 0);
+            assert(await trigger.evaluate(e => document.activeElement === e));
+          }
           assert.deepEqual(await page.locator('.intro-copy').allTextContents(), profile.person.intro[lang].split('\n\n'));
           assert.equal(await page.locator('#academic-interests li').count(), 3);
           assert.deepEqual(await page.locator('#academic-interests strong').allTextContents(), profile.academic_interests.map(item => item.title[lang] + (lang === 'zh' ? '：' : ': ')));
@@ -97,15 +109,12 @@ const server = http.createServer((req, res) => {
           assert.equal(await page.locator('#research-desk .entry-meta').innerText(), lang === 'zh' ? '科研 Agent' : 'Research Agent');
           assert(!(await page.locator('.footer-academic').innerText()).includes(profile.updated));
           assert(await page.locator('.masthead-inner').evaluate(e => { const cs = getComputedStyle(e); const box = e.getBoundingClientRect(), head = e.parentElement.getBoundingClientRect(); return cs.borderRadius === '999px' && cs.backdropFilter.includes('blur') && cs.boxShadow !== 'none' && Math.abs((box.left + box.width / 2) - (head.left + head.width / 2)) < 2; }));
-          assert(await page.locator('.portrait').evaluate(e => {
-            const portrait = e.getBoundingClientRect(), banner = e.closest('.home-banner').getBoundingClientRect();
-            return Math.abs(portrait.width - portrait.height) < 1 && portrait.height / banner.height > 0.9 && portrait.height < banner.height && portrait.top >= banner.top && portrait.bottom <= banner.bottom;
-          }));
+          assert(await page.locator('.desk-portrait').evaluate(e => { const r = e.getBoundingClientRect(), paper = e.closest('.desk-intro').getBoundingClientRect(); return r.width > 40 && r.left >= paper.left && r.right <= paper.right && r.top >= paper.top && r.bottom <= paper.bottom; }));
           assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => e.parentElement.classList.contains('entry-timing') && e.previousElementSibling.classList.contains('period') && Math.abs(e.getBoundingClientRect().top - e.previousElementSibling.getBoundingClientRect().top) < 2));
           if (width >= 1280 && lang === 'zh') {
             assert(await page.locator('#research .summary').evaluateAll(nodes => Math.max(...nodes.map(e => e.getBoundingClientRect().top)) - Math.min(...nodes.map(e => e.getBoundingClientRect().top)) < 1));
           }
-          assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
+          assert.equal(await page.locator('.desk-object[data-desk-dialog]').count(), 6);
           assert(await page.locator('#gamelibrary .application-icon').evaluate(e => e.naturalWidth === 64 && e.getBoundingClientRect().height > 20 && e.getBoundingClientRect().height < 40));
           assert(await page.locator('.closing-contact > span').evaluate(e => !e.closest('a') && getComputedStyle(e).color === getComputedStyle(e.parentElement).color && getComputedStyle(e).textDecorationLine === 'none'));
           assert(await page.locator('.hobby-position').evaluate(e => e.getAttribute('aria-live') === 'polite' && getComputedStyle(e).clipPath === 'inset(50%)' && e.getBoundingClientRect().width === 1));
@@ -124,6 +133,8 @@ const server = http.createServer((req, res) => {
           }
           if (width === 1280) assert(await page.locator('.contact-links').evaluate(e => e.getBoundingClientRect().bottom <= innerHeight), `${route}: primary contact does not fit laptop fold`);
         }
+        // Start keyboard navigation afresh after exercising focus restoration in dialogs.
+        await page.goto(base + route);
         await page.keyboard.press('Tab');
         assert.equal(await page.locator(':focus').innerText(), route.startsWith('/en') ? 'Skip to content' : '跳至正文');
         await page.keyboard.press('Enter');
@@ -143,17 +154,17 @@ const server = http.createServer((req, res) => {
     assert.deepEqual(await page.locator('#academic-interests li').allTextContents(), profile.academic_interests.map(item => item.title.zh + '：' + item.text.zh));
     assert.equal(await page.locator('#skills-title').innerText(), '技能 ＆ 语言');
     assert.deepEqual(await page.locator('#skills dd').allTextContents(), profile.skills.map(item => item.text.zh));
-    assert.equal(await page.locator('.intro a[href^="mailto:"]').count(), 0);
+    assert.equal(await page.locator('.desk-intro a[href^="mailto:"]').count(), 0);
     assert.equal(await page.locator('.closing-contact p').count(), 0);
     assert.equal(await page.locator('.closing-contact > span').textContent(), '联系我：');
     assert.equal(await page.locator('.closing-contact a').textContent(), 'sumingwang@qq.com ↗');
     assert.equal(await page.locator('#cleft-qualitative-2026 > .entry-meta').innerText(), '2026.08.19');
     assert.equal(await page.locator('#projects-title').innerText(), '作品');
-    assert.equal(await page.locator('h1#intro-title').innerText(), '王鑫 Xin Wang');
+    assert.equal(await page.locator('h1#intro-title').evaluate(e => e.textContent.replace(/\s+/g, ' ').trim()), '王鑫 Xin Wang');
     assert.equal(await page.locator('#emotion-self-verification .entry-supervisor').innerText(), '指导教师：马鑫');
     assert(await page.locator('#emotion-self-verification .entry-supervisor').evaluate(e => getComputedStyle(e).fontWeight === '700' && Math.abs(e.getBoundingClientRect().right - e.parentElement.getBoundingClientRect().right) < 1));
     assert.equal(await page.locator('#emotion-self-verification .research-status').count(), 0);
-    assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
+    assert.equal(await page.locator('.desk-motto').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('.section-intro, #evaluation').count(), 0);
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
     assert.equal(await page.locator('#projects > .project-overview > .overview-entry').count(), 2);
@@ -174,17 +185,13 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('#whu-psychology figure, #other figure').count(), 0);
     assert.equal(await page.locator('.masthead-meta > span').count(), 0);
     assert.equal(await page.locator('.wordmark img').getAttribute('src'), '/assets/images/favicon-avatar.png');
-    assert.equal(await page.locator('.banner-link img').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
-    assert.equal(await page.locator('.home-banner figcaption').count(), 0);
-    assert.equal(await page.locator('.home-banner .portrait img').getAttribute('src'), '/assets/images/portrait-lifestyle.jpg');
+    assert.equal(await page.locator('.desk-real-photo').getAttribute('src'), profile.hobbies.find(hobby => hobby.id === 'photography').image);
+    assert.equal(await page.locator('.desk figcaption').count(), 0);
+    assert.equal(await page.locator('.desk-portrait-link img').getAttribute('src'), '/assets/images/portrait-lifestyle.jpg');
     assert.equal(await page.locator('.masthead-academic').evaluate(e => getComputedStyle(e).position), 'sticky');
     assert.equal(await page.locator('.reveal--pending').count(), 0);
-    assert(await page.locator('.portrait').evaluate(e => {
-      const r = e.getBoundingClientRect();
-      const banner = e.closest('.home-banner').getBoundingClientRect();
-      return r.width === r.height && r.height / banner.height > 0.9 && getComputedStyle(e).borderRadius === '50%';
-    }));
-    assert(await page.locator('.portrait').evaluate(e => Math.abs(e.getBoundingClientRect().left - document.querySelector('.document').getBoundingClientRect().left) < 1));
+    assert(await page.locator('.desk-portrait').evaluate(e => { const r = e.getBoundingClientRect(), paper = e.closest('.desk-intro').getBoundingClientRect(); return r.width > 40 && r.left >= paper.left && r.right <= paper.right && r.top >= paper.top && r.bottom <= paper.bottom; }));
+    assert.equal(await page.locator('.desk-object[data-desk-dialog]').count(), 6);
     assert.deepEqual(await page.locator('h1,h2,h3').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
     const texture = await page.evaluate(() => getComputedStyle(document.body, '::before').backgroundImage);
     assert(texture.includes('book-paper-rough.png'));
@@ -230,7 +237,7 @@ const server = http.createServer((req, res) => {
       assert.equal(await page.locator('.reveal--pending').count(), 0);
       await page.goto(base + route);
       assert.equal(await page.locator('.reveal--pending').count(), 0);
-      assert.equal(await page.locator('.banner-link img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
+      assert.equal(await page.locator('.desk-portrait-link img').evaluate(e => getComputedStyle(e).transitionDuration), '0s');
     }
     // Navigation moves through intermediate positions and leaves the heading below the sticky bar.
     for (const route of ['/', '/en/']) {
@@ -251,12 +258,12 @@ const server = http.createServer((req, res) => {
         assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), 'auto');
       }
     }
-    // The same viewer handles research, hobby, banner and portrait images in place.
+    // The viewer retains zoom, keyboard, touch and fallback coverage for photos and the desk portrait.
     for (const route of ['/', '/en/']) {
       for (const width of [375, 1280]) {
         await page.setViewportSize({ width, height: 900 });
         await page.goto(base + route);
-        const link = page.locator('.banner-link');
+        const link = page.locator('.desk-portrait-link');
         const url = page.url(), pageCount = page.context().pages().length;
         await link.click();
         const viewer = page.locator('.image-viewer');
@@ -301,14 +308,14 @@ const server = http.createServer((req, res) => {
         assert.equal(await page.locator('.image-viewer[open]').count(), 0);
         assert.equal(await page.locator(':focus').getAttribute('href'), await link.getAttribute('href'));
         assert(!(await page.evaluate(() => document.documentElement.classList.contains('image-viewer-open'))));
-        for (const selector of ['.hobby.is-current .figure-link', '.banner-link', '.portrait']) {
+        for (const selector of ['.hobby.is-current .figure-link', '.desk-portrait-link']) {
           await page.locator(selector).click();
           await page.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
           await viewer.locator('.image-viewer-close').click();
           assert.equal(page.url(), url);
         }
         await link.click();
-        await page.evaluate(() => { document.querySelector('.image-viewer').close(); document.querySelector('.portrait').click(); });
+        await page.evaluate(() => { document.querySelector('.image-viewer').close(); document.querySelector('.desk-portrait-link').click(); });
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         assert(await viewer.evaluate(e => e.open && document.documentElement.classList.contains('image-viewer-open')));
         await viewer.locator('.image-viewer-close').click();
@@ -319,7 +326,7 @@ const server = http.createServer((req, res) => {
     await touch.route('https://*.supabase.co/**', route => route.fulfill({ json: [], headers: { 'access-control-allow-origin': '*' } }));
     touch.on('pageerror', error => errors.push(error.message));
     await touch.goto(base + '/');
-    await touch.locator('.banner-link').tap();
+    await touch.locator('.desk-portrait-link').tap();
     await touch.waitForFunction(() => !document.querySelector('.image-viewer img').hidden);
     await touch.locator('.image-viewer [data-zoom="1"]').tap();
     const touchBox = await touch.locator('.image-viewer-stage').boundingBox();
@@ -339,8 +346,8 @@ const server = http.createServer((req, res) => {
       await fallback.goto(base + route);
       assert.equal(await fallback.locator('.reveal--pending').count(), 0);
       assert(await fallback.locator('#research-title').isVisible());
-      assert(await fallback.locator('.banner-link img').isVisible());
-      assert.equal(await fallback.locator('.banner-link').getAttribute('target'), null);
+      assert(await fallback.locator('.desk-portrait-link img').isVisible());
+      assert.equal(await fallback.locator('.desk-portrait-link').getAttribute('target'), null);
       assert(await fallback.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await fallback.close();
     }
@@ -428,7 +435,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator('.contact-links a[download]').first().innerText(), 'Academic CV');
     assert.equal(await page.locator('.contact-links a').last().innerText(), 'Job resume (Chinese)');
     assert.equal(await page.locator('#projects-title').innerText(), 'Projects');
-    assert.equal(await page.locator('.intro-subtitle').innerText(), 'Be Water, my friend');
+    assert.equal(await page.locator('.desk-motto').innerText(), 'Be Water, my friend');
     assert.equal(await page.locator('#projects #angelalign-benchmark').count(), 1);
     assert.deepEqual(await page.locator('h1,h2,h3').evaluateAll(nodes => nodes.map(n => n.textContent.trim()).filter(t => /[。.]$/.test(t))), []);
     for (const lang of ['zh', 'en']) {
