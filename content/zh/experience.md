@@ -23,6 +23,7 @@ campus:
 - id: campus-philosophy-media
   title: 哲学学院融媒体中心 · 副部长
 honors:
+- 'BuildArena 人机协作工程挑战赛：Most Creative Machine（最具创意机器奖），Build with Agents 赛道，2026'
 - 武汉大学乙等奖学金、国家励志奖学金（2022—2023 学年）；优秀学生干部（2024—2025 学年）
 - “外研社·国才杯·理解当代中国”英语组短视频大赛武汉大学校赛金奖
 other_experience:
