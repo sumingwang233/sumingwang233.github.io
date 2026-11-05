@@ -23,6 +23,7 @@ campus:
 - id: campus-philosophy-media
   title: Deputy Head · School of Philosophy Integrated Media Center
 honors:
+- 'Most Creative Machine, BuildArena Human AI Collaboration Engineering Challenge, Build with Agents track (2026)'
 - 'Wuhan University: Second-Class Scholarship and National Encouragement Scholarship (2022–2023); Outstanding Student Leader (2024–2025)'
 - Gold Award, Wuhan University round of the FLTRP·ETIC “Understanding Contemporary China” English short-video competition
 other_experience:
